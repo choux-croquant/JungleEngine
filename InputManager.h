@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <unordered_map>
-
+#include "ImGui/imgui.h"
 
 class InputManager {
 public:
@@ -39,6 +39,15 @@ public:
 
     // 윈도우 메시지 처리 (윈도우 프로시저에서 호출해야 함)
     void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) {
+
+        if (ImGui::GetCurrentContext() != nullptr) {
+            ImGuiIO& io = ImGui::GetIO();
+            if (io.WantCaptureMouse && (message == WM_MOUSEMOVE ||
+                message == WM_LBUTTONDOWN || message == WM_LBUTTONUP ||
+                message == WM_RBUTTONDOWN || message == WM_RBUTTONUP))
+                return;
+        }
+
         switch (message) {
         case WM_KEYDOWN:
             keyStates[wParam] = true;

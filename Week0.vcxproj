@@ -141,6 +141,7 @@
     <ClCompile Include="UCamera.cpp" />
     <ClCompile Include="UEngineStatics.cpp" />
     <ClCompile Include="UGeometryGenerator.cpp" />
+    <ClCompile Include="ULog.cpp" />
     <ClCompile Include="UObject.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +167,7 @@
     <ClInclude Include="UEngineStatics.h" />
     <ClInclude Include="UGeometryGenerator.h" />
     <ClInclude Include="UGizmo.h" />
+    <ClInclude Include="ULog.h" />
     <ClInclude Include="UObject.h" />
     <ClInclude Include="UPrimitiveComponent.h" />
     <ClInclude Include="URenderer.h" />

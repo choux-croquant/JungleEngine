@@ -17,11 +17,15 @@
 
 #include "UCamera.h"
 #include "UCubeComp.h"
+
 #include "USphereComp.h"
 #include "UCylinderComp.h"
 #include "UConeComp.h"
 #include "UWorldAxis.h"
 #include "UGizmo.h"
+
+#include "ULog.h"
+
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -120,7 +124,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		input.Update();
 
-		// DirectX ∑ª¥ı∑Ø ∑Á«¡
+		// DirectX Î†åÎçîÎü¨ Î£®ÌîÑ
 		URenderer::GetInstance().Prepare();
 
 		worldAxis.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
@@ -150,7 +154,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 		}
 
-		// ∏∂øÏΩ∫ πˆ∆∞ ªÛ≈¬ «•Ω√
+		// ÎßàÏö∞Ïä§ Î≤ÑÌäº ÏÉÅÌÉú ÌëúÏãú
 		ImGui::Separator();
 		ImGui::Text("Mouse State:");
 		ImGui::Text("Position: (%d, %d)", InputManager::GetInstance().GetMousePosition().x, InputManager::GetInstance().GetMousePosition().y);
@@ -162,6 +166,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("camera looking at: %f, %f, %f", mainCamera.targetPos.X, mainCamera.targetPos.Y, mainCamera.targetPos.Z);
 		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
 		ImGui::End();
+
+		// UE_LOG
+		ULog::DrawLogWindow();
+		if (InputManager::GetInstance().IsKeyDown('H'))
+			UE_LOG(LogTemp, Log, "Hello World %d", 2025);
+		if (InputManager::GetInstance().IsMouseButtonDown(VK_RBUTTON))
+			UE_LOG(LogTemp, Error, "Mouse Right Button is Pressed!!");
+		if (InputManager::GetInstance().IsMouseButtonDown(VK_LBUTTON))
+			UE_LOG(LogTemp, Warning, "Mouse Left Button is Pressed!!");
 
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
