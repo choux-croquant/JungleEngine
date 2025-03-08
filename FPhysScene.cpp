@@ -12,6 +12,7 @@ void FPhysScene::Update()
 	if (input.IsMouseButtonDown(VK_LBUTTON))
 	{
 		RayCast();
+		checkCollision();
 	}
 }
 
@@ -23,8 +24,9 @@ void FPhysScene::LogRender()
 	ImGui::Text("Screen Size (%d, %d)", width, height);
 	ImGui::Text("NDC (%f, %f, %f)", ndc.X, ndc.Y, ndc.Z);
 	ImGui::Text("rayView (%f, %f, %f, %f)", rayView.X, rayView.Y, rayView.Z, rayView.W);
-	ImGui::Text("rayWorld (%f, %f, %f, %f)", rayWorld.X, rayWorld.Y, rayWorld.Z, rayView.W);
-	
+	ImGui::Text("rayWorld (%f, %f, %f)", rayWorld.X, rayWorld.Y, rayWorld.Z);
+
+	ImGui::Text("Ray Collision %s", rayCollision? "True" : "False");
 	ImGui::End();
 }
 
@@ -59,16 +61,47 @@ void FPhysScene::RayCast()
 		rayView.W = 1.0f;
 	}
 
-	rayWorld = viewI.TransformVector(rayView);
+	FVector4 rayWorld4 = viewI.TransformVector(rayView);
 
-	rayWorld.W = 0;
+	rayWorld.X = rayWorld4.X;
+	rayWorld.Y = rayWorld4.Y;
+	rayWorld.Z = rayWorld4.Z;
 
-	rayWorld.Normalize();
-
-
+	rayDir = rayWorld - camera->RelativeLocation;
+	rayDir.Normalize();
+	
 }
 
-void FPhysScene::setSampleCube(const UCubeComp& uCubeComp)
+void FPhysScene::checkCollision()
+{
+	FVector rayOrigin = camera->RelativeLocation;
+	for (UPrimitiveComponent* cube : cubes)
+	{
+		if (cube)
+		{
+			FVector cubeCenter = cube->RelativeLocation;
+
+			FVector V = cubeCenter - rayOrigin;
+			float t_closest = V.Dot(rayDir);
+
+			FVector P = rayOrigin + rayDir * t_closest;
+
+			float d2 = (P - cubeCenter).Dot(P - cubeCenter);
+			float r2 = 1.0f;
+			if (d2 < r2)
+			{
+			
+				rayCollision = true;
+				return;
+			}
+
+
+		}
+	}
+	rayCollision = false;
+}
+
+void FPhysScene::setSampleCube(UCubeComp* uCubeComp)
 {
 	cubes.push_back(uCubeComp);
 }

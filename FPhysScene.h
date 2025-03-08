@@ -8,11 +8,11 @@ class FPhysScene
 {
 public:
 	FPhysScene(HWND hwnd,const UCamera* camera);
-	void setSampleCube(const UCubeComp& uCubeComp);
+	void setSampleCube(UCubeComp* uCubeComp);
 	void Update();
 	void LogRender();
 private:
-	TArray<UPrimitiveComponent> cubes;
+	TArray<UPrimitiveComponent*> cubes;
 	InputManager& input = InputManager::GetInstance();
 	HWND hwnd;
 	const UCamera* camera;
@@ -22,8 +22,13 @@ private:
 
 	FVector4 ndc;
 	FVector4 rayView;
-	FVector4 rayWorld;
+	FVector rayWorld;
+
+	FVector rayDir;
+
+	bool rayCollision = false;
 
 	void RayCast();
+	void checkCollision();
 };
 
