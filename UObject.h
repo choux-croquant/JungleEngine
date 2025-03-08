@@ -5,13 +5,13 @@
 class UObject
 {
 public:
-	UObject()
-	{
-		UUID = UEngineStatics::GenUUID();
-	}
+    UObject()
+    {
+        UUID = UEngineStatics::GenUUID();
+    }
 
-	uint32 UUID;
-	uint32 InternalIndex; // Index of GUObjectArray
+    uint32 UUID;
+    uint32 InternalIndex; // Index of GUObjectArray
 };
 
-TArray<UObject*> GUObjectArray;
+extern TArray<UObject*> GUObjectArray;

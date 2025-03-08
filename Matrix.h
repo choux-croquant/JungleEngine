@@ -2,6 +2,19 @@
 #include <cmath>
 #include "Vector.h"
 #include "Vector4.h"
+#include <cstdlib>
+#include <string>
+#include <iostream>
+
+static const float PI = 3.14159265358979323846f;
+
+static float RadtoDeg(float a) {
+    return a * 180.0f / PI;
+}
+
+static float DegtoRad(float a) {
+    return a * PI / 180.0f;
+}
 
 struct FMatrix
 {
@@ -145,10 +158,35 @@ struct FMatrix
         return result;
     }
 
+    static FMatrix Rotate(const FVector& axis, float angle)
+    {
+        // 회전축을 정규화
+        FVector nAxis = axis;
+        nAxis.Normalize();
+
+        float cosA = cos(angle);
+        float sinA = sin(angle);
+        float oneMinusCosA = 1.0f - cosA;
+
+        // 미리 계산
+        float xx = nAxis.X * nAxis.X;
+        float yy = nAxis.Y * nAxis.Y;
+        float zz = nAxis.Z * nAxis.Z;
+        float xy = nAxis.X * nAxis.Y;
+        float xz = nAxis.X * nAxis.Z;
+        float yz = nAxis.Y * nAxis.Z;
+
+        FMatrix result = Identity;
+        result.M[0][0] = cosA + xx * oneMinusCosA; result.M[0][1] = xy * oneMinusCosA - nAxis.Z * sinA; result.M[0][2] = xz * oneMinusCosA + nAxis.Y * sinA;
+        result.M[1][0] = xy * oneMinusCosA + nAxis.Z * sinA; result.M[1][1] = cosA + yy * oneMinusCosA; result.M[1][2] = yz * oneMinusCosA - nAxis.X * sinA;
+        result.M[2][0] = xz * oneMinusCosA - nAxis.Y * sinA; result.M[2][1] = yz * oneMinusCosA + nAxis.X * sinA; result.M[2][2] = cosA + zz * oneMinusCosA;
+        return result;
+    }
+
     // 뷰 행렬 (LookAt)
     static FMatrix LookAt(const FVector& eye, const FVector& target, const FVector& up)
     {
-        FVector zAxis = (eye - target).Normalize();
+        FVector zAxis = (target-eye).Normalize();
         FVector xAxis = up.Cross(zAxis).Normalize();
         FVector yAxis = zAxis.Cross(xAxis);
 
@@ -179,12 +217,24 @@ struct FMatrix
     FMatrix operator*(FMatrix rhs) const {
         return this->Multiply(rhs);
     }
-};
 
-// Identity matrix definition
-const FMatrix FMatrix::Identity = [] {
-    FMatrix identity;
-    for (int i = 0; i < 4; ++i)
-        identity.M[i][i] = 1.0f;
-    return identity;
-}();
+    FVector operator*(FVector& a) const {
+        FVector result = FVector();
+        float x = M[0][0] * a.X + M[0][1] * a.Y + M[0][2] * a.Z + M[0][3];
+        float y = M[1][0] * a.X + M[1][1] * a.Y + M[1][2] * a.Z + M[1][3];
+        float z = M[2][0] * a.X + M[2][1] * a.Y + M[2][2] * a.Z + M[2][3];
+        return FVector(x, y, z);
+    }
+
+    std::string PrintMatrix()
+    {
+        std::string result = "";
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                result += std::to_string(M[i][j]) + ", ";
+            }
+            result += "\n";
+        }
+        return result;
+    }
+};

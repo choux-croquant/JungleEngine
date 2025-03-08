@@ -4,12 +4,6 @@
 class UEngineStatics
 {
 public:
-	static uint32 GenUUID()
-	{
-		return NextUUID++;
-	}
-
+	static uint32 GenUUID();
 	static uint32 NextUUID;
 };
-
-uint32 UEngineStatics::NextUUID = 0;

@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <unordered_map>
 
+
 class InputManager {
 public:
     static InputManager& GetInstance() {
