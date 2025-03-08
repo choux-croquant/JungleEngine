@@ -82,7 +82,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	UCubeComp sampleCube4(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	UCubeComp sampleCube5(FVector(-2.0f, -2.0f, -2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
-	FPhysScene physScene;
+	FPhysScene physScene(hWnd);
 	physScene.setSampleCube(sampleCube1);
 	physScene.setSampleCube(sampleCube2);
 	physScene.setSampleCube(sampleCube3);
@@ -150,9 +150,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("camera looking at: %f, %f, %f", mainCamera.targetPos.X, mainCamera.targetPos.Y, mainCamera.targetPos.Z);
 		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
 
-		physScene.LogRender();
 		ImGui::End();
 
+		physScene.LogRender();
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 		// IMGUI Section End
