@@ -2,6 +2,7 @@
 #include "Vector.h"
 #include "Vector4.h"
 #include "Matrix.h"
+#include "Types.h"
 
 struct FVertexSimple
 {
@@ -13,4 +14,10 @@ struct FVertexSimple
 struct FConstants
 {
 	FMatrix MVP;
+};
+
+struct MeshData 
+{
+	TArray<FVertexSimple> Vertices;
+	TArray<uint32> Indices;
 };

@@ -2,21 +2,21 @@
 #include "UPrimitiveComponent.h"
 #include "Utils.h"
 #include "URenderer.h"
-#include "UCubeMeshData.h"
+#include "UArrowMeshData.h"
 #include "UCamera.h"
 
 
-class UCubeComp : public UPrimitiveComponent
+class UGizmo : public UPrimitiveComponent
 {
 public:
-    UCubeComp(FVector Position, FVector Rotation, FVector Scale)
+    UGizmo(FVector Position, FVector Rotation, FVector Scale)
         : UPrimitiveComponent(Position, Rotation, Scale)
     {
-        MeshData = &UCubeMeshData::GetInstance();
+        MeshData = &UArrowMeshData::GetInstance();
     }
 
     void Render(FMatrix view, FMatrix projection) {
-    //void Render() {
+        //void Render() {
         FConstants constantData = {};
 
         // Scale 행렬
@@ -40,9 +40,11 @@ public:
 
         // 렌더링 데이터 업데이트 및 그리기
         URenderer::GetInstance().UpdateConstant(constantData);
-        URenderer::GetInstance().RenderPrimitive(MeshData->GetVertexBuffer(), MeshData->GetIndexBuffer(), MeshData->GetNumIndex());
+        URenderer::GetInstance().RenderPrimitive(MeshData->GetVertexBufferX(), MeshData->GetIndexBufferX(), MeshData->GetNumIndex());
+        URenderer::GetInstance().RenderPrimitive(MeshData->GetVertexBufferY(), MeshData->GetIndexBufferY(), MeshData->GetNumIndex());
+        URenderer::GetInstance().RenderPrimitive(MeshData->GetVertexBufferZ(), MeshData->GetIndexBufferZ(), MeshData->GetNumIndex());
     }
 
 private:
-    UCubeMeshData* MeshData; // 정적 데이터 참조
+    UArrowMeshData* MeshData; // 정적 데이터 참조
 };

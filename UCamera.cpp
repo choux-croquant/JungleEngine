@@ -52,7 +52,7 @@ void UCamera::SetWorldLocation(FVector pos)
 
 void UCamera::MoveCamera(const InputManager& input, float deltaTime) {
     float moveSpeed = 5.0f * deltaTime;
-    float rotateSpeed = 1.0f * deltaTime; // 회전 속도
+    float rotateSpeed = 0.5f * deltaTime; // 회전 속도
 
     FVector right = upDirection.Cross(facing).Normalize();
     FVector moveDir = FVector(0.0f, 0.0f, 0.0f);
@@ -95,12 +95,28 @@ void UCamera::MoveCamera(const InputManager& input, float deltaTime) {
         Rotate(pitchRotation);
     }
 
+    // 마우스 우클릭 드래그로 카메라 회전
+    if (input.IsMouseButtonDown(VK_RBUTTON)) { // 1은 마우스 우클릭 버튼
+        POINT mouseDelta = input.GetMouseDelta();
+        float yaw = -mouseDelta.x * rotateSpeed; // Yaw 회전 (좌우)
+        float pitch = -mouseDelta.y * rotateSpeed; // Pitch 회전 (상하)
+
+        // Yaw 회전 (좌우)
+        FMatrix yawRotation = FMatrix::RotateY(yaw);
+        Rotate(yawRotation);
+
+        // Pitch 회전 (상하)
+        FMatrix pitchRotation = FMatrix::Rotate(right, pitch);
+        Rotate(pitchRotation);
+    }
+
     // 이동 적용
     if (!moveDir.IsZero()) {
         moveDir.Normalize();
         Translate(moveDir * moveSpeed);
     }
 }
+
 void UCamera::Update()
 {
     viewMatrix = FMatrix::LookAt(GetWorldLocation(), targetPos, upDirection);

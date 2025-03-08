@@ -2,21 +2,21 @@
 #include "UPrimitiveComponent.h"
 #include "Utils.h"
 #include "URenderer.h"
-#include "UCubeMeshData.h"
+#include "USphereMeshData.h"
 #include "UCamera.h"
 
 
-class UCubeComp : public UPrimitiveComponent
+class USphereComp : public UPrimitiveComponent
 {
 public:
-    UCubeComp(FVector Position, FVector Rotation, FVector Scale)
+    USphereComp(FVector Position, FVector Rotation, FVector Scale)
         : UPrimitiveComponent(Position, Rotation, Scale)
     {
-        MeshData = &UCubeMeshData::GetInstance();
+        MeshData = &USphereMeshData::GetInstance();
     }
 
     void Render(FMatrix view, FMatrix projection) {
-    //void Render() {
+        //void Render() {
         FConstants constantData = {};
 
         // Scale 행렬
@@ -44,5 +44,5 @@ public:
     }
 
 private:
-    UCubeMeshData* MeshData; // 정적 데이터 참조
+    USphereMeshData* MeshData; // 정적 데이터 참조
 };
