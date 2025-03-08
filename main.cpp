@@ -144,6 +144,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		// UE_LOG
 		ULog::DrawLogWindow();
+		if (InputManager::GetInstance().IsKeyDown('H'))
+			UE_LOG(LogTemp, Log, "Hello World %d", 2025);
 		if (InputManager::GetInstance().IsMouseButtonDown(VK_RBUTTON))
 			UE_LOG(LogTemp, Error, "Mouse Right Button is Pressed!!");
 		if (InputManager::GetInstance().IsMouseButtonDown(VK_LBUTTON))
