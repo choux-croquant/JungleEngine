@@ -112,7 +112,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	physScene.setSampleCube(&sampleCube2);
 	physScene.setSampleCube(&sampleCube3);
 	physScene.setSampleCube(&sampleCube4);
-	physScene.setSampleCube(&sampleCube5);
 
 	while (bIsExit == false)
 	{
