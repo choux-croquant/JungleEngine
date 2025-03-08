@@ -154,6 +154,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="UCamera.h" />
     <ClInclude Include="UCubeComp.h" />
