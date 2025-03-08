@@ -26,6 +26,11 @@ public:
         return mousePosition;
     }
 
+    // 마우스 이동량 가져오기
+    POINT GetMouseDelta() const {
+        return mouseDelta;
+    }
+
     // 마우스 버튼 상태 확인
     bool IsMouseButtonDown(int button) const {
         auto it = mouseButtonStates.find(button);
@@ -51,8 +56,14 @@ public:
             keyStates[wParam] = false;
             break;
         case WM_MOUSEMOVE:
+            // 이전 마우스 위치를 저장
+            previousMousePosition = mousePosition;
+            // 현재 마우스 위치 업데이트
             mousePosition.x = LOWORD(lParam);
             mousePosition.y = HIWORD(lParam);
+            // 마우스 이동량 계산
+            mouseDelta.x = mousePosition.x - previousMousePosition.x;
+            mouseDelta.y = mousePosition.y - previousMousePosition.y;
             break;
         case WM_LBUTTONDOWN:
             mouseButtonStates[VK_LBUTTON] = true;
@@ -69,10 +80,16 @@ public:
         }
     }
 
+    void Update() {
+        mouseDelta = { 0, 0 };
+    }
+
 private:
     std::unordered_map<unsigned char, bool> keyStates;
     std::unordered_map<int, bool> mouseButtonStates;
     POINT mousePosition = { 0, 0 };
+    POINT previousMousePosition = { 0, 0 }; // 이전 마우스 위치
+    POINT mouseDelta = { 0, 0 }; // 마우스 이동량
 
     InputManager() {}
     ~InputManager() {}

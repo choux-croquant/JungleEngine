@@ -17,7 +17,15 @@
 
 #include "UCamera.h"
 #include "UCubeComp.h"
+
+#include "USphereComp.h"
+#include "UCylinderComp.h"
+#include "UConeComp.h"
+#include "UWorldAxis.h"
+#include "UGizmo.h"
+
 #include "ULog.h"
+
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -63,7 +71,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ImGui_ImplWin32_Init((void*)hWnd);
 	ImGui_ImplDX11_Init(URenderer::GetInstance().Device, URenderer::GetInstance().DeviceContext);
 
-	const int targetFPS = 30;
+	const int targetFPS = 60;
 	const double targetFrameTime = 1000.0 / targetFPS;
 
 	LARGE_INTEGER frequency;
@@ -75,12 +83,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Camera Initialize
 	UCamera mainCamera(FVector(0.0f, 0.0f, 10.0f), FVector(0.0f, 0.0f, 0.0f), UpVector);
 
+	// TEST Gizmo 
+	UGizmo gizmo(FVector(4.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+
+	// Guide Axis
+	UWorldAxis worldAxis(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+
 	// TEST CubeComp
 	UCubeComp sampleCube1(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	UCubeComp sampleCube2(FVector(2.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	UCubeComp sampleCube3(FVector(0.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	UCubeComp sampleCube4(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCubeComp sampleCube5(FVector(-2.0f, -2.0f, -2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	USphereComp sampleSphere1(FVector(-2.0f, -2.0f, -2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UCylinderComp sampleCylinder1(FVector(-2.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UConeComp sampleCone1(FVector(2.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
 	while (bIsExit == false)
 	{
@@ -102,17 +118,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		
 		InputManager& input = InputManager::GetInstance();
+
 		mainCamera.MoveCamera(input, 0.016f);
 		mainCamera.Update();
 
-		// DirectX ∑ª¥ı∑Ø ∑Á«¡
+		input.Update();
+
+		// DirectX Î†åÎçîÎü¨ Î£®ÌîÑ
 		URenderer::GetInstance().Prepare();
+
+		worldAxis.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 
 		sampleCube1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCube2.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCube3.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCube4.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCube5.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleSphere1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleCylinder1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleCone1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+
+		gizmo.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 
 		// IMGUI Section Start
 		ImGui_ImplDX11_NewFrame();
@@ -129,7 +154,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 		}
 
-		// ∏∂øÏΩ∫ πˆ∆∞ ªÛ≈¬ «•Ω√
+		// ÎßàÏö∞Ïä§ Î≤ÑÌäº ÏÉÅÌÉú ÌëúÏãú
 		ImGui::Separator();
 		ImGui::Text("Mouse State:");
 		ImGui::Text("Position: (%d, %d)", InputManager::GetInstance().GetMousePosition().x, InputManager::GetInstance().GetMousePosition().y);
