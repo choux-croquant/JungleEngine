@@ -80,6 +80,7 @@ public:
         // 래스터라이저 설정
         D3D11_RASTERIZER_DESC rasterizerdesc = {};
         rasterizerdesc.FillMode = D3D11_FILL_SOLID; 
+        //rasterizerdesc.FillMode = D3D11_FILL_WIREFRAME;
         rasterizerdesc.CullMode = D3D11_CULL_BACK;
         rasterizerdesc.FrontCounterClockwise = FALSE;
         Device->CreateRasterizerState(&rasterizerdesc, &RasterizerState);
@@ -130,6 +131,19 @@ public:
          return VertexBuffer;
     }
 
+    // Overload for TArray data
+    ID3D11Buffer* CreateVertexBuffer(TArray<FVertexSimple> vertices, uint32 numVertices) {
+        D3D11_BUFFER_DESC vertexBufferDesc = {};
+        vertexBufferDesc.ByteWidth = sizeof(FVertexSimple) * numVertices;
+        vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+        vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+        ID3D11Buffer* VertexBuffer;
+        D3D11_SUBRESOURCE_DATA vertexBufferData = { vertices.data() };
+        Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &VertexBuffer);
+        return VertexBuffer;
+    }
+
     // 인덱스 버퍼 생성
     ID3D11Buffer* CreateIndexBuffer(uint32 indices[], uint32 numIndices) {
         D3D11_BUFFER_DESC indexBufferDesc = {};
@@ -139,6 +153,19 @@ public:
 
         ID3D11Buffer* IndexBuffer;
         D3D11_SUBRESOURCE_DATA indexBufferData = { indices };
+        Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &IndexBuffer);
+        return IndexBuffer;
+    }
+
+    // Overload for TArray data
+    ID3D11Buffer* CreateIndexBuffer(TArray<uint32> indices, uint32 numIndices) {
+        D3D11_BUFFER_DESC indexBufferDesc = {};
+        indexBufferDesc.ByteWidth = sizeof(uint32) * numIndices;
+        indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+        indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+        ID3D11Buffer* IndexBuffer;
+        D3D11_SUBRESOURCE_DATA indexBufferData = { indices.data() };
         Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &IndexBuffer);
         return IndexBuffer;
     }
@@ -168,6 +195,21 @@ public:
         DeviceContext->Unmap(ConstantBuffer, 0);
 
         DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer);
+    }
+
+
+    void RenderLine(ID3D11Buffer* VertexBuffer, ID3D11Buffer* IndexBuffer, uint32 numIndex) {
+        // 정점 및 인덱스 버퍼 설정
+        UINT stride = sizeof(FVertexSimple);
+        UINT offset = 0;
+        DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
+        DeviceContext->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+        // 프리미티브 토폴로지 설정
+        DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+
+        // 그리기 호출
+        DeviceContext->DrawIndexed(numIndex, 0, 0);
     }
 
     void RenderPrimitive(ID3D11Buffer* VertexBuffer, ID3D11Buffer* IndexBuffer, uint32 numIndex) {

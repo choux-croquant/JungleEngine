@@ -140,6 +140,7 @@
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="UCamera.cpp" />
     <ClCompile Include="UEngineStatics.cpp" />
+    <ClCompile Include="UGeometryGenerator.cpp" />
     <ClCompile Include="UObject.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,15 +155,25 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Types.h" />
+    <ClInclude Include="UArrowMeshData.h" />
     <ClInclude Include="UCamera.h" />
+    <ClInclude Include="UConeComp.h" />
+    <ClInclude Include="UConeMeshData.h" />
     <ClInclude Include="UCubeComp.h" />
     <ClInclude Include="UCubeMeshData.h" />
+    <ClInclude Include="UCylinderMeshData.h" />
+    <ClInclude Include="UCylinderComp.h" />
     <ClInclude Include="UEngineStatics.h" />
+    <ClInclude Include="UGeometryGenerator.h" />
+    <ClInclude Include="UGizmo.h" />
     <ClInclude Include="UObject.h" />
     <ClInclude Include="UPrimitiveComponent.h" />
     <ClInclude Include="URenderer.h" />
     <ClInclude Include="USceneComponent.h" />
+    <ClInclude Include="USphereComp.h" />
+    <ClInclude Include="USphereMeshData.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="UWorldAxis.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Vector4.h" />
   </ItemGroup>
