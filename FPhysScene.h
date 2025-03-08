@@ -2,6 +2,7 @@
 #include "InputManager.h"
 #include "UCubeComp.h"
 #include "Types.h"
+#include "Matrix.h"
 class FPhysScene
 {
 public:
@@ -16,5 +17,7 @@ private:
 
 	POINT mousePos;
 	int width, height;
+
+	FVector ndc;
 };
 
