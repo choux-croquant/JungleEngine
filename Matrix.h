@@ -84,7 +84,16 @@ struct FMatrix
             M[2][0] * vec.X + M[2][1] * vec.Y + M[2][2] * vec.Z + M[2][3]
         );
     }
+    FVector4 TransformVector(const FVector4& vec) const
+    {
+        return FVector4(
+            M[0][0] * vec.X + M[0][1] * vec.Y + M[0][2] * vec.Z + M[0][3]*vec.W,
+            M[1][0] * vec.X + M[1][1] * vec.Y + M[1][2] * vec.Z + M[1][3]*vec.W,
+            M[2][0] * vec.X + M[2][1] * vec.Y + M[2][2] * vec.Z + M[2][3]*vec.W,
+            M[3][0] * vec.X + M[3][1] * vec.Y + M[3][2] * vec.Z + M[3][3]*vec.W
 
+        );
+    }
     FMatrix Transpose() const
     {
         FMatrix result;
@@ -237,4 +246,63 @@ struct FMatrix
         }
         return result;
     }
+
+    FMatrix Inverse() const {
+        FMatrix result;
+        float det = Determinant();
+        if (fabs(det) < 1e-6f) { // 행렬식이 0이면 역행렬이 없음
+            std::cerr << "Matrix is singular and cannot be inverted." << std::endl;
+            return result; // 기본 행렬 반환 (0으로 채워짐)
+        }
+
+        float invDet = 1.0f / det;
+        FMatrix adj = Adjugate(); // 수반행렬 계산
+
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                result.M[i][j] = adj.M[i][j] * invDet;
+            }
+        }
+        return result;
+    }
+
+    float Determinant() const {
+        float det = 0.0f;
+        for (int i = 0; i < 4; ++i) {
+            det += (i % 2 == 0 ? 1.0f : -1.0f) * M[0][i] * Cofactor(0, i);
+        }
+        return det;
+    }
+
+    float Cofactor(int row, int col) const {
+        float subMatrix[3][3];
+        int subi = 0;
+        for (int i = 0; i < 4; i++) {
+            if (i == row) continue;
+            int subj = 0;
+            for (int j = 0; j < 4; j++) {
+                if (j == col) continue;
+                subMatrix[subi][subj] = M[i][j];
+                subj++;
+            }
+            subi++;
+        }
+
+        float det3x3 = subMatrix[0][0] * (subMatrix[1][1] * subMatrix[2][2] - subMatrix[1][2] * subMatrix[2][1])
+            - subMatrix[0][1] * (subMatrix[1][0] * subMatrix[2][2] - subMatrix[1][2] * subMatrix[2][0])
+            + subMatrix[0][2] * (subMatrix[1][0] * subMatrix[2][1] - subMatrix[1][1] * subMatrix[2][0]);
+
+        return ((row + col) % 2 == 0 ? 1.0f : -1.0f) * det3x3;
+    }
+
+    FMatrix Adjugate() const {
+        FMatrix adj;
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                adj.M[j][i] = Cofactor(i, j); // 전치하여 저장
+            }
+        }
+        return adj;
+    }
+
 };
