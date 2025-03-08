@@ -19,6 +19,9 @@ struct FVector
 	float Length() const {
 		return sqrt(X * X + Y * Y + Z * Z);
 	};
+    bool IsZero() const {
+        return (X == 0 && Y == 0 && Z == 0) ? true : false;
+    };
 	FVector Normalize() {
 		float len = Length();
 

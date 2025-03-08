@@ -7,7 +7,6 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include "URenderer.h"
-#include "UCamera.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -15,11 +14,9 @@
 #include "imGui/imgui_impl_win32.h"
 
 #include "InputManager.h"
-//#include "Cube.h"
-#include "UCubeComp.h"
 
-//카메라 전역변수
-UCamera mainCamera;
+#include "UCamera.h"
+#include "UCubeComp.h"
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -56,9 +53,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		nullptr, nullptr, hInstance, nullptr);
 
 	bool bIsExit = false;
-	
-	//카메라 초기화
-	mainCamera = UCamera(FVector(0.0f, 2.0f, -10.0f), FVector(0.0f, 0.0f, 0.0f), UpVector);
 
 	URenderer::GetInstance().Initialize(hWnd);
 
@@ -76,6 +70,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	LARGE_INTEGER startTime, endTime;
 	double elapsedTime = 0.0;
+
+	// Camera Initialize
+	UCamera mainCamera(FVector(0.0f, 0.0f, 10.0f), FVector(0.0f, 0.0f, 0.0f), UpVector);
 
 	// TEST CubeComp
 	UCubeComp sampleCube1(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
@@ -105,14 +102,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		
 		InputManager& input = InputManager::GetInstance();
+		mainCamera.MoveCamera(input, 0.016f);
+		mainCamera.Update();
 
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();
 
-		sampleCube1.Render();
-		sampleCube2.Render();
-		//sampleCube3.Render();
-		//sampleCube4.Render();
+		sampleCube1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleCube2.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		//sampleCube1.Render();
+		//sampleCube2.Render();
 
 		// IMGUI Section Start
 		ImGui_ImplDX11_NewFrame();
@@ -135,7 +134,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("Position: (%d, %d)", InputManager::GetInstance().GetMousePosition().x, InputManager::GetInstance().GetMousePosition().y);
 		ImGui::Text("Left Button: %s", InputManager::GetInstance().IsMouseButtonDown(VK_LBUTTON) ? "Pressed" : "Released");
 		ImGui::Text("Right Button: %s", InputManager::GetInstance().IsMouseButtonDown(VK_RBUTTON) ? "Pressed" : "Released");
-		ImGui::Text("camera position: %f, %f, %f", mainCamera.position.X, mainCamera.position.Y, mainCamera.position.Z);
+		ImGui::Text("camera position: %f, %f, %f", mainCamera.RelativeLocation.X, mainCamera.RelativeLocation.Y, mainCamera.RelativeLocation.Z);
 		ImGui::Text("camera up direction: %f, %f, %f", mainCamera.upDirection.X, mainCamera.upDirection.Y, mainCamera.upDirection.Z);
 		ImGui::Text("camera facing: %f, %f, %f", mainCamera.facing.X, mainCamera.facing.Y, mainCamera.facing.Z);
 		ImGui::Text("camera looking at: %f, %f, %f", mainCamera.targetPos.X, mainCamera.targetPos.Y, mainCamera.targetPos.Z);

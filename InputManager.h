@@ -2,7 +2,6 @@
 #include <Windows.h>
 #include <unordered_map>
 
-extern UCamera mainCamera;
 
 class InputManager {
 public:
@@ -33,59 +32,11 @@ public:
         return it != mouseButtonStates.end() && it->second;
     }
 
-    void OnKeyAPressed()
-    {
-        mainCamera.Translate(FVector(-0.1f, 0, 0));
-    }
-
-    void OnKeySPressed()
-    {
-        mainCamera.Translate(FVector(0, 0, -0.1f));
-    }
-
-    void OnKeyDPressed()
-    {
-        mainCamera.Translate(FVector(0.1f, 0, 0));
-    }
-
-    void OnKeyFPressed()
-    {
-        mainCamera.Translate(FVector(0, 0, 0.1f));
-    }
-
-    void OnKeyQPressed()
-    {
-        mainCamera.Translate(FVector(0, 0.1f, 0.0f));
-    }
-
-    void OnKeyEPressed()
-    {
-        mainCamera.Translate(FVector(0, -0.1f, 0.0f));
-    }
-
     // 윈도우 메시지 처리 (윈도우 프로시저에서 호출해야 함)
     void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) {
         switch (message) {
         case WM_KEYDOWN:
             keyStates[wParam] = true;
-            if (wParam == 'A') {
-                OnKeyAPressed();
-            }
-            if (wParam == 'S') {
-                OnKeySPressed();
-            }
-            if (wParam == 'D') {
-                OnKeyDPressed();
-            }
-            if (wParam == 'F') {
-                OnKeyFPressed();
-            }
-            if (wParam == 'Q') {
-                OnKeyQPressed();
-            }
-            if (wParam == 'E') {
-                OnKeyEPressed();
-            }
             break;
         case WM_KEYUP:
             keyStates[wParam] = false;

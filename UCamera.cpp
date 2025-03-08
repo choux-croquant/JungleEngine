@@ -1,76 +1,87 @@
 #include "UCamera.h"
 #include <math.h>
 
-
-
-UCamera::UCamera(FVector pos, FVector targetpos, FVector up) : originalPos(pos), targetPos(targetpos)
+UCamera::UCamera(FVector pos, FVector targetpos, FVector up)
+    : USceneComponent(pos, FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f)), // 부모 생성자 호출
+    originalPos(pos), targetPos(targetpos)
 {
-	position = originalPos;
-	FVector forward = (targetPos - pos);
-	facing = forward;
-	forward.Normalize();
-	if (pos.Y == targetPos.Y) {
-		originalUp = up;
-		upDirection = originalUp;
-	}
-	else {
-		FVector axis = FVector(0, 0, 1).Cross(forward);
-		axis.Normalize();
-		FMatrix rotation = FMatrix::Rotate(axis, acosf(FVector(0, 0, 1).Dot(forward)));
-		originalUp = rotation * up;
-		upDirection = originalUp;
-	}
-	viewMatrix = FMatrix::LookAt(pos, targetPos, upDirection);
-	FOV = PI / 4.0f;
-	projectionMatrix = FMatrix::Perspective(FOV, 1.0f, 1.0f, 100.0f);
-	rotation = ZeroVector;
+    facing = (targetPos - pos).Normalize();
+
+    if (pos.Y == targetPos.Y) {
+        originalUp = up;
+        upDirection = originalUp;
+    }
+    else {
+        FVector axis = FVector(0, 0, 1).Cross(facing).Normalize();
+        FMatrix rotation = FMatrix::Rotate(axis, acosf(FVector(0, 0, 1).Dot(facing)));
+        originalUp = rotation * up;
+        upDirection = originalUp;
+    }
+
+    viewMatrix = FMatrix::LookAt(pos, targetPos, upDirection);
+    FOV = PI / 4.0f;
+    projectionMatrix = FMatrix::Perspective(FOV, 1.0f, 1.0f, 100.0f);
 }
 
 void UCamera::Rotate(FMatrix rotationMatrix)
 {
-	facing = rotationMatrix * facing;
-	targetPos = facing + position;
-	upDirection = rotationMatrix * upDirection;
-	upDirection.Normalize();
-	viewMatrix = FMatrix::LookAt(position, targetPos, upDirection);
-	rotation = GetRotation();
+    facing = rotationMatrix * facing;
+    targetPos = facing + GetWorldLocation();
+    upDirection = rotationMatrix * upDirection;
+    upDirection.Normalize();
+    RelativeRotation = GetWorldRotation(); // 동기화
 }
 
 void UCamera::Translate(FVector offset)
 {
-	position += offset;
-	targetPos = facing + position;
-	viewMatrix = FMatrix::LookAt(position, targetPos, upDirection);
+    RelativeLocation += offset;
+    targetPos = facing + GetWorldLocation();
 }
 
 void UCamera::ChangeFOV(float fov)
 {
-	FOV = fov;
-	projectionMatrix = FMatrix::Perspective(FOV, 1.0f, 1.0f, 100.0f);
+    FOV = fov;
+    projectionMatrix = FMatrix::Perspective(FOV, 1.0f, 1.0f, 100.0f);
 }
 
-void UCamera::SetPosition(FVector pos)
+void UCamera::SetWorldLocation(FVector pos)
 {
-	originalPos = pos;
-	position = originalPos;
-	targetPos = facing + position;
-	viewMatrix = FMatrix::LookAt(position, targetPos, upDirection);
+    RelativeLocation = pos;
+    targetPos = facing + GetWorldLocation();
 }
 
-FVector UCamera::GetRotation()
+void UCamera::MoveCamera(const InputManager& input, float deltaTime) {
+    float moveSpeed = 5.0f * deltaTime;
+
+    FVector right = facing.Cross(upDirection).Normalize();
+    FVector moveDir = FVector(0.0f, 0.0f, 0.0f);
+
+    if (input.IsKeyDown('W')) {
+        moveDir += facing;  // 전진
+    }
+    if (input.IsKeyDown('S')) {
+        moveDir -= facing;  // 후진
+    }
+    if (input.IsKeyDown('A')) {
+        moveDir -= right;  // 좌측 이동
+    }
+    if (input.IsKeyDown('D')) {
+        moveDir += right;  // 우측 이동
+    }
+    if (input.IsKeyDown('Q')) {
+        moveDir -= upDirection;  // 아래 이동
+    }
+    if (input.IsKeyDown('E')) {
+        moveDir += upDirection;  // 위로 이동
+    }
+
+    if (!moveDir.IsZero()) {
+        moveDir.Normalize();
+        Translate(moveDir * moveSpeed);
+    }
+}
+
+void UCamera::Update()
 {
-	FVector zAxis = facing.Normalize();
-	FVector yAxis = upDirection;
-	FVector xAxis = yAxis.Cross(zAxis).Normalize();
-	FMatrix R = FMatrix::Identity;
-	R.M[0][0] = xAxis.X; R.M[0][1] = yAxis.X; R.M[0][2] = zAxis.X;
-	R.M[1][0] = xAxis.Y; R.M[1][1] = yAxis.Y; R.M[1][2] = zAxis.Y;
-	R.M[2][0] = xAxis.Z; R.M[2][1] = yAxis.Z; R.M[2][2] = zAxis.Z;
-	R.Transpose();
-	float angleY = asinf(R.M[0][2]);              // 피치
-	float angleZ = atan2f(-R.M[0][1], R.M[0][0]);   // 요
-	float angleX = atan2f(-R.M[1][2], R.M[2][2]);   // 롤
-	return FVector(angleX, angleY, angleZ);
+    viewMatrix = FMatrix::LookAt(GetWorldLocation(), targetPos, upDirection);
 }
-
-
