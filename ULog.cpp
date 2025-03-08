@@ -53,10 +53,12 @@ void ULog::DrawLogWindow()
 		}
 		ImGui::SetClipboardText(allLogs.c_str());
 	}
+	ImGui::Separator();
 	static char filter[128] = "";
 	ImGui::InputText("Filter", filter, IM_ARRAYSIZE(filter));
 	ImGui::SameLine();
-	ImGui::Text("Filter : LogTemp, Error ...");
+	ImGui::Text(": LogTemp, Error ...");
+	ImGui::Separator();
 
 	std::lock_guard<std::mutex> lock(LogMutex);  // lock LogMutex -> 여러 스레드 접근 시 발생하는 경쟁상태 예방
 	for (const auto& msg : LogMessages)
