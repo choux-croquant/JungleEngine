@@ -50,7 +50,8 @@ void UCamera::SetWorldLocation(FVector pos)
     targetPos = facing + GetWorldLocation();
 }
 
-void UCamera::MoveCamera(const InputManager& input, float deltaTime) {
+void UCamera::MoveCamera(float deltaTime) {
+    InputManager& input = InputManager::GetInstance();
     float moveSpeed = 5.0f * deltaTime;
     float rotateSpeed = 0.5f * deltaTime; // 회전 속도
 

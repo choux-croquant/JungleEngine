@@ -131,16 +131,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 			
 		}
-		
-		InputManager& input = InputManager::GetInstance();
 
-		mainCamera.MoveCamera(input, 0.016f);
+		mainCamera.MoveCamera(0.016f);
 		mainCamera.Update();
 
 		physScene.Update();
 
-		// DirectX ������ ����
-		input.Update();
+		InputManager::GetInstance().Update();
 
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();

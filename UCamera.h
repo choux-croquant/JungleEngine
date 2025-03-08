@@ -21,6 +21,6 @@ public:
     void Translate(FVector offset);
     void ChangeFOV(float fov);
     void SetWorldLocation(FVector pos);
-    void MoveCamera(const InputManager& input, float deltaTime);
+    void MoveCamera(float deltaTime);
     void Update();
 };

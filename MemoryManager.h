@@ -38,7 +38,7 @@ private:
 
 // Overloading
 void* operator new(std::size_t size) {
-    // delte에서 할당된 크기 알아내기 위해 헤더 추가
+    // delete에서 할당된 크기 알아내기 위해 헤더 추가
     std::size_t totalSize = size + sizeof(std::size_t);
 
     if (void* ptr = std::malloc(totalSize))
