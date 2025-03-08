@@ -82,6 +82,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	UCubeComp sampleCube4(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	UCubeComp sampleCube5(FVector(-2.0f, -2.0f, -2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
+	FPhysScene physScene;
+	physScene.setSampleCube(sampleCube1);
+	physScene.setSampleCube(sampleCube2);
+	physScene.setSampleCube(sampleCube3);
+	physScene.setSampleCube(sampleCube4);
+	physScene.setSampleCube(sampleCube5);
+
 	while (bIsExit == false)
 	{
 		QueryPerformanceCounter(&startTime);
@@ -104,6 +111,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		InputManager& input = InputManager::GetInstance();
 		mainCamera.MoveCamera(input, 0.016f);
 		mainCamera.Update();
+
+		physScene.Update();
 
 		// DirectX ∑ª¥ı∑Ø ∑Á«¡
 		URenderer::GetInstance().Prepare();
@@ -140,6 +149,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("camera facing: %f, %f, %f", mainCamera.facing.X, mainCamera.facing.Y, mainCamera.facing.Z);
 		ImGui::Text("camera looking at: %f, %f, %f", mainCamera.targetPos.X, mainCamera.targetPos.Y, mainCamera.targetPos.Z);
 		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
+
+		physScene.LogRender();
 		ImGui::End();
 
 		ImGui::Render();
