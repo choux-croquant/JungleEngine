@@ -17,6 +17,7 @@
 
 #include "UCamera.h"
 #include "UCubeComp.h"
+#include "ULog.h"
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -140,6 +141,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("camera looking at: %f, %f, %f", mainCamera.targetPos.X, mainCamera.targetPos.Y, mainCamera.targetPos.Z);
 		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
 		ImGui::End();
+
+		// UE_LOG
+		ULog::DrawLogWindow();
+		if (InputManager::GetInstance().IsMouseButtonDown(VK_RBUTTON))
+			UE_LOG(LogTemp, Error, "Mouse Right Button is Pressed!!");
+		if (InputManager::GetInstance().IsMouseButtonDown(VK_LBUTTON))
+			UE_LOG(LogTemp, Warning, "Mouse Left Button is Pressed!!");
 
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

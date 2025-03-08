@@ -140,6 +140,7 @@
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="UCamera.cpp" />
     <ClCompile Include="UEngineStatics.cpp" />
+    <ClCompile Include="ULog.cpp" />
     <ClCompile Include="UObject.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +159,7 @@
     <ClInclude Include="UCubeComp.h" />
     <ClInclude Include="UCubeMeshData.h" />
     <ClInclude Include="UEngineStatics.h" />
+    <ClInclude Include="ULog.h" />
     <ClInclude Include="UObject.h" />
     <ClInclude Include="UPrimitiveComponent.h" />
     <ClInclude Include="URenderer.h" />
