@@ -3,6 +3,9 @@
 #include "Utils.h"
 #include "URenderer.h"
 #include "UCubeMeshData.h"
+#include "UCamera.h"
+
+extern UCamera mainCamera;
 
 class UCubeComp : public UPrimitiveComponent
 {
@@ -32,19 +35,10 @@ public:
         FMatrix model = translationMatrix * rotationMatrix * scaleMatrix;
 
         // ViewMatrix 설정
-        FMatrix view = FMatrix::LookAt(
-            FVector(0.0f, 2.0f, -10.0f), // 카메라 위치
-            FVector(0.0f, 0.0f, 0.0f),   // 바라보는 지점
-            FVector(0.0f, 1.0f, 0.0f)    // 업 벡터
-        );
+        FMatrix view = mainCamera.viewMatrix;
 
         // ProjectionMatrix 설정
-        FMatrix projection = FMatrix::Perspective(
-            0.785398f,       // FOV (45도)
-            (float)1024 / 1024, // 화면 비율
-            1.0f,            // 가까운 클리핑 평면
-            100.0f           // 먼 클리핑 평면
-        );
+        FMatrix projection = mainCamera.projectionMatrix;
 
         // MVP 행렬 계산
         FMatrix mvp = projection * view * model;

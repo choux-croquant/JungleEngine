@@ -7,6 +7,7 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include "URenderer.h"
+#include "UCamera.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -16,6 +17,9 @@
 #include "InputManager.h"
 //#include "Cube.h"
 #include "UCubeComp.h"
+
+//카메라 전역변수
+UCamera mainCamera;
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -53,6 +57,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	bool bIsExit = false;
 	
+	//카메라 초기화
+	mainCamera = UCamera(FVector(0.0f, 2.0f, -10.0f), FVector(0.0f, 0.0f, 0.0f), UpVector);
+
 	URenderer::GetInstance().Initialize(hWnd);
 
 	IMGUI_CHECKVERSION();
@@ -128,7 +135,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("Position: (%d, %d)", InputManager::GetInstance().GetMousePosition().x, InputManager::GetInstance().GetMousePosition().y);
 		ImGui::Text("Left Button: %s", InputManager::GetInstance().IsMouseButtonDown(VK_LBUTTON) ? "Pressed" : "Released");
 		ImGui::Text("Right Button: %s", InputManager::GetInstance().IsMouseButtonDown(VK_RBUTTON) ? "Pressed" : "Released");
-
+		ImGui::Text("camera position: %f, %f, %f", mainCamera.position.X, mainCamera.position.Y, mainCamera.position.Z);
+		ImGui::Text("camera up direction: %f, %f, %f", mainCamera.upDirection.X, mainCamera.upDirection.Y, mainCamera.upDirection.Z);
+		ImGui::Text("camera facing: %f, %f, %f", mainCamera.facing.X, mainCamera.facing.Y, mainCamera.facing.Z);
+		ImGui::Text("camera looking at: %f, %f, %f", mainCamera.targetPos.X, mainCamera.targetPos.Y, mainCamera.targetPos.Z);
+		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
 		ImGui::End();
 
 		ImGui::Render();

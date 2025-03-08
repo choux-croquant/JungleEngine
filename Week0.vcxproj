@@ -137,6 +137,8 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="UCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cube.h" />
@@ -151,6 +153,7 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Types.h" />
+    <ClInclude Include="UCamera.h" />
     <ClInclude Include="UCubeComp.h" />
     <ClInclude Include="UCubeMeshData.h" />
     <ClInclude Include="UEngineStatics.h" />
