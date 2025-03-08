@@ -43,6 +43,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
+	case WM_SIZE:
+		{
+			UINT width = LOWORD(lParam);
+			UINT height = HIWORD(lParam);
+			URenderer::GetInstance().OnResize(width, height);
+		}
+		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
