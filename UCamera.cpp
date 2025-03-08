@@ -5,7 +5,7 @@ UCamera::UCamera(FVector pos, FVector targetpos, FVector up)
     : USceneComponent(pos, FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f)), // 부모 생성자 호출
     originalPos(pos), targetPos(targetpos)
 {
-    facing = (targetPos - pos).Normalize();
+    facing = (pos - targetPos).Normalize();
 
     if (pos.Y == targetPos.Y) {
         originalUp = up;
@@ -52,15 +52,17 @@ void UCamera::SetWorldLocation(FVector pos)
 
 void UCamera::MoveCamera(const InputManager& input, float deltaTime) {
     float moveSpeed = 5.0f * deltaTime;
+    float rotateSpeed = 1.0f * deltaTime; // 회전 속도
 
-    FVector right = facing.Cross(upDirection).Normalize();
+    FVector right = upDirection.Cross(facing).Normalize();
     FVector moveDir = FVector(0.0f, 0.0f, 0.0f);
 
+    // 이동 입력 처리
     if (input.IsKeyDown('W')) {
-        moveDir += facing;  // 전진
+        moveDir -= facing;  // 전진
     }
     if (input.IsKeyDown('S')) {
-        moveDir -= facing;  // 후진
+        moveDir += facing;  // 후진
     }
     if (input.IsKeyDown('A')) {
         moveDir -= right;  // 좌측 이동
@@ -75,12 +77,30 @@ void UCamera::MoveCamera(const InputManager& input, float deltaTime) {
         moveDir += upDirection;  // 위로 이동
     }
 
+    // 회전 입력 처리 테스트
+    if (input.IsKeyDown(VK_LEFT)) { // 좌회전 (Yaw)
+        FMatrix yawRotation = FMatrix::RotateY(rotateSpeed);
+        Rotate(yawRotation);
+    }
+    if (input.IsKeyDown(VK_RIGHT)) { // 우회전 (Yaw)
+        FMatrix yawRotation = FMatrix::RotateY(-rotateSpeed);
+        Rotate(yawRotation);
+    }
+    if (input.IsKeyDown(VK_UP)) { // 상회전 (Pitch)
+        FMatrix pitchRotation = FMatrix::Rotate(right, rotateSpeed);
+        Rotate(pitchRotation);
+    }
+    if (input.IsKeyDown(VK_DOWN)) { // 하회전 (Pitch)
+        FMatrix pitchRotation = FMatrix::Rotate(right, -rotateSpeed);
+        Rotate(pitchRotation);
+    }
+
+    // 이동 적용
     if (!moveDir.IsZero()) {
         moveDir.Normalize();
         Translate(moveDir * moveSpeed);
     }
 }
-
 void UCamera::Update()
 {
     viewMatrix = FMatrix::LookAt(GetWorldLocation(), targetPos, upDirection);

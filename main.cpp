@@ -76,11 +76,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	// TEST CubeComp
 	UCubeComp sampleCube1(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCubeComp sampleCube2(FVector(2.0f, 0.0f, 0.0f), FVector(0.0f, 90.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-
-	// TEST Cube
-	//Cube sampleCube3(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	//Cube sampleCube4(FVector(2.0f, 0.0f, 0.0f), FVector(0.0f, 90.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UCubeComp sampleCube2(FVector(2.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UCubeComp sampleCube3(FVector(0.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UCubeComp sampleCube4(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UCubeComp sampleCube5(FVector(-2.0f, -2.0f, -2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
 	while (bIsExit == false)
 	{
@@ -110,8 +109,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		sampleCube1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCube2.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		//sampleCube1.Render();
-		//sampleCube2.Render();
+		sampleCube3.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleCube4.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleCube5.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 
 		// IMGUI Section Start
 		ImGui_ImplDX11_NewFrame();
