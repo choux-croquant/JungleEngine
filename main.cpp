@@ -116,11 +116,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	UWorldAxis worldAxis(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
 	FPhysScene physScene(hWnd,&mainCamera);
-	//physScene.setSampleCube(&sampleCube1);
-	//physScene.setSampleCube(&sampleCube2);
-	//physScene.setSampleCube(&sampleCube3);
-	//physScene.setSampleCube(&sampleCube4);
-
+	physScene.setSampleCube(&sampleCube1);
+	physScene.setSampleCube(&sampleCube2);
+	physScene.setSampleCube(&sampleCube3);
+	physScene.setSampleCube(&sampleCube4);
+	physScene.setSampleCube(&sampleSphere1);
+	physScene.setSampleCube(&sampleCylinder1);
+	physScene.setSampleCube(&sampleCone1);
 	ScenePropertyWindow scenePropertyWindow(mainCamera);
 
 	int selectedPrimitive = 0;
@@ -221,6 +223,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::End();
 
 		physScene.LogRender();
+		physScene.PickedObjPropertyRender();
     
 		// UE_LOG
 		ULog::DrawLogWindow();

@@ -13,6 +13,7 @@ public:
         : UPrimitiveComponent(EPrimitiveType::Cone, Position, Rotation, Scale)
     {
         MeshData = &UConeMeshData::GetInstance();
+        meshData = MeshData->GetMeshData();
     }
 
     void Render(FMatrix view, FMatrix projection) override {

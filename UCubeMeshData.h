@@ -14,12 +14,13 @@ public:
 
     ID3D11Buffer* GetVertexBuffer() const { return vertexBuffer; }
     ID3D11Buffer* GetIndexBuffer() const { return indexBuffer; }
+    const MeshData& GetMeshData() const { return meshData; }
     const int32 GetNumIndex() const { return numIndex; }
 private:
     UCubeMeshData()
     {
         // 정점 데이터 초기화
-        FVertexSimple Vertices[] =
+        meshData.Vertices=
         {
             // Front Face
             { FVector(-0.5f, -0.5f, 0.5f), FVector4(1.0f, 0.0f, 0.0f, 1.0f) }, // 4
@@ -35,7 +36,7 @@ private:
         };
 
         // 인덱스 데이터 초기화
-        uint32 Indices[] =
+        meshData.Indices=
         {
             0, 3, 2, 2, 1, 0, // Front
             4, 5, 6, 6, 7, 4, // Back
@@ -46,9 +47,9 @@ private:
         };
 
         // 버퍼 생성
-        numIndex = sizeof(Indices) / sizeof(Indices[0]);
-        vertexBuffer = URenderer::GetInstance().CreateVertexBuffer(Vertices, 8);
-        indexBuffer = URenderer::GetInstance().CreateIndexBuffer(Indices, numIndex);
+        numIndex = sizeof(meshData.Indices) / sizeof(meshData.Indices[0]);
+        vertexBuffer = URenderer::GetInstance().CreateVertexBuffer(meshData.Vertices, 8);
+        indexBuffer = URenderer::GetInstance().CreateIndexBuffer(meshData.Indices, numIndex);
     }
 
     ~UCubeMeshData()
@@ -57,8 +58,7 @@ private:
         if (indexBuffer) indexBuffer->Release();
     }
 
-    TArray<FVertexSimple> Vertices;
-    TArray<uint32> Indices;
+    MeshData meshData;
     ID3D11Buffer* vertexBuffer;
     ID3D11Buffer* indexBuffer;
     uint32 numIndex;
