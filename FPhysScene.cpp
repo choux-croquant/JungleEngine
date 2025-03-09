@@ -205,6 +205,52 @@ bool FPhysScene::lineTriangleInter(FVector v0, FVector v1, FVector v2)
 	return true;
 }
 
+void FPhysScene::checkFaceCollision()
+{
+	FVector rayOrigin = camera->RelativeLocation;
+	float min_t = FLT_MAX;
+	UPrimitiveComponent* closestObject = nullptr;
+
+	for (UPrimitiveComponent* cube : cubes)
+	{
+		if (cube)
+		{
+			FVector cubeCenter = cube->RelativeLocation;
+
+			//Todo
+		}
+	}
+
+	if (closestObject)
+	{
+		rayCollision = true;
+		closestHitObject = closestObject;
+	}
+	else
+	{
+		rayCollision = false;
+		closestHitObject = nullptr;
+	}
+}
+
+FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USceneComponent* component)
+{
+	FVector WorldPos = component->GetWorldLocation();
+	FVector WorldRotation = component->GetWorldRotation();
+	FVector WorldScale = component->GetWorldScale3D();
+
+	FMatrix T = FMatrix::Translate(WorldPos);
+	FMatrix Rx = FMatrix::RotateX(WorldRotation.X);
+	FMatrix Ry = FMatrix::RotateX(WorldRotation.Y);
+	FMatrix Rz = FMatrix::RotateX(WorldRotation.Z);
+	FMatrix R = Rz * Ry * Rx;
+	FMatrix S = FMatrix::Scale(WorldScale);
+
+	FMatrix ModelMatrix = T * R * S;
+	FVector transformedVertex = ModelMatrix.TransformVector(localVertex);
+	return transformedVertex;
+}
+
 void FPhysScene::setSampleCube(UCubeComp* uCubeComp)
 {
 	cubes.push_back(uCubeComp);
