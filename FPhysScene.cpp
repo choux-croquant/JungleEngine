@@ -165,6 +165,46 @@ void FPhysScene::checkCollision()
 	}
 }
 
+bool FPhysScene::lineTriangleInter(FVector v0, FVector v1, FVector v2)
+{
+	//v0, v1, v2 ´Â clockwise ¼ø¼­
+	FVector rayOrigin = camera->RelativeLocation;
+
+	FVector e1 = v1 - v0;
+	FVector e2 = v2 - v0;
+
+	FVector normal = e2.Cross(e1);
+	normal.Normalize();
+
+	float NdotRayDir = normal.Dot(rayDir);
+	if (abs(NdotRayDir) < 1e-6f) return false;
+
+	float d = normal.Dot(v0);
+	float t = (d - normal.Dot(rayOrigin)) / NdotRayDir;
+
+	if (t < 0.0f) return false;
+
+	FVector P = rayOrigin + rayDir * t;
+
+	FVector edge0 = v1 - v0;
+	FVector edge1 = v2 - v1;
+	FVector edge2 = v0 - v2;
+
+	FVector C0 = P - v0;
+	FVector C1 = P - v1;
+	FVector C2 = P - v2;
+
+	FVector EdgeCrosC0 = edge0.Cross(C0);
+	FVector EdgeCrosC1 = edge1.Cross(C1);
+	FVector EdgeCrosC2 = edge2.Cross(C2);
+
+	if (normal.Dot(EdgeCrosC0) < 0) return false;
+	if (normal.Dot(EdgeCrosC1) < 0) return false;
+	if (normal.Dot(EdgeCrosC2) < 0) return false;
+
+	return true;
+}
+
 void FPhysScene::setSampleCube(UCubeComp* uCubeComp)
 {
 	cubes.push_back(uCubeComp);

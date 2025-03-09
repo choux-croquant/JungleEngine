@@ -13,6 +13,8 @@ public:
         : UPrimitiveComponent(Position, Rotation, Scale)
     {
         MeshData = &UCubeMeshData::GetInstance();
+        Vertices = MeshData->GetVertices();
+        Indices = MeshData->GetIndices();
     }
 
     void Render(FMatrix view, FMatrix projection) {

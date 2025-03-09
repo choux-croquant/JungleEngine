@@ -33,5 +33,6 @@ private:
 
 	void RayCast();
 	void checkCollision();
+	bool lineTriangleInter(FVector v0, FVector v1, FVector v2);
 };
 
