@@ -11,6 +11,8 @@ public:
 	void setSampleCube(UCubeComp* uCubeComp);
 	void Update();
 	void LogRender();
+
+	UPrimitiveComponent* closestHitObject = nullptr;
 private:
 	TArray<UPrimitiveComponent*> cubes;
 	InputManager& input = InputManager::GetInstance();
