@@ -28,9 +28,16 @@
 #include "ULog.h"
 #include "UMemory.h"
 #include "ScenePropertyWindow.h"
+#include "UWorld.h"
+#include "ULevel.h"
+#include <random>
 
 constexpr float BaseWindowWidth = 1024.0f;
 constexpr float BaseWindowHeight = 1024.0f;
+
+
+std::random_device rd;
+std::mt19937 gen(rd());
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -108,22 +115,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Guide Axis
 	UWorldAxis worldAxis(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
-	// TEST CubeComp
-	UCubeComp sampleCube1(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCubeComp sampleCube2(FVector(2.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCubeComp sampleCube3(FVector(0.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCubeComp sampleCube4(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	USphereComp sampleSphere1(FVector(-2.0f, -2.0f, -2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCylinderComp sampleCylinder1(FVector(-2.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UConeComp sampleCone1(FVector(2.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-
 	FPhysScene physScene(hWnd,&mainCamera);
-	physScene.setSampleCube(&sampleCube1);
-	physScene.setSampleCube(&sampleCube2);
-	physScene.setSampleCube(&sampleCube3);
-	physScene.setSampleCube(&sampleCube4);
+	//physScene.setSampleCube(&sampleCube1);
+	//physScene.setSampleCube(&sampleCube2);
+	//physScene.setSampleCube(&sampleCube3);
+	//physScene.setSampleCube(&sampleCube4);
 
 	ScenePropertyWindow scenePropertyWindow(mainCamera);
+
+	int selectedPrimitive = 0;
+	int primitiveSpawnNum = 0;
+	ULevel* currLevel = new ULevel();
+	std::uniform_real_distribution<float> dis(-5.0f, 5.0f);
+
 
 	while (bIsExit == false)
 	{
@@ -141,24 +145,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				bIsExit = true;
 				break;
 			}
-			
+
 		}
 
 		//physScene.Update();
 
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();
-
 		worldAxis.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-
-		sampleCube1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCube2.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCube3.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCube4.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleSphere1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCylinder1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCone1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-
 		gizmo.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 
 		#pragma region ImGui
@@ -169,6 +163,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Begin("Jungle Control Panel");
 		ImGui::Text("Hello Jungle World!");
 		ImGui::Text("FPS %.1f (%.2f ms)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+		ImGui::Separator();
+
+		// Spawn Primitives
+		const char* options[] = { "Cube", "Sphere", "Cylinder", "Cone" };
+		if (ImGui::Combo("Primitive", &selectedPrimitive, options, IM_ARRAYSIZE(options)))
+		{
+			UE_LOG(SpawnOption, Log, "%d", selectedPrimitive);
+		}
+		if (ImGui::Button("Spawn"))
+		{
+			for (int i = 0; i < primitiveSpawnNum; i++)
+			{
+				FVector randomPos(dis(gen), dis(gen), dis(gen));
+				EPrimitiveType type = static_cast<EPrimitiveType>(selectedPrimitive);
+				currLevel->SpawnPrimitiveByType(type, randomPos, FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+			}
+		}
+		ImGui::SameLine();
+		ImGui::InputInt("Number of spawn", &primitiveSpawnNum);
+		for (const auto& primitive : currLevel->GetPrimitives())
+		{
+			primitive->Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		}
 		ImGui::Separator();
 
 		//카메라 속성창
@@ -223,8 +240,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		} while (elapsedTime < targetFrameTime);
 
 	}
+	delete currLevel;
 	URenderer::GetInstance().Release();
-
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
