@@ -21,7 +21,7 @@ private:
     UCubeMeshData()
     {
         // 정점 데이터 초기화
-        FVertexSimple Vertices[] =
+        Vertices =
         {
             { FVector(-0.5f, -0.5f,  0.5f), FVector4(1.0f, 0.0f, 1.0f, 1.0f) },
             { FVector(0.5f, -0.5f,  0.5f), FVector4(0.0f, 1.0f, 1.0f, 1.0f) },
@@ -34,7 +34,7 @@ private:
         };
 
         // 인덱스 데이터 초기화
-        uint32 Indices[] =
+        Indices =
         {
             0, 3, 2, 2, 1, 0, // Front
             4, 5, 6, 6, 7, 4, // Back

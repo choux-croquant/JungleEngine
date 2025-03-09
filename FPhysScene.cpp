@@ -20,7 +20,8 @@ void FPhysScene::Update()
 	if (input.IsMouseButtonDown(VK_LBUTTON))
 	{
 		RayCast();
-		checkCollision();
+		//checkCollision();
+		checkFaceCollision();
 	}
 }
 
@@ -165,6 +166,44 @@ void FPhysScene::checkCollision()
 	}
 }
 
+void FPhysScene::checkFaceCollision()
+{
+	FVector rayOrigin = camera->RelativeLocation;
+	UPrimitiveComponent* closestObject = nullptr;
+	float min_t = FLT_MAX;
+	bool Hit = false;
+	for (UPrimitiveComponent* cube : cubes)
+	{
+		if (cube)
+		{
+			FVector MeshIntersection;
+			if (lineMeshIntersection(cube, MeshIntersection))
+			{
+				float T = (rayOrigin - MeshIntersection).Length();
+				if (T < min_t)
+				{
+					min_t = T;
+					closestObject = cube;
+					//OutIntersection = MeshIntersection
+					Hit = true;
+				}
+			}
+
+		}
+	}
+
+	if (closestObject)
+	{
+		rayCollision = true;
+		closestHitObject = closestObject;
+	}
+	else
+	{
+		rayCollision = false;
+		closestHitObject = nullptr;
+	}
+}
+
 bool FPhysScene::lineTriangleInter(FVector v0, FVector v1, FVector v2, FVector& outIntersection)
 {
 	//v0, v1, v2 ´Â clockwise ¼ø¼­
@@ -173,7 +212,7 @@ bool FPhysScene::lineTriangleInter(FVector v0, FVector v1, FVector v2, FVector& 
 	FVector e1 = v1 - v0;
 	FVector e2 = v2 - v0;
 
-	FVector normal = e2.Cross(e1);
+	FVector normal = e1.Cross(e2);
 	normal.Normalize();
 
 	float NdotRayDir = normal.Dot(rayDir);
@@ -243,43 +282,6 @@ bool FPhysScene::lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& 
 	return hit;
 }
 
-void FPhysScene::checkFaceCollision()
-{
-	FVector rayOrigin = camera->RelativeLocation;
-	UPrimitiveComponent* closestObject = nullptr;
-	float min_t = FLT_MAX;
-	bool Hit = false;
-	for (UPrimitiveComponent* cube : cubes)
-	{
-		if (cube)
-		{
-			FVector MeshIntersection;
-			if (lineMeshIntersection(cube, MeshIntersection))
-			{
-				float T = (rayOrigin - MeshIntersection).Length();
-				if (T < min_t)
-				{
-					min_t = T;
-					closestObject = cube;
-					//OutIntersection = MeshIntersection
-					Hit = true;
-				}
-			}
-
-		}
-	}
-
-	if (closestObject)
-	{
-		rayCollision = true;
-		closestHitObject = closestObject;
-	}
-	else
-	{
-		rayCollision = false;
-		closestHitObject = nullptr;
-	}
-}
 
 FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USceneComponent* component)
 {
@@ -289,8 +291,8 @@ FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USc
 
 	FMatrix T = FMatrix::Translate(WorldPos);
 	FMatrix Rx = FMatrix::RotateX(WorldRotation.X);
-	FMatrix Ry = FMatrix::RotateX(WorldRotation.Y);
-	FMatrix Rz = FMatrix::RotateX(WorldRotation.Z);
+	FMatrix Ry = FMatrix::RotateY(WorldRotation.Y);
+	FMatrix Rz = FMatrix::RotateZ(WorldRotation.Z);
 	FMatrix R = Rz * Ry * Rx;
 	FMatrix S = FMatrix::Scale(WorldScale);
 
