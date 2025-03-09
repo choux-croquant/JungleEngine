@@ -15,7 +15,7 @@ public:
         MeshData = &UCylinderMeshData::GetInstance();
     }
 
-    void Render(FMatrix view, FMatrix projection) {
+    void Render(FMatrix view, FMatrix projection) override  {
         //void Render() {
         FConstants constantData = {};
 

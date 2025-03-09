@@ -1,5 +1,6 @@
 #pragma once
 #include "USceneComponent.h"
+#include "Matrix.h"
 
 enum class EPrimitiveType {
     Cube,
@@ -17,6 +18,8 @@ public:
         : USceneComponent(Position, Rotation, Scale)
     {
     }
+
+    virtual void Render(FMatrix view, FMatrix projection) = 0;
 
     const char* GetTypeName() const {
         switch (PrimitiveType) {
