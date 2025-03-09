@@ -32,10 +32,9 @@
 #include "ULevel.h"
 #include <random>
 
-#include "SceneSaveManager.h"
-
 constexpr float BaseWindowWidth = 1024.0f;
 constexpr float BaseWindowHeight = 1024.0f;
+
 
 std::random_device rd;
 std::mt19937 gen(rd());
@@ -127,8 +126,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	int selectedPrimitive = 0;
 	int primitiveSpawnNum = 0;
 	ULevel* currLevel = new ULevel();
-	SceneSaveManager sceneSaveManager;
-	char saveFileName[10] = "Default";
 	std::uniform_real_distribution<float> dis(-5.0f, 5.0f);
 
 
@@ -191,53 +188,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		ImGui::Separator();
 
-		//씬 저장
-		ImGui::InputText("Scene Name", saveFileName, 10);
-		if(ImGui::Button("New Scene")) {
-			delete currLevel;
-			currLevel = new ULevel();
-			sceneSaveManager.SceneData.clear();
-		}
-		if (ImGui::Button("Save Scene")) {
-			sceneSaveManager.NextUUID = UEngineStatics::NextUUID;
-			TArray<UPrimitiveComponent*> primitives;
-			primitives = currLevel->GetPrimitives();
-			if (primitives.size() > 0) {
-				for (int i = 0; i < primitives.size(); i++) {
-					std::string TypeName = primitives[i]->GetTypeName();
-					if (TypeName == "Cube" || TypeName == "Sphere") {
-						SceneSaveManager::PrimitiveData data;
-						data.UUID = primitives[i]->GetUUID();
-						data.Location = primitives[i]->GetLocation();
-						data.Rotation = primitives[i]->GetRotation();
-						data.Scale = primitives[i]->GetScale();
-						data.Type = primitives[i]->GetTypeName();
-						sceneSaveManager.SceneData.push_back(data);
-					}
-				}
-				json SavedJson = sceneSaveManager.toJson();
-				sceneSaveManager.Save(saveFileName);
-			}
-		}
-		if (ImGui::Button("Load Scene")) {
-			if (sceneSaveManager.Load(saveFileName)) {
-				delete currLevel;
-				currLevel = new ULevel();
-				for (int i = 0; i < sceneSaveManager.SceneData.size(); i++) {
-					EPrimitiveType type = UPrimitiveComponent::GetType(sceneSaveManager.SceneData[i].Type);
-					currLevel->SpawnPrimitiveByType(type, sceneSaveManager.SceneData[i].Location, sceneSaveManager.SceneData[i].Rotation, sceneSaveManager.SceneData[i].Scale);
-				}
-				for (const auto& primitive : currLevel->GetPrimitives())
-				{
-					primitive->Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-				}
-			}
-			else {
-				MessageBoxW(hWnd, L"No such file!", L"Error", MB_OK);
-			}
-		}
-		ImGui::Separator();
-
 		//카메라 속성창
 		scenePropertyWindow.Draw();
 		mainCamera.MoveCamera(0.016f);
@@ -264,10 +214,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("camera facing: %f, %f, %f", mainCamera.facing.X, mainCamera.facing.Y, mainCamera.facing.Z);
 		ImGui::Text("camera looking at: %f, %f, %f", mainCamera.targetPos.X, mainCamera.targetPos.Y, mainCamera.targetPos.Z);
 		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
-
-		if (currLevel->GetPrimitives().size() != 0) {
-			ImGui::Text("obejct UUID  : %d", currLevel->GetPrimitives()[0]->GetUUID());
-		}
 
 		// Heap Memory
 		ImGui::Text("Total Bytes  : %d", UMemory::GetInstance().GetTotalAllocationBytes());

@@ -160,7 +160,6 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ScenePropertyWindow.h" />
-    <ClInclude Include="SceneSaveManager.h" />
     <ClInclude Include="ULevel.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="UActorComponent.h" />

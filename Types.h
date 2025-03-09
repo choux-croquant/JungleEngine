@@ -7,7 +7,7 @@
 // 기본 STL 컨테이너 타입 재정의
 template <typename T>
 using TArray = std::vector<T>;
-using FString = std::string;
+
 
 // 자료형 타입 재정의
 typedef int int32;
