@@ -11,7 +11,9 @@ public:
 	void setSampleCube(UCubeComp* uCubeComp);
 	void Update();
 	void LogRender();
+	void PickedObjPropertyRender();
 
+	bool rayCollision = false;
 	UPrimitiveComponent* closestHitObject = nullptr;
 private:
 	TArray<UPrimitiveComponent*> cubes;
@@ -28,9 +30,12 @@ private:
 
 	FVector rayDir;
 
-	bool rayCollision = false;
 
 	void RayCast();
 	void checkCollision();
+private: //Property Log
+	FVector T;
+	FVector R;
+	FVector S;
 };
 

@@ -45,6 +45,40 @@ void FPhysScene::LogRender()
 	ImGui::End();
 }
 
+void FPhysScene::PickedObjPropertyRender()
+{
+	static int value = 0;
+	if (closestHitObject != nullptr)
+	{
+		T = closestHitObject->RelativeLocation;
+		R = closestHitObject->RelativeRotation;
+		S = closestHitObject->RelativeScale3D;
+	}
+	else
+	{
+	}
+	ImGui::Begin("Object Property");
+	ImGui::PushItemWidth(50);
+	ImGui::InputFloat("##NumberBox", &T.X, 0, 0); ImGui::SameLine();
+	ImGui::InputFloat("##NumberBox", &T.Y, 0, 0); ImGui::SameLine();
+	ImGui::InputFloat("##NumberBox", &T.Z, 0, 0); ImGui::SameLine();
+	ImGui::Text("Translation");
+
+
+	ImGui::InputFloat("##NumberBox", &R.X, 0, 0); ImGui::SameLine();
+	ImGui::InputFloat("##NumberBox", &R.Y, 0, 0); ImGui::SameLine();
+	ImGui::InputFloat("##NumberBox", &R.Z, 0, 0); ImGui::SameLine();
+	ImGui::Text("Rotation");
+
+
+	ImGui::InputFloat("##NumberBox", &S.X, 0, 0); ImGui::SameLine();
+	ImGui::InputFloat("##NumberBox", &S.Y, 0, 0); ImGui::SameLine();
+	ImGui::InputFloat("##NumberBox", &S.Z, 0, 0); ImGui::SameLine();
+	ImGui::Text("Scale");
+	ImGui::PopItemWidth();
+	ImGui::End();
+}
+
 void FPhysScene::RayCast()
 {
 	mousePos = input.GetMousePosition();
@@ -84,7 +118,7 @@ void FPhysScene::RayCast()
 
 	rayDir = rayWorld - camera->RelativeLocation;
 	rayDir.Normalize();
-	
+
 }
 
 void FPhysScene::checkCollision()
@@ -117,7 +151,6 @@ void FPhysScene::checkCollision()
 	if (closestObject)
 	{
 		rayCollision = true;
-		// 가장 가까운 오브젝트를 따로 저장하거나 활용 가능
 		closestHitObject = closestObject;
 	}
 	else

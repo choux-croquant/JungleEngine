@@ -189,7 +189,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("Total Count  : %d", MemoryManager::GetInstance().GetTotalAllocationCount());
 		ImGui::End();
 
-    physScene.LogRender();
+		physScene.LogRender();
+		physScene.PickedObjPropertyRender();
     
 		// UE_LOG
 		ULog::DrawLogWindow();
