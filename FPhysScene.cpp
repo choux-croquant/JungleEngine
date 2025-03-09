@@ -246,14 +246,25 @@ bool FPhysScene::lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& 
 void FPhysScene::checkFaceCollision()
 {
 	FVector rayOrigin = camera->RelativeLocation;
-	float min_t = FLT_MAX;
 	UPrimitiveComponent* closestObject = nullptr;
-
+	float min_t = FLT_MAX;
+	bool Hit = false;
 	for (UPrimitiveComponent* cube : cubes)
 	{
 		if (cube)
 		{
-			FVector cubeCenter = cube->RelativeLocation;
+			FVector MeshIntersection;
+			if (lineMeshIntersection(cube, MeshIntersection))
+			{
+				float T = (rayOrigin - MeshIntersection).Length();
+				if (T < min_t)
+				{
+					min_t = T;
+					closestObject = cube;
+					//OutIntersection = MeshIntersection
+					Hit = true;
+				}
+			}
 
 		}
 	}
