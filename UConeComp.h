@@ -10,7 +10,7 @@ class UConeComp : public UPrimitiveComponent
 {
 public:
     UConeComp(FVector Position, FVector Rotation, FVector Scale)
-        : UPrimitiveComponent(Position, Rotation, Scale)
+        : UPrimitiveComponent(EPrimitiveType::Cone, Position, Rotation, Scale)
     {
         MeshData = &UConeMeshData::GetInstance();
     }

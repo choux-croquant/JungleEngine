@@ -10,7 +10,7 @@ class UCylinderComp : public UPrimitiveComponent
 {
 public:
     UCylinderComp(FVector Position, FVector Rotation, FVector Scale)
-        : UPrimitiveComponent(Position, Rotation, Scale)
+        : UPrimitiveComponent(EPrimitiveType::Cylinder, Position, Rotation, Scale)
     {
         MeshData = &UCylinderMeshData::GetInstance();
     }

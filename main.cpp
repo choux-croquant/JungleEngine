@@ -143,7 +143,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		mainCamera.MoveCamera(0.016f);
 		mainCamera.Update();
 
-		physScene.Update();
+		//physScene.Update();
 
 		InputManager::GetInstance().Update();
 
@@ -172,6 +172,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("FPS %.1f (%.2f ms)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 		ImGui::Separator();
 
+
+
+
+		ImGui::Separator();
 		ImGui::Text("Keyboard State:");
 		for (const auto& [key, isPressed] : InputManager::GetInstance().GetKeyStates()) {
 			if (isPressed) {
@@ -196,7 +200,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("Total Count  : %d", UMemory::GetInstance().GetTotalAllocationCount());
 		ImGui::End();
 
-    physScene.LogRender();
+		physScene.LogRender();
     
 		// UE_LOG
 		ULog::DrawLogWindow();
