@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include "Types.h"
 
 static const float PI = 3.14159265358979323846f;
 
@@ -137,8 +138,8 @@ struct FMatrix
         float c = cos(angle);
         float s = sin(angle);
         result.M[1][1] = c;
-        result.M[1][2] = -s;
-        result.M[2][1] = s;
+        result.M[1][2] = s;  // 부호 반전
+        result.M[2][1] = -s; // 부호 반전
         result.M[2][2] = c;
         return result;
     }
@@ -149,8 +150,8 @@ struct FMatrix
         float c = cos(angle);
         float s = sin(angle);
         result.M[0][0] = c;
-        result.M[0][2] = s;
-        result.M[2][0] = -s;
+        result.M[0][2] = s; // 부호 반전
+        result.M[2][0] = -s;  // 부호 반전
         result.M[2][2] = c;
         return result;
     }
@@ -161,8 +162,8 @@ struct FMatrix
         float c = cos(angle);
         float s = sin(angle);
         result.M[0][0] = c;
-        result.M[0][1] = -s;
-        result.M[1][0] = s;
+        result.M[0][1] = s;  // 부호 반전
+        result.M[1][0] = -s; // 부호 반전
         result.M[1][1] = c;
         return result;
     }
@@ -186,16 +187,23 @@ struct FMatrix
         float yz = nAxis.Y * nAxis.Z;
 
         FMatrix result = Identity;
-        result.M[0][0] = cosA + xx * oneMinusCosA; result.M[0][1] = xy * oneMinusCosA - nAxis.Z * sinA; result.M[0][2] = xz * oneMinusCosA + nAxis.Y * sinA;
-        result.M[1][0] = xy * oneMinusCosA + nAxis.Z * sinA; result.M[1][1] = cosA + yy * oneMinusCosA; result.M[1][2] = yz * oneMinusCosA - nAxis.X * sinA;
-        result.M[2][0] = xz * oneMinusCosA - nAxis.Y * sinA; result.M[2][1] = yz * oneMinusCosA + nAxis.X * sinA; result.M[2][2] = cosA + zz * oneMinusCosA;
+        result.M[0][0] = cosA + xx * oneMinusCosA; result.M[0][1] = xy * oneMinusCosA + nAxis.Z * sinA; result.M[0][2] = xz * oneMinusCosA - nAxis.Y * sinA;
+        result.M[1][0] = xy * oneMinusCosA - nAxis.Z * sinA; result.M[1][1] = cosA + yy * oneMinusCosA; result.M[1][2] = yz * oneMinusCosA + nAxis.X * sinA;
+        result.M[2][0] = xz * oneMinusCosA + nAxis.Y * sinA; result.M[2][1] = yz * oneMinusCosA - nAxis.X * sinA; result.M[2][2] = cosA + zz * oneMinusCosA;
         return result;
     }
 
     // 뷰 행렬 (LookAt)
     static FMatrix LookAt(const FVector& eye, const FVector& target, const FVector& up)
     {
-        FVector zAxis = (target-eye).Normalize();
+        FMatrix result = LookFrom(eye, eye - target, up);
+
+        return result;
+    }
+
+    static FMatrix LookFrom(const FVector& eye, const FVector& look, const FVector& up)
+    {
+        FVector zAxis = const_cast<FVector&>(look).Normalize();
         FVector xAxis = up.Cross(zAxis).Normalize();
         FVector yAxis = zAxis.Cross(xAxis);
 
@@ -207,6 +215,7 @@ struct FMatrix
         result.M[1][3] = -yAxis.Dot(eye);
         result.M[2][3] = -zAxis.Dot(eye);
         result.M[3][3] = 1.0f;
+        
         return result;
     }
 
@@ -217,9 +226,9 @@ struct FMatrix
         float tanHalfFov = tan(fov / 2.0f);
         result.M[0][0] = 1.0f / (aspect * tanHalfFov);
         result.M[1][1] = 1.0f / tanHalfFov;
-        result.M[2][2] = -(farZ + nearZ) / (farZ - nearZ);
-        result.M[2][3] = -2.0f * farZ * nearZ / (farZ - nearZ);
-        result.M[3][2] = -1.0f;
+        result.M[2][2] = farZ / (farZ - nearZ);
+        result.M[2][3] = -farZ * nearZ / (farZ - nearZ);
+        result.M[3][2] = 1.0f;
         return result;
     }
 

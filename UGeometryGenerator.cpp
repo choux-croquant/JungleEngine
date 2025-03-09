@@ -9,7 +9,7 @@ void UGeometryGenerator::CreateSphere(int32 radius, uint32 sliceCount, uint32 st
 
     // 상단 극점 추가
     FVertexSimple topVertex;
-    topVertex.Position = FVector(0.0f, radius, 0.0f);
+    topVertex.Position = FVector(0.0f, 0.0f, radius);
     topVertex.Color = FVector4(1.0f, 1.0f, 1.0f, 1.0f);
     meshData.Vertices.push_back(topVertex);
 
@@ -23,9 +23,9 @@ void UGeometryGenerator::CreateSphere(int32 radius, uint32 sliceCount, uint32 st
 
             // 정점 위치 계산
             FVertexSimple vertex;
-            vertex.Position.X = radius * sinf(phi) * cosf(theta);
-            vertex.Position.Y = radius * cosf(phi);
-            vertex.Position.Z = radius * sinf(phi) * sinf(theta);
+            vertex.Position.Y = radius * sinf(phi) * cosf(theta);
+            vertex.Position.Z = radius * cosf(phi);
+            vertex.Position.X = radius * sinf(phi) * sinf(theta);
 
             // 정점 색상 설정
             vertex.Color = FVector4(
@@ -42,12 +42,12 @@ void UGeometryGenerator::CreateSphere(int32 radius, uint32 sliceCount, uint32 st
 
     // 하단 극점 추가
     FVertexSimple bottomVertex;
-    bottomVertex.Position = FVector(0.0f, -radius, 0.0f);
+    bottomVertex.Position = FVector(0.0f, 0.0f, -radius);
     bottomVertex.Color = FVector4(1.0f, 1.0f, 1.0f, 1.0f); // 흰색
     meshData.Vertices.push_back(bottomVertex);
 
     // 상단 극점과 첫 번째 스택 연결
-    for (uint32 slice = 0; slice < sliceCount; ++slice)
+    for (uint32 slice = 0; slice < sliceCount + 1; ++slice)
     {
         meshData.Indices.push_back(0); // 상단 극점
         meshData.Indices.push_back(slice + 1);
@@ -104,9 +104,9 @@ void UGeometryGenerator::CreateCylinder(float bRadius, float tRadius, float heig
 
             // 정점 위치 계산
             FVertexSimple vertex;
-            vertex.Position.X = r * cosf(theta);
-            vertex.Position.Y = y;
-            vertex.Position.Z = r * sinf(theta);
+            vertex.Position.Y = r * cosf(theta);
+            vertex.Position.Z = y;
+            vertex.Position.X = r * sinf(theta);
 
             // 정점 색상 설정
             vertex.Color = FVector4(
@@ -130,13 +130,13 @@ void UGeometryGenerator::CreateCylinder(float bRadius, float tRadius, float heig
 
             // 첫 번째 삼각형
             meshData.Indices.push_back(baseIndex);
-            meshData.Indices.push_back(baseIndex + 1);
             meshData.Indices.push_back(baseIndex + (sliceCount + 1));
+            meshData.Indices.push_back(baseIndex + 1);
 
             // 두 번째 삼각형
             meshData.Indices.push_back(baseIndex + 1);
-            meshData.Indices.push_back(baseIndex + (sliceCount + 1) + 1);
             meshData.Indices.push_back(baseIndex + (sliceCount + 1));
+            meshData.Indices.push_back(baseIndex + (sliceCount + 1) + 1);
         }
     }
     CreateCylinderTop(bRadius, tRadius, height, sliceCount, stackCount, meshData);
@@ -147,7 +147,7 @@ void UGeometryGenerator::CreateCylinderTop(float bRadius, float tRadius, float h
 {
     // 윗면의 중심 정점 추가
     FVertexSimple topCenter;
-    topCenter.Position = FVector(0.0f, height / 2.0f, 0.0f); // 윗면의 중심
+    topCenter.Position = FVector(0.0f, 0.0f, height / 2.0f); // 윗면의 중심
     topCenter.Color = FVector4(1.0f, 1.0f, 1.0f, 1.0f); // 흰색
     uint32 centerIndex = meshData.Vertices.size(); // 중심 정점의 인덱스 저장
     meshData.Vertices.push_back(topCenter);
@@ -158,9 +158,9 @@ void UGeometryGenerator::CreateCylinderTop(float bRadius, float tRadius, float h
         float theta = 2.0f * PI * slice / sliceCount; // 경도 (0 ~ 2PI)
 
         FVertexSimple vertex;
-        vertex.Position.X = tRadius * cosf(theta); // X 좌표
-        vertex.Position.Y = height / 2.0f;        // Y 좌표 (윗면의 높이)
-        vertex.Position.Z = tRadius * sinf(theta); // Z 좌표
+        vertex.Position.Y = tRadius * cosf(theta); // X 좌표
+        vertex.Position.Z = height / 2.0f;        // Y 좌표 (윗면의 높이)
+        vertex.Position.X = tRadius * sinf(theta); // Z 좌표
 
         // 정점 색상 설정
         vertex.Color = FVector4(
@@ -178,8 +178,8 @@ void UGeometryGenerator::CreateCylinderTop(float bRadius, float tRadius, float h
     for (uint32 slice = 0; slice < sliceCount; ++slice)
     {
         meshData.Indices.push_back(centerIndex); // 중심 정점
-        meshData.Indices.push_back(centerIndex + slice + 1);
         meshData.Indices.push_back(centerIndex + (slice + 1) % sliceCount + 1); // 슬라이스의 끝에서 시작점으로 연결
+        meshData.Indices.push_back(centerIndex + slice + 1);
     }
 }
 
@@ -187,7 +187,7 @@ void UGeometryGenerator::CreateCylinderBottom(float bRadius, float tRadius, floa
 {
     // 아랫면의 중심 정점 추가
     FVertexSimple bottomCenter;
-    bottomCenter.Position = FVector(0.0f, -height / 2.0f, 0.0f); // 아랫면의 중심
+    bottomCenter.Position = FVector(0.0f, 0.0f, -height / 2.0f); // 아랫면의 중심
     bottomCenter.Color = FVector4(1.0f, 1.0f, 1.0f, 1.0f); // 흰색
     uint32 centerIndex = meshData.Vertices.size(); // 중심 정점의 인덱스 저장
     meshData.Vertices.push_back(bottomCenter);
@@ -198,9 +198,9 @@ void UGeometryGenerator::CreateCylinderBottom(float bRadius, float tRadius, floa
         float theta = 2.0f * PI * slice / sliceCount; // 경도 (0 ~ 2PI)
 
         FVertexSimple vertex;
-        vertex.Position.X = bRadius * cosf(theta); // X 좌표
-        vertex.Position.Y = -height / 2.0f;       // Y 좌표 (아랫면의 높이)
-        vertex.Position.Z = bRadius * sinf(theta); // Z 좌표
+        vertex.Position.Y = bRadius * cosf(theta); // X 좌표
+        vertex.Position.Z = -height / 2.0f;       // Y 좌표 (아랫면의 높이)
+        vertex.Position.X = bRadius * sinf(theta); // Z 좌표
 
         // 정점 색상 설정
         vertex.Color = FVector4(
@@ -218,8 +218,8 @@ void UGeometryGenerator::CreateCylinderBottom(float bRadius, float tRadius, floa
     for (uint32 slice = 0; slice < sliceCount; ++slice)
     {
         meshData.Indices.push_back(centerIndex); // 중심 정점
-        meshData.Indices.push_back(centerIndex + (slice + 1) % sliceCount + 1); // 슬라이스의 끝에서 시작점으로 연결
         meshData.Indices.push_back(centerIndex + slice + 1);
+        meshData.Indices.push_back(centerIndex + (slice + 1) % sliceCount + 1); // 슬라이스의 끝에서 시작점으로 연결
     }
 }
 
@@ -231,7 +231,7 @@ void UGeometryGenerator::CreateCone(float bottomRadius, float height, uint32 sli
 
     // 밑면의 중심 정점 추가
     FVertexSimple bottomCenter;
-    bottomCenter.Position = FVector(0.0f, -height / 2.0f, 0.0f); // 밑면의 중심
+    bottomCenter.Position = FVector(0.0f, 0.0f, -height / 2.0f); // 밑면의 중심
     bottomCenter.Color = FVector4(1.0f, 1.0f, 1.0f, 1.0f); // 흰색
     uint32 centerIndex = meshData.Vertices.size(); // 중심 정점의 인덱스 저장
     meshData.Vertices.push_back(bottomCenter);
@@ -242,9 +242,9 @@ void UGeometryGenerator::CreateCone(float bottomRadius, float height, uint32 sli
         float theta = 2.0f * PI * slice / sliceCount; // 경도 (0 ~ 2PI)
 
         FVertexSimple vertex;
-        vertex.Position.X = bottomRadius * cosf(theta); // X 좌표
-        vertex.Position.Y = -height / 2.0f;            // Y 좌표 (밑면의 높이)
-        vertex.Position.Z = bottomRadius * sinf(theta); // Z 좌표
+        vertex.Position.Y = bottomRadius * cosf(theta); // X 좌표
+        vertex.Position.Z = -height / 2.0f;            // Y 좌표 (밑면의 높이)
+        vertex.Position.X = bottomRadius * sinf(theta); // Z 좌표
 
         // 정점 색상 설정
         vertex.Color = FVector4(
@@ -268,7 +268,7 @@ void UGeometryGenerator::CreateCone(float bottomRadius, float height, uint32 sli
 
     // 원뿔의 꼭짓점 추가
     FVertexSimple topVertex;
-    topVertex.Position = FVector(0.0f, height / 2.0f, 0.0f); // 원뿔의 꼭짓점
+    topVertex.Position = FVector(0.0f, 0.0f, height / 2.0f); // 원뿔의 꼭짓점
     topVertex.Color = FVector4(1.0f, 1.0f, 1.0f, 1.0f); // 흰색
     uint32 topIndex = meshData.Vertices.size(); // 꼭짓점의 인덱스 저장
     meshData.Vertices.push_back(topVertex);
@@ -284,9 +284,9 @@ void UGeometryGenerator::CreateCone(float bottomRadius, float height, uint32 sli
             float theta = 2.0f * PI * slice / sliceCount; // 경도 (0 ~ 2PI)
 
             FVertexSimple vertex;
-            vertex.Position.X = r * cosf(theta); // X 좌표
-            vertex.Position.Y = y;              // Y 좌표
-            vertex.Position.Z = r * sinf(theta); // Z 좌표
+            vertex.Position.Y = r * cosf(theta); // X 좌표
+            vertex.Position.Z = y;              // Y 좌표
+            vertex.Position.X = r * sinf(theta); // Z 좌표
 
             // 정점 색상 설정
             vertex.Color = FVector4(

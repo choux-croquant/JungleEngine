@@ -82,10 +82,10 @@ void UCamera::MoveCamera(float deltaTime) {
         moveDir += facing;  // 후진
     }
     if (input.IsKeyDown('A')) {
-        moveDir -= right;  // 좌측 이동
+        moveDir += right;  // 좌측 이동
     }
     if (input.IsKeyDown('D')) {
-        moveDir += right;  // 우측 이동
+        moveDir -= right;  // 우측 이동
     }
     if (input.IsKeyDown('Q')) {
         moveDir -= upDirection;  // 아래 이동
@@ -96,11 +96,11 @@ void UCamera::MoveCamera(float deltaTime) {
 
     // 회전 입력 처리 테스트
     if (input.IsKeyDown(VK_LEFT)) { // 좌회전 (Yaw)
-        FMatrix yawRotation = FMatrix::RotateY(rotateSpeed);
+        FMatrix yawRotation = FMatrix::RotateZ(rotateSpeed);
         Rotate(yawRotation);
     }
     if (input.IsKeyDown(VK_RIGHT)) { // 우회전 (Yaw)
-        FMatrix yawRotation = FMatrix::RotateY(-rotateSpeed);
+        FMatrix yawRotation = FMatrix::RotateZ(-rotateSpeed);
         Rotate(yawRotation);
     }
     if (input.IsKeyDown(VK_UP)) { // 상회전 (Pitch)
@@ -116,10 +116,10 @@ void UCamera::MoveCamera(float deltaTime) {
     if (input.IsMouseButtonDown(VK_RBUTTON)) { // 1은 마우스 우클릭 버튼
         POINT mouseDelta = input.GetMouseDelta();
         float yaw = -mouseDelta.x * rotateSpeed; // Yaw 회전 (좌우)
-        float pitch = -mouseDelta.y * rotateSpeed; // Pitch 회전 (상하)
+        float pitch = mouseDelta.y * rotateSpeed; // Pitch 회전 (상하)
 
         // Yaw 회전 (좌우)
-        FMatrix yawRotation = FMatrix::RotateY(yaw);
+        FMatrix yawRotation = FMatrix::RotateZ(yaw);
         Rotate(yawRotation);
 
         // Pitch 회전 (상하)
