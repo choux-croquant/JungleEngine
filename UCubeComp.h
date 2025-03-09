@@ -10,13 +10,13 @@ class UCubeComp : public UPrimitiveComponent
 {
 public:
     UCubeComp(FVector Position, FVector Rotation, FVector Scale)
-        : UPrimitiveComponent(Position, Rotation, Scale)
+        : UPrimitiveComponent(EPrimitiveType::Cube, Position, Rotation, Scale)
     {
         MeshData = &UCubeMeshData::GetInstance();
         meshData = MeshData->GetMeshData();
     }
 
-    void Render(FMatrix view, FMatrix projection) {
+    void Render(FMatrix view, FMatrix projection) override {
     //void Render() {
         FConstants constantData = {};
 

@@ -4,10 +4,10 @@
 #include "ULog.h"
 
 
-class MemoryManager {
+class UMemory {
 public:
-    static MemoryManager& GetInstance() {
-        static MemoryManager instance;
+    static UMemory& GetInstance() {
+        static UMemory instance;
         return instance;
     }
 
@@ -26,10 +26,10 @@ public:
     uint32 GetTotalAllocationCount() const { return totalAllocationCount; }
 
 private:
-    MemoryManager() : totalAllocationBytes(0), totalAllocationCount(0) {}
-    ~MemoryManager() {}
-    MemoryManager(const MemoryManager&) = delete;
-    MemoryManager& operator=(const MemoryManager&) = delete;
+    UMemory() : totalAllocationBytes(0), totalAllocationCount(0) {}
+    ~UMemory() {}
+    UMemory(const UMemory&) = delete;
+    UMemory& operator=(const UMemory&) = delete;
 
     uint32 totalAllocationBytes;
     uint32 totalAllocationCount;
@@ -38,13 +38,13 @@ private:
 
 // Overloading
 void* operator new(std::size_t size) {
-    // delte에서 할당된 크기 알아내기 위해 헤더 추가
+    // delete에서 할당된 크기 알아내기 위해 헤더 추가
     std::size_t totalSize = size + sizeof(std::size_t);
 
     if (void* ptr = std::malloc(totalSize))
     {
         *((std::size_t*)ptr) = size;
-        MemoryManager::GetInstance().AddAllocation(size);
+        UMemory::GetInstance().AddAllocation(size);
 
         return static_cast<char*>(ptr) + sizeof(std::size_t);
     }
@@ -57,6 +57,6 @@ void operator delete(void* ptr) noexcept {
     void* originalPtr = static_cast<char*>(ptr) - sizeof(std::size_t);
     std::size_t size = *((std::size_t*)originalPtr);
 
-    MemoryManager::GetInstance().SubtractAllocation(size);
+    UMemory::GetInstance().SubtractAllocation(size);
     std::free(originalPtr);
 }

@@ -19,6 +19,7 @@ PS_INPUT VS(VS_INPUT input)
 {
     PS_INPUT output;
     output.Position = mul(input.Position, MVP);
+    //output.Position = input.Position;
     output.Color = input.Color;
     return output;
 }

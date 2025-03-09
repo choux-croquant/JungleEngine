@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AActor.cpp" />
     <ClCompile Include="FPhysScene.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
@@ -139,6 +140,7 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="ScenePropertyWindow.cpp" />
     <ClCompile Include="UCamera.cpp" />
     <ClCompile Include="UEngineStatics.cpp" />
     <ClCompile Include="UGeometryGenerator.cpp" />
@@ -146,6 +148,7 @@
     <ClCompile Include="UObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AActor.h" />
     <ClInclude Include="FPhysScene.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -156,8 +159,11 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="ScenePropertyWindow.h" />
+    <ClInclude Include="ULevel.h" />
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="MemoryManager.h" />
+    <ClInclude Include="UActorComponent.h" />
+    <ClInclude Include="UMemory.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="UArrowMeshData.h" />
     <ClInclude Include="UCamera.h" />
@@ -178,6 +184,7 @@
     <ClInclude Include="USphereComp.h" />
     <ClInclude Include="USphereMeshData.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="UWorld.h" />
     <ClInclude Include="UWorldAxis.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Vector4.h" />

@@ -10,13 +10,13 @@ class UConeComp : public UPrimitiveComponent
 {
 public:
     UConeComp(FVector Position, FVector Rotation, FVector Scale)
-        : UPrimitiveComponent(Position, Rotation, Scale)
+        : UPrimitiveComponent(EPrimitiveType::Cone, Position, Rotation, Scale)
     {
         MeshData = &UConeMeshData::GetInstance();
         meshData = MeshData->GetMeshData();
     }
 
-    void Render(FMatrix view, FMatrix projection) {
+    void Render(FMatrix view, FMatrix projection) override {
         //void Render() {
         FConstants constantData = {};
 

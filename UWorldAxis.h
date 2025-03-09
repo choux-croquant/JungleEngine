@@ -10,7 +10,7 @@ class UWorldAxis : public UPrimitiveComponent
 {
 public:
     UWorldAxis(FVector Position, FVector Rotation, FVector Scale)
-        : UPrimitiveComponent(Position, Rotation, Scale)
+        : UPrimitiveComponent(EPrimitiveType::Axis, Position, Rotation, Scale)
     {
         TArray<FVertexSimple> axisVertices = {
             // XÃà (»¡°£»ö)

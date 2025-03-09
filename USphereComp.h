@@ -10,13 +10,13 @@ class USphereComp : public UPrimitiveComponent
 {
 public:
     USphereComp(FVector Position, FVector Rotation, FVector Scale)
-        : UPrimitiveComponent(Position, Rotation, Scale)
+        : UPrimitiveComponent(EPrimitiveType::Sphere, Position, Rotation, Scale)
     {
         MeshData = &USphereMeshData::GetInstance();
         meshData = MeshData->GetMeshData();
     }
 
-    void Render(FMatrix view, FMatrix projection) {
+    void Render(FMatrix view, FMatrix projection) override {
         //void Render() {
         FConstants constantData = {};
 

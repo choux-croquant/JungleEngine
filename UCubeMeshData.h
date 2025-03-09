@@ -22,14 +22,17 @@ private:
         // 정점 데이터 초기화
         meshData.Vertices=
         {
-            { FVector(-0.5f, -0.5f,  0.5f), FVector4(1.0f, 0.0f, 1.0f, 1.0f) },
-            { FVector(0.5f, -0.5f,  0.5f), FVector4(0.0f, 1.0f, 1.0f, 1.0f) },
-            { FVector(0.5f,  0.5f,  0.5f), FVector4(1.0f, 1.0f, 1.0f, 1.0f) },
-            { FVector(-0.5f,  0.5f,  0.5f), FVector4(0.0f, 0.0f, 0.0f, 1.0f) },
-            { FVector(-0.5f, -0.5f, -0.5f), FVector4(1.0f, 0.0f, 0.0f, 1.0f) },
-            { FVector(0.5f, -0.5f, -0.5f), FVector4(0.0f, 1.0f, 0.0f, 1.0f) },
-            { FVector(0.5f,  0.5f, -0.5f), FVector4(0.0f, 0.0f, 1.0f, 1.0f) },
-            { FVector(-0.5f,  0.5f, -0.5f), FVector4(1.0f, 1.0f, 0.0f, 1.0f) }
+            // Front Face
+            { FVector(-0.5f, -0.5f, 0.5f), FVector4(1.0f, 0.0f, 0.0f, 1.0f) }, // 4
+            { FVector(-0.5f,  -0.5f, -0.5f), FVector4(0.0f, 1.0f, 0.0f, 1.0f) }, // 5
+            { FVector(-0.5f,  0.5f, -0.5f), FVector4(0.0f, 0.0f, 1.0f, 1.0f) }, // 6
+            { FVector(-0.5f, 0.5f, 0.5f), FVector4(1.0f, 1.0f, 0.0f, 1.0f) },  // 7
+
+            // Back Face
+            { FVector(0.5f, -0.5f, 0.5f), FVector4(1.0f, 0.0f, 1.0f, 1.0f) }, // 0
+            { FVector(0.5f, -0.5f, -0.5f), FVector4(0.0f, 1.0f, 1.0f, 1.0f) }, // 1
+            { FVector(0.5f, 0.5f, -0.5f), FVector4(1.0f, 1.0f, 1.0f, 1.0f) }, // 2
+            { FVector(0.5f, 0.5f, 0.5f), FVector4(0.0f, 0.0f, 0.0f, 1.0f) }, // 3
         };
 
         // 인덱스 데이터 초기화

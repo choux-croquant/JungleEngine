@@ -66,6 +66,24 @@
     <ClCompile Include="Matrix.cpp">
       <Filter>Source Files\Utils\Math</Filter>
     </ClCompile>
+    <ClCompile Include="FPhysScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UEngineStatics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UGeometryGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ULog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AActor.cpp">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGui\imconfig.h">
@@ -104,9 +122,6 @@
     <ClInclude Include="URenderer.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Cube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
@@ -136,6 +151,57 @@
     </ClInclude>
     <ClInclude Include="UCamera.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FPhysScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UMemory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UArrowMeshData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UConeComp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UConeMeshData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UCylinderMeshData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UCylinderComp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UGeometryGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UGizmo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ULog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="USphereComp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="USphereMeshData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UWorldAxis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UActorComponent.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AActor.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="UWorld.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ULevel.h">
+      <Filter>Source Files\Engine\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

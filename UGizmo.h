@@ -10,7 +10,7 @@ class UGizmo : public UPrimitiveComponent
 {
 public:
     UGizmo(FVector Position, FVector Rotation, FVector Scale)
-        : UPrimitiveComponent(Position, Rotation, Scale)
+        : UPrimitiveComponent(EPrimitiveType::Gizmo, Position, Rotation, Scale)
     {
         MeshData = &UArrowMeshData::GetInstance();
     }

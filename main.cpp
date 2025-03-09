@@ -26,8 +26,18 @@
 #include "UGizmo.h"
 
 #include "ULog.h"
-#include "MemoryManager.h"
+#include "UMemory.h"
+#include "ScenePropertyWindow.h"
+#include "UWorld.h"
+#include "ULevel.h"
+#include <random>
 
+constexpr float BaseWindowWidth = 1024.0f;
+constexpr float BaseWindowHeight = 1024.0f;
+
+
+std::random_device rd;
+std::mt19937 gen(rd());
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -49,6 +59,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			UINT width = LOWORD(lParam);
 			UINT height = HIWORD(lParam);
 			URenderer::GetInstance().OnResize(width, height);
+
+			if (ImGui::GetCurrentContext() != nullptr)
+			{
+				ImGuiIO& io = ImGui::GetIO();
+				io.DisplaySize = ImVec2((float)width, (float)height);
+			}
 		}
 		break;
 	default:
@@ -67,7 +83,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	RegisterClassW(&wndclass);
 
 	HWND hWnd = CreateWindowExW(0, WindowClass, Title, WS_POPUP | WS_VISIBLE | WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, 1024, 1024,
+		CW_USEDEFAULT, CW_USEDEFAULT, BaseWindowWidth, BaseWindowHeight,
 		nullptr, nullptr, hInstance, nullptr);
 
 	bool bIsExit = false;
@@ -90,22 +106,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	double elapsedTime = 0.0;
 
 	// Camera Initialize
-	UCamera mainCamera(FVector(0.0f, 0.0f, 10.0f), FVector(0.0f, 0.0f, 0.0f), UpVector);
+	UCamera mainCamera(FVector(-10.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 1.0f));
+	mainCamera.Update();
 
 	// TEST Gizmo 
 	UGizmo gizmo(FVector(4.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
 	// Guide Axis
 	UWorldAxis worldAxis(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-
-	// TEST CubeComp
-	UCubeComp sampleCube1(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCubeComp sampleCube2(FVector(2.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCubeComp sampleCube3(FVector(0.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCubeComp sampleCube4(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	USphereComp sampleSphere1(FVector(-2.0f, -2.0f, -2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCylinderComp sampleCylinder1(FVector(-2.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UConeComp sampleCone1(FVector(2.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
 	FPhysScene physScene(hWnd,&mainCamera);
 	physScene.setSampleCube(&sampleCube1);
@@ -115,6 +123,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	physScene.setSampleCube(&sampleSphere1);
 	physScene.setSampleCube(&sampleCylinder1);
 	physScene.setSampleCube(&sampleCone1);
+	ScenePropertyWindow scenePropertyWindow(mainCamera);
+
+	int selectedPrimitive = 0;
+	int primitiveSpawnNum = 0;
+	ULevel* currLevel = new ULevel();
+	std::uniform_real_distribution<float> dis(-5.0f, 5.0f);
+
 
 	while (bIsExit == false)
 	{
@@ -132,32 +147,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				bIsExit = true;
 				break;
 			}
-			
+
 		}
-		
-		InputManager& input = InputManager::GetInstance();
 
-		mainCamera.MoveCamera(input, 0.016f);
-		mainCamera.Update();
-
-		physScene.Update();
-
-		// DirectX ������ ����
-		input.Update();
+		//physScene.Update();
 
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();
-
 		worldAxis.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-
-		sampleCube1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCube2.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCube3.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCube4.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleSphere1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCylinder1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCone1.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-
 		gizmo.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 
 		#pragma region ImGui
@@ -170,6 +167,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("FPS %.1f (%.2f ms)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 		ImGui::Separator();
 
+		// Spawn Primitives
+		const char* options[] = { "Cube", "Sphere", "Cylinder", "Cone" };
+		if (ImGui::Combo("Primitive", &selectedPrimitive, options, IM_ARRAYSIZE(options)))
+		{
+			UE_LOG(SpawnOption, Log, "%d", selectedPrimitive);
+		}
+		if (ImGui::Button("Spawn"))
+		{
+			for (int i = 0; i < primitiveSpawnNum; i++)
+			{
+				FVector randomPos(dis(gen), dis(gen), dis(gen));
+				EPrimitiveType type = static_cast<EPrimitiveType>(selectedPrimitive);
+				currLevel->SpawnPrimitiveByType(type, randomPos, FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+			}
+		}
+		ImGui::SameLine();
+		ImGui::InputInt("Number of spawn", &primitiveSpawnNum);
+		for (const auto& primitive : currLevel->GetPrimitives())
+		{
+			primitive->Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		}
+		ImGui::Separator();
+
+		//카메라 속성창
+		scenePropertyWindow.Draw();
+		mainCamera.MoveCamera(0.016f);
+		mainCamera.Update();
+		InputManager::GetInstance().Update();
+		scenePropertyWindow.UpdateCamera();
+
+		ImGui::Separator();
 		ImGui::Text("Keyboard State:");
 		for (const auto& [key, isPressed] : InputManager::GetInstance().GetKeyStates()) {
 			if (isPressed) {
@@ -181,6 +209,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Separator();
 		ImGui::Text("Mouse State:");
 		ImGui::Text("Position: (%d, %d)", InputManager::GetInstance().GetMousePosition().x, InputManager::GetInstance().GetMousePosition().y);
+		ImGui::Text("Left Button: %s", InputManager::GetInstance().IsMouseButtonDown(VK_LBUTTON) ? "Pressed" : "Released");
+		ImGui::Text("Right Button: %s", InputManager::GetInstance().IsMouseButtonDown(VK_RBUTTON) ? "Pressed" : "Released");
 		ImGui::Text("camera position: %f, %f, %f", mainCamera.RelativeLocation.X, mainCamera.RelativeLocation.Y, mainCamera.RelativeLocation.Z);
 		ImGui::Text("camera up direction: %f, %f, %f", mainCamera.upDirection.X, mainCamera.upDirection.Y, mainCamera.upDirection.Z);
 		ImGui::Text("camera facing: %f, %f, %f", mainCamera.facing.X, mainCamera.facing.Y, mainCamera.facing.Z);
@@ -188,8 +218,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
 
 		// Heap Memory
-		ImGui::Text("Total Bytes  : %d", MemoryManager::GetInstance().GetTotalAllocationBytes());
-		ImGui::Text("Total Count  : %d", MemoryManager::GetInstance().GetTotalAllocationCount());
+		ImGui::Text("Total Bytes  : %d", UMemory::GetInstance().GetTotalAllocationBytes());
+		ImGui::Text("Total Count  : %d", UMemory::GetInstance().GetTotalAllocationCount());
 		ImGui::End();
 
 		physScene.LogRender();
@@ -199,10 +229,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ULog::DrawLogWindow();
 		if (InputManager::GetInstance().IsKeyDown('H'))
 			UE_LOG(LogTemp, Log, "Hello World %d", 2025);
-		if (InputManager::GetInstance().IsMouseButtonDown(VK_RBUTTON))
-			UE_LOG(LogTemp, Error, "Mouse Right Button is Pressed!!");
-		if (InputManager::GetInstance().IsMouseButtonDown(VK_LBUTTON))
-			UE_LOG(LogTemp, Warning, "Mouse Left Button is Pressed!!");
 
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -217,8 +243,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		} while (elapsedTime < targetFrameTime);
 
 	}
+	delete currLevel;
 	URenderer::GetInstance().Release();
-
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
