@@ -100,6 +100,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	// Camera Initialize
 	UCamera mainCamera(FVector(0.0f, 0.0f, 10.0f), FVector(0.0f, 0.0f, 0.0f), UpVector);
+	mainCamera.Update();
 
 	// TEST Gizmo 
 	UGizmo gizmo(FVector(4.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
@@ -142,8 +143,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 			
 		}
-
-		
 
 		//physScene.Update();
 
