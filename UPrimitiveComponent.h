@@ -10,6 +10,4 @@ public:
     {
     }
     MeshData meshData;
-    TArray<FVertexSimple> Vertices;
-    TArray<uint32> Indices;
 };

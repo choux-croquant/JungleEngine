@@ -15,7 +15,7 @@ public:
 
     ID3D11Buffer* GetVertexBuffer() const { return vertexBuffer; }
     ID3D11Buffer* GetIndexBuffer() const { return indexBuffer; }
-    MeshData GetMeshData() const { return meshData; }
+    const MeshData& GetMeshData() const { return meshData; }
     const int32 GetNumIndex() const { return numIndex; }
 private:
     UCylinderMeshData()

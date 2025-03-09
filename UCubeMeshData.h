@@ -14,9 +14,7 @@ public:
 
     ID3D11Buffer* GetVertexBuffer() const { return vertexBuffer; }
     ID3D11Buffer* GetIndexBuffer() const { return indexBuffer; }
-    TArray<FVertexSimple> GetVertices() const { return Vertices; }
-    TArray<uint32> GetIndices() const { return Indices; }
-    MeshData GetMeshData() const { return meshData; }
+    const MeshData& GetMeshData() const { return meshData; }
     const int32 GetNumIndex() const { return numIndex; }
 private:
     UCubeMeshData()
@@ -58,8 +56,6 @@ private:
     }
 
     MeshData meshData;
-    TArray<FVertexSimple> Vertices;
-    TArray<uint32> Indices;
     ID3D11Buffer* vertexBuffer;
     ID3D11Buffer* indexBuffer;
     uint32 numIndex;

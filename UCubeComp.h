@@ -14,8 +14,6 @@ public:
     {
         MeshData = &UCubeMeshData::GetInstance();
         meshData = MeshData->GetMeshData();
-        Vertices = MeshData->GetVertices();
-        Indices = MeshData->GetIndices();
     }
 
     void Render(FMatrix view, FMatrix projection) {
