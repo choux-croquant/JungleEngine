@@ -1,8 +1,8 @@
 #pragma once
-#include "UObject.h"
+#include "UActorComponent.h"
 #include "Vector.h"
 
-class USceneComponent : public UObject
+class USceneComponent : public UActorComponent
 {
 public:
 	USceneComponent(FVector Position, FVector Rotation, FVector Scale)

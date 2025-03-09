@@ -26,7 +26,7 @@
 #include "UGizmo.h"
 
 #include "ULog.h"
-#include "MemoryManager.h"
+#include "UMemory.h"
 
 constexpr float BaseWindowWidth = 1024.0f;
 constexpr float BaseWindowHeight = 1024.0f;
@@ -192,8 +192,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
 
 		// Heap Memory
-		ImGui::Text("Total Bytes  : %d", MemoryManager::GetInstance().GetTotalAllocationBytes());
-		ImGui::Text("Total Count  : %d", MemoryManager::GetInstance().GetTotalAllocationCount());
+		ImGui::Text("Total Bytes  : %d", UMemory::GetInstance().GetTotalAllocationBytes());
+		ImGui::Text("Total Count  : %d", UMemory::GetInstance().GetTotalAllocationCount());
 		ImGui::End();
 
     physScene.LogRender();
