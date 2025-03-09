@@ -46,6 +46,8 @@ public:
                 message == WM_LBUTTONDOWN || message == WM_LBUTTONUP ||
                 message == WM_RBUTTONDOWN || message == WM_RBUTTONUP))
                 return;
+            if (io.WantCaptureKeyboard && message == WM_KEYDOWN)
+                return;
         }
 
         switch (message) {

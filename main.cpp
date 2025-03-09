@@ -28,6 +28,8 @@
 #include "ULog.h"
 #include "MemoryManager.h"
 
+constexpr float BaseWindowWidth = 1024.0f;
+constexpr float BaseWindowHeight = 1024.0f;
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -49,6 +51,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			UINT width = LOWORD(lParam);
 			UINT height = HIWORD(lParam);
 			URenderer::GetInstance().OnResize(width, height);
+
+			if (ImGui::GetCurrentContext() != nullptr)
+			{
+				ImGuiIO& io = ImGui::GetIO();
+				io.DisplaySize = ImVec2((float)width, (float)height);
+			}
 		}
 		break;
 	default:
@@ -67,7 +75,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	RegisterClassW(&wndclass);
 
 	HWND hWnd = CreateWindowExW(0, WindowClass, Title, WS_POPUP | WS_VISIBLE | WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, 1024, 1024,
+		CW_USEDEFAULT, CW_USEDEFAULT, BaseWindowWidth, BaseWindowHeight,
 		nullptr, nullptr, hInstance, nullptr);
 
 	bool bIsExit = false;
