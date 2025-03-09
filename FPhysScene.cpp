@@ -251,10 +251,10 @@ bool FPhysScene::lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& 
 
 	float minT = FLT_MAX;
 	bool hit = false;
-
-	const TArray<FVertexSimple>& Vertices = mesh->Vertices;
-	const TArray<uint32>& Indices = mesh->Indices;
-
+	const MeshData meshData = mesh->meshData;
+	const TArray<FVertexSimple>& Vertices = meshData.Vertices;
+	const TArray<uint32>& Indices = meshData.Indices;
+	
 	for (int i = 0; i < Indices.size(); i+=3)
 	{
 		FVector V0 = Vertices[Indices[i]].Position;
@@ -301,7 +301,7 @@ FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USc
 	return transformedVertex;
 }
 
-void FPhysScene::setSampleCube(UCubeComp* uCubeComp)
+void FPhysScene::setSampleCube(UPrimitiveComponent* uCubeComp)
 {
 	cubes.push_back(uCubeComp);
 }

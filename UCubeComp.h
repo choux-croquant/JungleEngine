@@ -13,6 +13,7 @@ public:
         : UPrimitiveComponent(Position, Rotation, Scale)
     {
         MeshData = &UCubeMeshData::GetInstance();
+        meshData = MeshData->GetMeshData();
         Vertices = MeshData->GetVertices();
         Indices = MeshData->GetIndices();
     }

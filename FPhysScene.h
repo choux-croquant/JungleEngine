@@ -8,7 +8,7 @@ class FPhysScene
 {
 public:
 	FPhysScene(HWND hwnd,const UCamera* camera);
-	void setSampleCube(UCubeComp* uCubeComp);
+	void setSampleCube(UPrimitiveComponent* uCubeComp);
 	void Update();
 	void LogRender();
 	void PickedObjPropertyRender();

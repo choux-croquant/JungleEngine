@@ -13,6 +13,7 @@ public:
         : UPrimitiveComponent(Position, Rotation, Scale)
     {
         MeshData = &USphereMeshData::GetInstance();
+        meshData = MeshData->GetMeshData();
     }
 
     void Render(FMatrix view, FMatrix projection) {
