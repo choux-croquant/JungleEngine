@@ -110,10 +110,10 @@ void FPhysScene::RayCast()
 
 	if (rayViewW.W != 0)
 	{
-		rayView.X = rayViewW.X / rayViewW.W;
-		rayView.Y = rayViewW.Y / rayViewW.W;
-		rayView.Z = rayViewW.Z / rayViewW.W;
-		rayView.W = 1.0f;
+		rayView.X = -rayViewW.X / rayViewW.W;
+		rayView.Y = -rayViewW.Y / rayViewW.W;
+		rayView.Z = -rayViewW.Z / rayViewW.W;
+		rayView.W = -1.0f;
 	}
 
 	FVector4 rayWorld4 = viewI.TransformVector(rayView);
