@@ -33,9 +33,5 @@ private:
 
 	void RayCast();
 	void checkCollision();
-private: //Property Log
-	FVector T;
-	FVector R;
-	FVector S;
 };
 

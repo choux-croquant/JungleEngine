@@ -47,36 +47,41 @@ void FPhysScene::LogRender()
 
 void FPhysScene::PickedObjPropertyRender()
 {
-	static int value = 0;
-	if (closestHitObject != nullptr)
-	{
-		T = closestHitObject->RelativeLocation;
-		R = closestHitObject->RelativeRotation;
-		S = closestHitObject->RelativeScale3D;
+	static UPrimitiveComponent* lastSelectedObject = nullptr; // 이전 선택된 오브젝트 저장
+
+	if (closestHitObject != nullptr) {
+		lastSelectedObject = closestHitObject;
 	}
-	else
-	{
+
+	if (lastSelectedObject != nullptr) {
+		FVector& T = lastSelectedObject->RelativeLocation;
+		FVector& R = lastSelectedObject->RelativeRotation;
+		FVector& S = lastSelectedObject->RelativeScale3D;
+
+		ImGui::Begin("Object Property");
+		ImGui::PushItemWidth(50);
+
+		// Translation
+		ImGui::InputFloat("##T_X", &T.X, 0, 0); ImGui::SameLine();
+		ImGui::InputFloat("##T_Y", &T.Y, 0, 0); ImGui::SameLine();
+		ImGui::InputFloat("##T_Z", &T.Z, 0, 0); ImGui::SameLine();
+		ImGui::Text("Translation");
+
+		// Rotation
+		ImGui::InputFloat("##R_X", &R.X, 0, 0); ImGui::SameLine();
+		ImGui::InputFloat("##R_Y", &R.Y, 0, 0); ImGui::SameLine();
+		ImGui::InputFloat("##R_Z", &R.Z, 0, 0); ImGui::SameLine();
+		ImGui::Text("Rotation");
+
+		// Scale
+		ImGui::InputFloat("##S_X", &S.X, 0, 0); ImGui::SameLine();
+		ImGui::InputFloat("##S_Y", &S.Y, 0, 0); ImGui::SameLine();
+		ImGui::InputFloat("##S_Z", &S.Z, 0, 0); ImGui::SameLine();
+		ImGui::Text("Scale");
+
+		ImGui::PopItemWidth();
+		ImGui::End();
 	}
-	ImGui::Begin("Object Property");
-	ImGui::PushItemWidth(50);
-	ImGui::InputFloat("##NumberBox", &T.X, 0, 0); ImGui::SameLine();
-	ImGui::InputFloat("##NumberBox", &T.Y, 0, 0); ImGui::SameLine();
-	ImGui::InputFloat("##NumberBox", &T.Z, 0, 0); ImGui::SameLine();
-	ImGui::Text("Translation");
-
-
-	ImGui::InputFloat("##NumberBox", &R.X, 0, 0); ImGui::SameLine();
-	ImGui::InputFloat("##NumberBox", &R.Y, 0, 0); ImGui::SameLine();
-	ImGui::InputFloat("##NumberBox", &R.Z, 0, 0); ImGui::SameLine();
-	ImGui::Text("Rotation");
-
-
-	ImGui::InputFloat("##NumberBox", &S.X, 0, 0); ImGui::SameLine();
-	ImGui::InputFloat("##NumberBox", &S.Y, 0, 0); ImGui::SameLine();
-	ImGui::InputFloat("##NumberBox", &S.Z, 0, 0); ImGui::SameLine();
-	ImGui::Text("Scale");
-	ImGui::PopItemWidth();
-	ImGui::End();
 }
 
 void FPhysScene::RayCast()
