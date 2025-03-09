@@ -133,7 +133,7 @@ void FPhysScene::checkCollision()
 	float min_t = FLT_MAX;
 	UPrimitiveComponent* closestObject = nullptr;
 
-	for (UPrimitiveComponent* cube : cubes)
+	for (UPrimitiveComponent* cube : primitives)
 	{
 		if (cube)
 		{
@@ -172,7 +172,7 @@ void FPhysScene::checkFaceCollision()
 	UPrimitiveComponent* closestObject = nullptr;
 	float min_t = FLT_MAX;
 	bool Hit = false;
-	for (UPrimitiveComponent* cube : cubes)
+	for (UPrimitiveComponent* cube : primitives)
 	{
 		if (cube)
 		{
@@ -301,7 +301,7 @@ FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USc
 	return transformedVertex;
 }
 
-void FPhysScene::setSampleCube(UPrimitiveComponent* uCubeComp)
+void FPhysScene::SetPrimitive(UPrimitiveComponent* uCubeComp)
 {
-	cubes.push_back(uCubeComp);
+	primitives.push_back(uCubeComp);
 }

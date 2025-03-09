@@ -8,7 +8,7 @@ class FPhysScene
 {
 public:
 	FPhysScene(HWND hwnd,const UCamera* camera);
-	void setSampleCube(UPrimitiveComponent* uCubeComp);
+	void SetPrimitive(UPrimitiveComponent* uPrimitiveComp);
 	void Update();
 	void LogRender();
 	void PickedObjPropertyRender();
@@ -16,7 +16,7 @@ public:
 	bool rayCollision = false;
 	UPrimitiveComponent* closestHitObject = nullptr;
 private:
-	TArray<UPrimitiveComponent*> cubes;
+	TArray<UPrimitiveComponent*> primitives;
 	InputManager& input = InputManager::GetInstance();
 	HWND hwnd;
 	const UCamera* camera;
