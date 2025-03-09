@@ -7,6 +7,7 @@
 class ULevel : public UObject {
 public:
     ULevel() {}
+    ULevel(TArray<UPrimitiveComponent*> components) : PrimitiveComponents(components) {}
     virtual ~ULevel() {
         for (UPrimitiveComponent* Component : PrimitiveComponents) {
             delete Component;
@@ -43,6 +44,8 @@ public:
     {
         return PrimitiveComponents;
     }
+
+
 
     void Tick(float DeltaTime) {
         for (UPrimitiveComponent* Component : PrimitiveComponents) {
