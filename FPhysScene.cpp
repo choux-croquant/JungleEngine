@@ -165,7 +165,7 @@ void FPhysScene::checkCollision()
 	}
 }
 
-bool FPhysScene::lineTriangleInter(FVector v0, FVector v1, FVector v2)
+bool FPhysScene::lineTriangleInter(FVector v0, FVector v1, FVector v2, FVector& outIntersection)
 {
 	//v0, v1, v2 ´Â clockwise ¼ø¼­
 	FVector rayOrigin = camera->RelativeLocation;
@@ -202,7 +202,45 @@ bool FPhysScene::lineTriangleInter(FVector v0, FVector v1, FVector v2)
 	if (normal.Dot(EdgeCrosC1) < 0) return false;
 	if (normal.Dot(EdgeCrosC2) < 0) return false;
 
+	outIntersection = P;
 	return true;
+}
+
+bool FPhysScene::lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& outIntersection)
+{
+	FVector rayOrigin = camera->RelativeLocation;
+
+	float minT = FLT_MAX;
+	bool hit = false;
+
+	const TArray<FVertexSimple>& Vertices = mesh->Vertices;
+	const TArray<uint32>& Indices = mesh->Indices;
+
+	for (int i = 0; i < Indices.size(); i+=3)
+	{
+		FVector V0 = Vertices[Indices[i]].Position;
+		FVector V1 = Vertices[Indices[i+1]].Position;
+		FVector V2 = Vertices[Indices[i+2]].Position;
+
+		V0 = TransformVertexToWorld(V0, mesh);
+		V1 = TransformVertexToWorld(V1, mesh);
+		V2 = TransformVertexToWorld(V2, mesh);
+
+		FVector intersection;
+		if (lineTriangleInter(V0, V1, V2, intersection))
+		{
+			float T = (rayOrigin - intersection).Length();
+			if (T < minT)
+			{
+				minT = T;
+				outIntersection = intersection;
+				hit = true;
+			}
+		}
+	}
+
+
+	return hit;
 }
 
 void FPhysScene::checkFaceCollision()
@@ -217,7 +255,6 @@ void FPhysScene::checkFaceCollision()
 		{
 			FVector cubeCenter = cube->RelativeLocation;
 
-			//Todo
 		}
 	}
 

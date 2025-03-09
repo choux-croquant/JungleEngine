@@ -33,8 +33,10 @@ private:
 
 	void RayCast();
 	void checkCollision();
-	bool lineTriangleInter(FVector v0, FVector v1, FVector v2);
+	bool lineTriangleInter(FVector v0, FVector v1, FVector v2, FVector& outIntersection);
+	bool lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& outIntersection);
 	void checkFaceCollision();
 	FVector TransformVertexToWorld(const FVector& localVertex, const USceneComponent* component);
+
 };
 
