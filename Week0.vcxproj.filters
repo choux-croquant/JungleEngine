@@ -197,6 +197,12 @@
     <ClInclude Include="AActor.h">
       <Filter>Source Files\Engine\Core</Filter>
     </ClInclude>
+    <ClInclude Include="UWorld.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ULevel.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader.hlsl">
