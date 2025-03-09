@@ -8,11 +8,15 @@ class FPhysScene
 {
 public:
 	FPhysScene(HWND hwnd,const UCamera* camera);
-	void setSampleCube(UCubeComp* uCubeComp);
+	void SetPrimitive(UPrimitiveComponent* uPrimitiveComp);
 	void Update();
 	void LogRender();
+	void PickedObjPropertyRender();
+
+	bool rayCollision = false;
+	UPrimitiveComponent* closestHitObject = nullptr;
 private:
-	TArray<UPrimitiveComponent*> cubes;
+	TArray<UPrimitiveComponent*> primitives;
 	InputManager& input = InputManager::GetInstance();
 	HWND hwnd;
 	const UCamera* camera;
@@ -26,9 +30,13 @@ private:
 
 	FVector rayDir;
 
-	bool rayCollision = false;
 
 	void RayCast();
 	void checkCollision();
+	bool lineTriangleInter(FVector v0, FVector v1, FVector v2, FVector& outIntersection);
+	bool lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& outIntersection);
+	void checkFaceCollision();
+	FVector TransformVertexToWorld(const FVector& localVertex, const USceneComponent* component);
+
 };
 

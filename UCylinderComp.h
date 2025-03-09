@@ -13,6 +13,7 @@ public:
         : UPrimitiveComponent(EPrimitiveType::Cylinder, Position, Rotation, Scale)
     {
         MeshData = &UCylinderMeshData::GetInstance();
+        meshData = MeshData->GetMeshData();
     }
 
     void Render(FMatrix view, FMatrix projection) override  {

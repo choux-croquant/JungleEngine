@@ -1,5 +1,6 @@
 #pragma once
 #include "USceneComponent.h"
+#include "Utils.h"
 #include "Matrix.h"
 
 enum class EPrimitiveType {
@@ -18,6 +19,7 @@ public:
         : USceneComponent(Position, Rotation, Scale)
     {
     }
+    MeshData meshData;
 
     virtual void Render(FMatrix view, FMatrix projection) = 0;
 
@@ -32,6 +34,4 @@ public:
     }
 private:
     EPrimitiveType PrimitiveType;
-
-    
 };

@@ -115,12 +115,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Guide Axis
 	UWorldAxis worldAxis(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
-	FPhysScene physScene(hWnd,&mainCamera);
-	//physScene.setSampleCube(&sampleCube1);
-	//physScene.setSampleCube(&sampleCube2);
-	//physScene.setSampleCube(&sampleCube3);
-	//physScene.setSampleCube(&sampleCube4);
+	UCubeComp sampleCube(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	USphereComp sampleSphere(FVector(2.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UCylinderComp sampleCylinder(FVector(0.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UConeComp sampleCone(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
+
+	FPhysScene physScene(hWnd,&mainCamera);
+	physScene.SetPrimitive(&sampleCube);
+	physScene.SetPrimitive(&sampleSphere);
+	physScene.SetPrimitive(&sampleCylinder);
+	physScene.SetPrimitive(&sampleCone);
+	
 	ScenePropertyWindow scenePropertyWindow(mainCamera);
 
 	int selectedPrimitive = 0;
@@ -148,12 +154,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		}
 
-		//physScene.Update();
+		physScene.Update();
 
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();
 		worldAxis.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		gizmo.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleCone.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleCube.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleCylinder.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleSphere.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		
+
 
 		#pragma region ImGui
 		ImGui_ImplDX11_NewFrame();
@@ -221,6 +233,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::End();
 
 		physScene.LogRender();
+		physScene.PickedObjPropertyRender();
     
 		// UE_LOG
 		ULog::DrawLogWindow();
