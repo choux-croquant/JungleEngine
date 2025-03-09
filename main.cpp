@@ -27,6 +27,7 @@
 
 #include "ULog.h"
 #include "UMemory.h"
+#include "ScenePropertyWindow.h"
 
 constexpr float BaseWindowWidth = 1024.0f;
 constexpr float BaseWindowHeight = 1024.0f;
@@ -121,6 +122,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	physScene.setSampleCube(&sampleCube3);
 	physScene.setSampleCube(&sampleCube4);
 
+	ScenePropertyWindow scenePropertyWindow(mainCamera);
+
 	while (bIsExit == false)
 	{
 		QueryPerformanceCounter(&startTime);
@@ -140,12 +143,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			
 		}
 
-		mainCamera.MoveCamera(0.016f);
-		mainCamera.Update();
+		
 
 		//physScene.Update();
-
-		InputManager::GetInstance().Update();
 
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();
@@ -172,8 +172,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("FPS %.1f (%.2f ms)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 		ImGui::Separator();
 
-
-
+		//카메라 속성창
+		scenePropertyWindow.Draw();
+		mainCamera.MoveCamera(0.016f);
+		mainCamera.Update();
+		InputManager::GetInstance().Update();
+		scenePropertyWindow.UpdateCamera();
 
 		ImGui::Separator();
 		ImGui::Text("Keyboard State:");

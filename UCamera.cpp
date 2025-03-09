@@ -29,7 +29,23 @@ void UCamera::Rotate(FMatrix rotationMatrix)
     targetPos = facing + GetWorldLocation();
     upDirection = rotationMatrix * upDirection;
     upDirection.Normalize();
-    RelativeRotation = GetWorldRotation(); // 동기화
+    RelativeRotation = GetRotation(); // 동기화
+}
+
+FVector UCamera::GetRotation()
+{
+    FVector zAxis = facing.Normalize();
+    FVector yAxis = upDirection;
+    FVector xAxis = yAxis.Cross(zAxis).Normalize();
+    FMatrix R = FMatrix::Identity;
+    R.M[0][0] = xAxis.X; R.M[0][1] = yAxis.X; R.M[0][2] = zAxis.X;
+    R.M[1][0] = xAxis.Y; R.M[1][1] = yAxis.Y; R.M[1][2] = zAxis.Y;
+    R.M[2][0] = xAxis.Z; R.M[2][1] = yAxis.Z; R.M[2][2] = zAxis.Z;
+    R.Transpose();
+    float angleY = asinf(R.M[0][2]);              // 피치
+    float angleZ = atan2f(-R.M[0][1], R.M[0][0]);   // 요
+    float angleX = atan2f(-R.M[1][2], R.M[2][2]);   // 롤
+    return FVector(angleX, angleY, angleZ);
 }
 
 void UCamera::Translate(FVector offset)

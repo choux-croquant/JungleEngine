@@ -18,6 +18,7 @@ public:
     UCamera(FVector pos, FVector target, FVector up);
 
     void Rotate(FMatrix rotationMatrix);
+    FVector GetRotation();
     void Translate(FVector offset);
     void ChangeFOV(float fov);
     void SetWorldLocation(FVector pos);

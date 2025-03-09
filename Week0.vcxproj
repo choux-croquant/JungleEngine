@@ -140,6 +140,7 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="ScenePropertyWindow.cpp" />
     <ClCompile Include="UCamera.cpp" />
     <ClCompile Include="UEngineStatics.cpp" />
     <ClCompile Include="UGeometryGenerator.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="ScenePropertyWindow.h" />
     <ClInclude Include="ULevel.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="UActorComponent.h" />
