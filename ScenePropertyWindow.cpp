@@ -54,6 +54,13 @@ void ScenePropertyWindow::Draw()
 			// 모든 회전값이 0이면, 기본값으로 초기화
 			mainCamera->ResetRotation();
 		}
+		else if (newRot.X == 0 || newRot.Y == 0 || newRot.Z == 0) {
+			Quaternion rotX = Quaternion::RotateX(newRot.X);
+			Quaternion rotY = Quaternion::RotateY(newRot.Y);
+			Quaternion rotZ = Quaternion::RotateZ(newRot.Z);
+			Quaternion rotation = rotZ * rotY * rotX;
+			mainCamera->SetRotation(rotation);
+		}
 		else {
 			Quaternion rotX = Quaternion::RotateX(newRot.X - mainCamera->RelativeRotation.X);
 			Quaternion rotY = Quaternion::RotateY(newRot.Y - mainCamera->RelativeRotation.Y);
