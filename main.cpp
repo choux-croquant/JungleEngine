@@ -123,19 +123,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 	FPhysScene physScene(hWnd,&mainCamera);
-	physScene.SetPrimitive(&sampleCube);
-	physScene.SetPrimitive(&sampleSphere);
-	physScene.SetPrimitive(&sampleCylinder);
-	physScene.SetPrimitive(&sampleCone);
+	//physScene.SetPrimitive(&sampleCube);
+	//physScene.SetPrimitive(&sampleSphere);
+	//physScene.SetPrimitive(&sampleCylinder);
+	//physScene.SetPrimitive(&sampleCone);
 	
 	ScenePropertyWindow scenePropertyWindow(mainCamera);
 
 	int selectedPrimitive = 0;
 	int primitiveSpawnNum = 0;
+	std::uniform_real_distribution<float> dis(-5.0f, 5.0f);
 	ULevel* currLevel = new ULevel();
+	currLevel->OnPrimitiveSpawned.push_back([&physScene](UPrimitiveComponent* newPrimitive) {
+		physScene.SetPrimitive(newPrimitive);
+	});
+
 	SceneSaveManager sceneSaveManager;
 	char saveFileName[10] = "Default";
-	std::uniform_real_distribution<float> dis(-5.0f, 5.0f);
 
 
 	while (bIsExit == false)
@@ -154,10 +158,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				bIsExit = true;
 				break;
 			}
-
 		}
 
-		//physScene.Update();
+		physScene.Update();
 
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();
@@ -168,8 +171,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//sampleCylinder.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		//sampleSphere.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		
-
-
 		#pragma region ImGui
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
@@ -197,7 +198,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		ImGui::SameLine();
 		ImGui::InputInt("Number of spawn", &primitiveSpawnNum);
-		for (const auto& primitive : currLevel->GetPrimitives())
+		TArray<UPrimitiveComponent*> primitives = currLevel->GetPrimitives();
+		for (const auto& primitive : primitives)
 		{
 			primitive->Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		}

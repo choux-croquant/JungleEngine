@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <functional>
 #include "UObject.h"
 #include "UPrimitiveComponent.h"
 
@@ -15,10 +16,19 @@ public:
         PrimitiveComponents.clear();
     }
 
+    // primitive 생성 이벤트 콜백
+    using PrimitiveSpawnedCallback = std::function<void(UPrimitiveComponent*)>;
+    TArray<PrimitiveSpawnedCallback> OnPrimitiveSpawned;
+
     template<typename T, typename... Args>
     T* SpawnPrimitive(Args&&... args) {
         T* NewPrimitive = new T(std::forward<Args>(args)...);
         PrimitiveComponents.push_back(NewPrimitive);
+
+        // 생성 시 등록된 모든 콜백에 알림
+        for (auto& callback : OnPrimitiveSpawned) {
+            callback(NewPrimitive);
+        }
         return NewPrimitive;
     }
 
@@ -40,12 +50,11 @@ public:
             return nullptr;
         }
     }
-    TArray<UPrimitiveComponent*> GetPrimitives()
+
+    const TArray<UPrimitiveComponent*>& GetPrimitives() const
     {
         return PrimitiveComponents;
     }
-
-
 
     void Tick(float DeltaTime) {
         for (UPrimitiveComponent* Component : PrimitiveComponents) {
