@@ -24,7 +24,7 @@ PS_INPUT VS(VS_INPUT input)
     //output.Position = input.Position;
     float4 highlight;
     if (clicked==1)
-        highlight = float4(0.5f, 0.5f, 0, 0);
+        highlight = float4(0.5f, 0.5f, 0, -0.3f);
     else
         highlight = float4(0, 0, 0, 0);
     output.Color = input.Color + highlight;

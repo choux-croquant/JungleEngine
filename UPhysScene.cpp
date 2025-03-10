@@ -78,14 +78,17 @@ void UPhysScene::Update()
 				case GizmoAxis::X:
 					len = deltaRayWorld.Dot(axisX);
 					closestHitObject->RelativeRotation.X += len * 5.0f;
+					m_gizmoGroup->RelativeRotation = closestHitObject->RelativeRotation;
 					break;
 				case GizmoAxis::Y:
 					len = deltaRayWorld.Dot(axisY);
 					closestHitObject->RelativeRotation.Y += len * 5.0f;
+					m_gizmoGroup->RelativeRotation = closestHitObject->RelativeRotation;
 					break;
 				case GizmoAxis::Z:
 					len = deltaRayWorld.Dot(axisZ);
 					closestHitObject->RelativeRotation.Z += len * 5.0f;
+					m_gizmoGroup->RelativeRotation = closestHitObject->RelativeRotation;
 					break;
 				}
 			break;
@@ -134,11 +137,13 @@ void UPhysScene::Update()
 
 	if (rayCollision)
 	{
-		m_gizmoGroup->AttachTo(closestHitObject);
+		//m_gizmoGroup->AttachTo(closestHitObject);
+		m_gizmoGroup->RelativeLocation = closestHitObject->RelativeLocation;
 	}
 	else if (!rayCollision && !isGizmoClicked)
 	{
-		m_gizmoGroup->DetachFromParent();
+		//m_gizmoGroup->DetachFromParent();
+		m_gizmoGroup->RelativeLocation = FVector(1000.0f, 0.0f, 0.0f);
 	}
 }
 
@@ -313,23 +318,22 @@ void UPhysScene::checkFaceCollision()
 	UPrimitiveComponent* closestObject = nullptr;
 	float min_t = FLT_MAX;
 	bool Hit = false;
-	for (UPrimitiveComponent* cube : primitives)
+	for (UPrimitiveComponent* primitive : primitives)
 	{
-		if (cube)
+		if (primitive)
 		{
 			FVector MeshIntersection;
-			if (lineMeshIntersection(cube, MeshIntersection))
+			if (lineMeshIntersection(primitive, MeshIntersection))
 			{
 				float T = (rayOrigin - MeshIntersection).Length();
 				if (T < min_t)
 				{
 					min_t = T;
-					closestObject = cube;
+					closestObject = primitive;
 					//OutIntersection = MeshIntersection
 					Hit = true;
 				}
 			}
-
 		}
 	}
 
@@ -338,7 +342,7 @@ void UPhysScene::checkFaceCollision()
 		rayCollision = true;
 		closestHitObject = closestObject;
 	}
-	else if(!rayCollision && !isGizmoClicked)
+	else if(!isGizmoClicked)
 	{
 		rayCollision = false;
 		closestHitObject = nullptr;

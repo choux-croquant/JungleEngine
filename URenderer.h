@@ -6,6 +6,7 @@
 #include "Types.h"
 #include <assert.h>
 #include "ULog.h"
+#include "UCamera.h"
 
 static float ROT = 0;
 
@@ -37,6 +38,16 @@ public:
     ID3D11InputLayout* InputLayout = nullptr;
     ID3D11Buffer* ConstantBuffer = nullptr;
     ID3D11Buffer* ConstantBuffer2 = nullptr;
+    ID3D11BlendState* blendState = nullptr;
+
+    float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; // 블렌딩 팩터 (기본값)
+    UINT sampleMask = 0xFFFFFFFF; // 샘플 마스크 (기본값)
+  
+    UCamera* MainCamera = nullptr;
+
+    void SetMainCamera(UCamera* camera) {
+        MainCamera = camera;
+    }
 
     void Initialize(HWND hWnd)
     {
@@ -81,6 +92,21 @@ public:
         Device->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer);
         Device->CreateDepthStencilView(depthStencilBuffer, nullptr, &DepthStencilView);
         depthStencilBuffer->Release();
+
+        // Blend
+        D3D11_BLEND_DESC blendDesc = {};
+        blendDesc.AlphaToCoverageEnable = FALSE; // 알파 투 커버리지 비활성화
+        blendDesc.IndependentBlendEnable = FALSE; // 독립 블렌딩 비활성화
+        blendDesc.RenderTarget[0].BlendEnable = TRUE; // 블렌딩 활성화
+        blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA; // 소스 알파
+        blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA; // 1 - 소스 알파
+        blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD; // 블렌딩 연산: 더하기
+        blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE; // 소스 알파
+        blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO; // 목적지 알파
+        blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD; // 알파 블렌딩 연산: 더하기
+        blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL; // 모든 채널 쓰기 활성화
+
+        Device->CreateBlendState(&blendDesc, &blendState);
 
         // 래스터라이저 설정
         D3D11_RASTERIZER_DESC rasterizerdesc = {};
@@ -270,6 +296,7 @@ public:
         // 정점 및 인덱스 버퍼 설정
         UINT stride = sizeof(FVertexSimple);
         UINT offset = 0;
+        DeviceContext->OMSetBlendState(blendState, blendFactor, sampleMask);
         DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
         DeviceContext->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
@@ -368,28 +395,35 @@ public:
         DeviceContext->OMSetRenderTargets(1, &RenderTargetView, DepthStencilView);
 
         // 6. 새 뷰포트 설정
-        float targetAspect = 1.0f;
-        float windowAspect = width / static_cast<float>(height);
+        //float targetAspect = 1.0f;
+        //float windowAspect = width / static_cast<float>(height);
 
+        //D3D11_VIEWPORT viewport = {};
+
+        //if (windowAspect >= targetAspect)
+        //{
+        //    // 창이 더 넓은 경우: 좌우에 레터박스(빈 영역)가 생김
+        //    viewport.Height = static_cast<float>(height);
+        //    viewport.Width = viewport.Height * targetAspect;  // = height
+        //    viewport.TopLeftX = (width - viewport.Width) / 2.0f;
+        //    viewport.TopLeftY = 0;
+        //}
+        //else
+        //{
+        //    // 창이 더 좁은 경우: 상하에 레터박스(빈 영역)가 생김
+        //    viewport.Width = static_cast<float>(width);
+        //    viewport.Height = viewport.Width / targetAspect;  // = width
+        //    viewport.TopLeftX = 0;
+        //    viewport.TopLeftY = (height - viewport.Height) / 2.0f;
+        //}
+
+        //viewport.MinDepth = 0.0f;
+        //viewport.MaxDepth = 1.0f;
         D3D11_VIEWPORT viewport = {};
-
-        if (windowAspect >= targetAspect)
-        {
-            // 창이 더 넓은 경우: 좌우에 레터박스(빈 영역)가 생김
-            viewport.Height = static_cast<float>(height);
-            viewport.Width = viewport.Height * targetAspect;  // = height
-            viewport.TopLeftX = (width - viewport.Width) / 2.0f;
-            viewport.TopLeftY = 0;
-        }
-        else
-        {
-            // 창이 더 좁은 경우: 상하에 레터박스(빈 영역)가 생김
-            viewport.Width = static_cast<float>(width);
-            viewport.Height = viewport.Width / targetAspect;  // = width
-            viewport.TopLeftX = 0;
-            viewport.TopLeftY = (height - viewport.Height) / 2.0f;
-        }
-
+        viewport.TopLeftX = 0;
+        viewport.TopLeftY = 0;
+        viewport.Width = static_cast<float>(width);
+        viewport.Height = static_cast<float>(height);
         viewport.MinDepth = 0.0f;
         viewport.MaxDepth = 1.0f;
         DeviceContext->RSSetViewports(1, &viewport);
