@@ -282,12 +282,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// Heap Memory
 		ImGui::Text("Total Bytes  : %d", UMemory::GetInstance().GetTotalAllocationBytes());
 		ImGui::Text("Total Count  : %d", UMemory::GetInstance().GetTotalAllocationCount());
-		for (UPrimitiveComponent* primitive : physScene.GetPrimitives()) {
-			ImGui::Checkbox("object isClicked", &primitive->bIsClicked);
-		}
-		if (physScene.closestHitObject != nullptr) {
-			ImGui::Text("object selected");
-		}
 		ImGui::End();
 
 		//physScene.LogRender();
