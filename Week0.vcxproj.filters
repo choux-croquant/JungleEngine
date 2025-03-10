@@ -167,9 +167,6 @@
     <ClInclude Include="UGeometryGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UGizmo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ULog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -212,9 +209,21 @@
     <ClInclude Include="USphereMeshData.h">
       <Filter>Source Files\Engine\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ProjectionVertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="DefaultPixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="SingleColorPixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

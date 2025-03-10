@@ -63,6 +63,7 @@ public:
 
         // 렌더링 데이터 업데이트 및 그리기
         URenderer::GetInstance().UpdateConstant(constantData);
+        URenderer::GetInstance().PreparePixelShader();
         URenderer::GetInstance().RenderLine(vertexBuffer, indexBuffer, 6);
     }
 

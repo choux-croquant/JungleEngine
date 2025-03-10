@@ -9,6 +9,7 @@ public:
 	float cameraRotation[3];
 	bool bIsOrthogonal;
 	UCamera* mainCamera;
+	bool hasRotated;
 
 public:
 	ScenePropertyWindow(UCamera& camera);

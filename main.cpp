@@ -23,7 +23,6 @@
 #include "UCylinderComp.h"
 #include "UConeComp.h"
 #include "UWorldAxis.h"
-#include "UGizmo.h"
 
 #include "ULog.h"
 #include "UMemory.h"
@@ -115,15 +114,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	UCubeComp sampleCube(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	USphereComp sampleSphere(FVector(2.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UConeComp sampleCone(FVector(0.0f, 2.0f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
 	USceneComponent group(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.2f, 0.2f, 0.2f));
+
 	
-	UCylinderComp sampleCylinderX(FVector(0.6f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(0.5f, 0.5f, 3.0f));
-	UConeComp sampleConeX(FVector(1.2f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCylinderComp sampleCylinderY(FVector(0.0f, 0.6f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f));
-	UConeComp sampleConeY(FVector(0.0f, 1.2f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCylinderComp sampleCylinderZ(FVector(0.0f, 0.0f, 0.6f), FVector(0.0f, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f));
-	UConeComp sampleConeZ(FVector(0.0f, 0.0f, 1.2f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UCylinderComp sampleCylinderX(FVector(2.5f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(0.5f, 0.5f, 3.0f), FVector4(1.0f, 0.0f, 0.0f, 1.0f), true);
+	UConeComp sampleConeX(FVector(6.0f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(1.0f, 1.0f, 1.0f), FVector4(1.0f, 0.0f, 0.0f, 1.0f), true);
+	UCylinderComp sampleCylinderY(FVector(0.0f, 2.5f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f), FVector4(0.0f, 1.0f, 0.0f, 1.0f), true);
+	UConeComp sampleConeY(FVector(0.0f, 6.0f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f), FVector4(0.0f, 1.0f, 0.0f, 1.0f), true);
+	UCylinderComp sampleCylinderZ(FVector(0.0f, 0.0f, 2.5f), FVector(0.0f, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f), FVector4(0.0f, 0.0f, 1.0f, 1.0f), true);
+	UConeComp sampleConeZ(FVector(0.0f, 0.0f, 6.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f), FVector4(0.0f, 0.0f, 1.0f, 1.0f), true);
 
 	sampleConeX.AttachTo(&group);
 	sampleCylinderX.AttachTo(&group);
@@ -182,7 +183,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		
 		sampleCube.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleSphere.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		
+
+		sampleCone.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+
 		sampleConeX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCylinderX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleConeY.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
@@ -288,6 +291,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		// 마우스 버튼 상태 표시
 		ImGui::Separator();
+		ImGui::Checkbox("hasRotated", &scenePropertyWindow.hasRotated);
 		ImGui::Text("Mouse State:");
 		ImGui::Text("Position: (%d, %d)", InputManager::GetInstance().GetMousePosition().x, InputManager::GetInstance().GetMousePosition().y);
 		ImGui::Text("Left Button: %s", InputManager::GetInstance().IsMouseButtonDown(VK_LBUTTON) ? "Pressed" : "Released");
@@ -295,7 +299,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("camera position: %f, %f, %f", mainCamera.RelativeLocation.X, mainCamera.RelativeLocation.Y, mainCamera.RelativeLocation.Z);
 		ImGui::Text("camera up direction: %f, %f, %f", mainCamera.upDirection.X, mainCamera.upDirection.Y, mainCamera.upDirection.Z);
 		ImGui::Text("camera facing: %f, %f, %f", mainCamera.facing.X, mainCamera.facing.Y, mainCamera.facing.Z);
-		ImGui::Text("camera looking at: %f, %f, %f", mainCamera.targetPos.X, mainCamera.targetPos.Y, mainCamera.targetPos.Z);
+		ImGui::Text("camera rotation: %f, %f, %f", RadtoDeg(mainCamera.RelativeRotation.X), RadtoDeg(mainCamera.RelativeRotation.Y), RadtoDeg(mainCamera.RelativeRotation.Z));
 		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
 
 		if (currLevel->GetPrimitives().size() != 0) {

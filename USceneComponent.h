@@ -2,6 +2,7 @@
 #include "UActorComponent.h"
 #include "Vector.h"
 #include "Types.h"
+#include "Matrix.h"
 
 class USceneComponent : public UActorComponent
 {
@@ -63,5 +64,28 @@ public:
         if (Parent)
             return Parent->GetWorldScale3D() * RelativeScale3D; // 부모 스케일 * 상대 스케일
         return RelativeScale3D;
+    }
+
+    FMatrix GetWorldTransform() const
+    {
+        // 현재 로컬 변환 행렬
+        FMatrix localTransform =
+            FMatrix::Translate(RelativeLocation) *
+            (FMatrix::RotateZ(RelativeRotation.Z) *
+                FMatrix::RotateY(RelativeRotation.Y) *
+                FMatrix::RotateX(RelativeRotation.X)) *
+            FMatrix::Scale(RelativeScale3D);
+
+        if (Parent)
+        {
+            // 부모의 월드 변환 행렬
+            FMatrix parentTransform = Parent->GetWorldTransform();
+            return parentTransform * localTransform;
+        }
+        else
+        {
+            return localTransform;
+        }
+        return localTransform;
     }
 };

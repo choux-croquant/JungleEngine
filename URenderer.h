@@ -33,8 +33,10 @@ public:
     ID3D11DepthStencilView* DepthStencilView = nullptr;
     ID3D11VertexShader* VertexShader = nullptr;
     ID3D11PixelShader* PixelShader = nullptr;
+    ID3D11PixelShader* PixelShader2 = nullptr;
     ID3D11InputLayout* InputLayout = nullptr;
     ID3D11Buffer* ConstantBuffer = nullptr;
+    ID3D11Buffer* ConstantBuffer2 = nullptr;
 
     void Initialize(HWND hWnd)
     {
@@ -95,12 +97,16 @@ public:
 
         // 셰이더 컴파일 및 생성
         ID3DBlob* vsBlob = nullptr;
-        D3DCompileFromFile(L"Shader.hlsl", nullptr, nullptr, "VS", "vs_5_0", 0, 0, &vsBlob, nullptr);
+        D3DCompileFromFile(L"ProjectionVertexShader.hlsl", nullptr, nullptr, "VS", "vs_5_0", 0, 0, &vsBlob, nullptr);
         Device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, &VertexShader);
 
         ID3DBlob* psBlob = nullptr;
-        D3DCompileFromFile(L"Shader.hlsl", nullptr, nullptr, "PS", "ps_5_0", 0, 0, &psBlob, nullptr);
+        D3DCompileFromFile(L"DefaultPixelShader.hlsl", nullptr, nullptr, "PS", "ps_5_0", 0, 0, &psBlob, nullptr);
         Device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, &PixelShader);
+
+        ID3DBlob* ps2Blob = nullptr;
+        D3DCompileFromFile(L"SingleColorPixelShader.hlsl", nullptr, nullptr, "PS", "ps_5_0", 0, 0, &ps2Blob, nullptr);
+        Device->CreatePixelShader(ps2Blob->GetBufferPointer(), ps2Blob->GetBufferSize(), nullptr, &PixelShader2);
 
         // 입력 레이아웃 생성
         D3D11_INPUT_ELEMENT_DESC layout[] =
@@ -111,6 +117,7 @@ public:
         Device->CreateInputLayout(layout, 2, vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &InputLayout);
         vsBlob->Release();
         psBlob->Release();
+        ps2Blob->Release();
 
         // 상수 버퍼 생성
         D3D11_BUFFER_DESC constantBufferDesc = {};
@@ -119,6 +126,13 @@ public:
         constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         Device->CreateBuffer(&constantBufferDesc, nullptr, &ConstantBuffer);
+
+        D3D11_BUFFER_DESC constantBufferDesc2 = {};
+        constantBufferDesc2.ByteWidth = sizeof(FVector4) * 3;
+        constantBufferDesc2.Usage = D3D11_USAGE_DYNAMIC;
+        constantBufferDesc2.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        constantBufferDesc2.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        Device->CreateBuffer(&constantBufferDesc2, nullptr, &ConstantBuffer2);
         
         bIsInitialize = true;
     }
@@ -187,8 +201,15 @@ public:
 
         // 셰이더 및 입력 레이아웃 설정
         DeviceContext->VSSetShader(VertexShader, nullptr, 0);
-        DeviceContext->PSSetShader(PixelShader, nullptr, 0);
         DeviceContext->IASetInputLayout(InputLayout);
+    }
+
+    void PreparePixelShader() {
+        DeviceContext->PSSetShader(PixelShader, nullptr, 0);
+    }
+
+    void PreparePixelShader2() {
+        DeviceContext->PSSetShader(PixelShader2, nullptr, 0);
     }
 
     void UpdateConstant(const FConstants& m_constantBufferData)
@@ -202,6 +223,16 @@ public:
         DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer);
     }
 
+    void UpdateConstant2(const FVector4& Color)
+    {
+        // 상수 버퍼 업데이트
+        D3D11_MAPPED_SUBRESOURCE mappedResource;
+        DeviceContext->Map(ConstantBuffer2, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+        memcpy(mappedResource.pData, &Color, sizeof(FVector4));
+        DeviceContext->Unmap(ConstantBuffer2, 0);
+
+        DeviceContext->PSSetConstantBuffers(1, 1, &ConstantBuffer2);
+    }
 
     void RenderLine(ID3D11Buffer* VertexBuffer, ID3D11Buffer* IndexBuffer, uint32 numIndex) {
         // 정점 및 인덱스 버퍼 설정

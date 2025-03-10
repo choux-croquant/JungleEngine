@@ -197,7 +197,7 @@ struct FMatrix
     // ºä Çà·Ä (LookAt)
     static FMatrix LookAt(const FVector& eye, const FVector& target, const FVector& up)
     {
-        FMatrix result = LookFrom(eye, eye - target, up);
+        FMatrix result = LookFrom(eye, target-eye, up);
 
         return result;
     }
