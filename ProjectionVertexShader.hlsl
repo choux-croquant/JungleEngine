@@ -13,6 +13,8 @@ struct PS_INPUT
 cbuffer ConstantBuffer : register(b0)
 {
     matrix MVP;
+    int clicked;
+    float3 padding;
 };
 
 PS_INPUT VS(VS_INPUT input)
@@ -20,6 +22,11 @@ PS_INPUT VS(VS_INPUT input)
     PS_INPUT output;
     output.Position = mul(input.Position, MVP);
     //output.Position = input.Position;
-    output.Color = input.Color;
+    float4 highlight;
+    if (clicked==1)
+        highlight = float4(0.5f, 0.5f, 0, 0);
+    else
+        highlight = float4(0, 0, 0, 0);
+    output.Color = input.Color + highlight;
     return output;
 }

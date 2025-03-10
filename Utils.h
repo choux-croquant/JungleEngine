@@ -14,6 +14,8 @@ struct FVertexSimple
 struct FConstants
 {
 	FMatrix MVP;
+	int bClicked;
+	float padding[3];
 };
 
 struct MeshData 

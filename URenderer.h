@@ -235,7 +235,7 @@ public:
         // 상수 버퍼 업데이트
         D3D11_MAPPED_SUBRESOURCE mappedResource;
         DeviceContext->Map(ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-        memcpy(mappedResource.pData, &m_constantBufferData.MVP, sizeof(FMatrix));
+        memcpy(mappedResource.pData, &m_constantBufferData, sizeof(FConstants));
         DeviceContext->Unmap(ConstantBuffer, 0);
 
         DeviceContext->VSSetConstantBuffers(0, 1, &ConstantBuffer);

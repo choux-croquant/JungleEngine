@@ -282,6 +282,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// Heap Memory
 		ImGui::Text("Total Bytes  : %d", UMemory::GetInstance().GetTotalAllocationBytes());
 		ImGui::Text("Total Count  : %d", UMemory::GetInstance().GetTotalAllocationCount());
+		for (UPrimitiveComponent* primitive : physScene.GetPrimitives()) {
+			ImGui::Checkbox("object isClicked", &primitive->bIsClicked);
+		}
+		if (physScene.closestHitObject != nullptr) {
+			ImGui::Text("object selected");
+		}
 		ImGui::End();
 
 		//physScene.LogRender();
@@ -292,11 +298,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// temp
 		if (!hasLogged)
 		{
-			UE_LOG(LogTemp, Log, "Hello World %d", 2025);
-			UE_LOG(TEST1, Error, "Hello World %d", 1);
-			UE_LOG(LogTemp, Log, "Hello World %d", 3);
-			UE_LOG(LogTemp, Log, "Hello World %d", 6);
-			UE_LOG(LogTemp, Log, "Hello World %d", 28);
 			UE_LOG(LogTemp, Log, "Hello World %d", 2025);
 			hasLogged = true;
 		}

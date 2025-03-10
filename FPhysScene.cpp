@@ -38,6 +38,7 @@ void FPhysScene::Update()
 		float len;
 		if (closestHitObject != nullptr)
 		{
+			closestHitObject->bIsClicked = true;
 			FMatrix rotation =
 			FMatrix::RotateX(closestHitObject->RelativeRotation.X) *
 			FMatrix::RotateY(closestHitObject->RelativeRotation.Y) *
@@ -45,8 +46,16 @@ void FPhysScene::Update()
 			FVector axisX(rotation.M[0][0], rotation.M[1][0], rotation.M[2][0]);
 			FVector axisY(rotation.M[0][1], rotation.M[1][1], rotation.M[2][1]);
 			FVector axisZ(rotation.M[0][2], rotation.M[1][2], rotation.M[2][2]);
+<<<<<<< HEAD
 
 			switch (currentGizmoMode)
+=======
+			if (CurrentGizmo.gizmoCone!=nullptr) {
+				CurrentGizmo.gizmoCone->bIsClicked = true;
+				CurrentGizmo.gizmoCylinder->bIsClicked = true;
+			}
+			switch (CurrentGizmo.gizmoAxis)
+>>>>>>> 8e2b85235b36899ee6020e65444bce523bbcbbdf
 			{
 			case GizmoMode::TRANSLATE:
 				// 이동 모드
@@ -111,7 +120,21 @@ void FPhysScene::Update()
 			default:
 			break;
 		}
+<<<<<<< HEAD
 	}
+=======
+		for (UPrimitiveComponent* primitive : primitives) {
+			if (closestHitObject != primitive) {
+				primitive->bIsClicked = false;
+			}
+		}
+		for (Gizmo gizmo : gizmos) {
+			if (CurrentGizmo.gizmoCone != gizmo.gizmoCone) {
+				gizmo.gizmoCone->bIsClicked = false;
+				gizmo.gizmoCylinder->bIsClicked = false;
+			}
+		}
+>>>>>>> 8e2b85235b36899ee6020e65444bce523bbcbbdf
 		prevRayWorld = currentRayWorld;
 	}
 
@@ -201,6 +224,11 @@ void FPhysScene::PickedObjPropertyRender()
 		ImGui::PopItemWidth();
 		ImGui::End();
 	}
+}
+
+TArray<UPrimitiveComponent*> FPhysScene::GetPrimitives()
+{
+	return primitives;
 }
 
 FVector FPhysScene::RayCast()

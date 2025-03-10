@@ -18,6 +18,7 @@ public:
     UPrimitiveComponent(EPrimitiveType type, FVector Position, FVector Rotation, FVector Scale)
         : USceneComponent(Position, Rotation, Scale), PrimitiveType(type)
     {
+        bIsClicked = false;
     }
     MeshData meshData;
 
@@ -64,4 +65,6 @@ public:
     }
 private:
     EPrimitiveType PrimitiveType;
+public:
+    bool bIsClicked;
 };
