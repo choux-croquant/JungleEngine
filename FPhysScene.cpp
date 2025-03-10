@@ -42,6 +42,10 @@ void FPhysScene::Update()
 		m_gizmoGroup->AttachTo(closestHitObject);
 		//closestHitObject->RelativeLocation + deltaRayWorld;
 	}
+	else
+	{
+		m_gizmoGroup->DetachFromParent();
+	}
 }
 
 void FPhysScene::LogRender()

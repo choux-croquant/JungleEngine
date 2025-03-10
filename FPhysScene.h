@@ -25,6 +25,7 @@ public:
 	void SetGizmo(UPrimitiveComponent* cylinder, 
 		UPrimitiveComponent* cone,
 		GizmoAxis gizmoAxis);
+	void SetGizmoGroup(USceneComponent* gizmoGroup);
 	void Update();
 	void LogRender();
 	void PickedObjPropertyRender();
@@ -41,7 +42,7 @@ private:
 	TArray<Gizmo> gizmos;
 	Gizmo CurrentGizmo;
 	bool isGizmoClicked = false;
-	USceneComponent* gizmoGroup;
+	USceneComponent* m_gizmoGroup;
 
 	POINT mousePos;
 	int width, height;
