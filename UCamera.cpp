@@ -20,7 +20,8 @@ UCamera::UCamera(FVector pos, FVector targetpos, FVector up)
     RelativeRotation = GetRotation();
     viewMatrix = FMatrix::LookAt(pos, targetPos, upDirection);
     FOV = PI / 4.0f;
-    projectionMatrix = FMatrix::Perspective(FOV, 1.0f, 1.0f, 100.0f);
+    AspectRatio = 1.0f;
+    projectionMatrix = FMatrix::Perspective(FOV, AspectRatio, 1.0f, 100.0f);
 }
 
 void UCamera::Rotate(FMatrix rotationMatrix)
@@ -192,7 +193,7 @@ void UCamera::Update()
         projectionMatrix = FMatrix::Orthogonal(-10, 10, -10, 10, -10, 10);
     }
     else {
-        projectionMatrix = FMatrix::Perspective(FOV, 1.0f, 1.0f, 100.0f);
+        projectionMatrix = FMatrix::Perspective(FOV, AspectRatio, 1.0f, 100.0f);
     }
     viewMatrix = FMatrix::LookAt(GetWorldLocation(), targetPos, upDirection);
 }

@@ -8,6 +8,7 @@ class UCamera : public USceneComponent
 {
 public:
     float FOV;
+    float AspectRatio;
     FVector originalPos;
     FVector originalUp;
     FVector facing;
