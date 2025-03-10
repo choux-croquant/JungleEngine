@@ -138,6 +138,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	physScene.SetPrimitive(&sampleSphere);
 	//physScene.SetPrimitive(&sampleCylinder);
 	//physScene.SetPrimitive(&sampleCone);
+	physScene.SetGizmo(&sampleCylinderX, &sampleConeX);
+	physScene.SetGizmo(&sampleCylinderY, &sampleConeY);
+	physScene.SetGizmo(&sampleCylinderZ, &sampleConeZ);
 	
 	ScenePropertyWindow scenePropertyWindow(mainCamera);
 

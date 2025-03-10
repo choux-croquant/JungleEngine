@@ -17,12 +17,17 @@ FPhysScene::FPhysScene(HWND hwnd, const UCamera* camera)
 
 void FPhysScene::Update()
 {
-	if (input.IsMouseButtonDown(VK_LBUTTON))
+	bool currentMouseButtonState = input.IsMouseButtonDown(VK_LBUTTON);
+
+	if (!prevMouseButtonState && input.IsMouseButtonDown(VK_LBUTTON))
 	{
 		RayCast();
 		//checkCollision();
 		checkFaceCollision();
+		checkGizmo();
 	}
+
+	prevMouseButtonState = currentMouseButtonState;
 }
 
 void FPhysScene::LogRender()
@@ -43,6 +48,15 @@ void FPhysScene::LogRender()
 	else
 	{
 		ImGui::Text("Ray Collision Object None");
+	}
+	if (isGizmoClicked)
+	{
+
+		ImGui::Text("Clicked Gizmo");
+	}
+	else
+	{
+		ImGui::Text("Clicked Gizmo None");
 	}
 	ImGui::End();
 }
@@ -302,7 +316,74 @@ FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USc
 	return transformedVertex;
 }
 
+void FPhysScene::checkGizmo()
+{
+	FVector rayOrigin = camera->RelativeLocation;
+	Gizmo closestGizmo;
+	closestGizmo.gizmoCone = nullptr;
+	closestGizmo.gizmoCylinder = nullptr;
+
+	float min_t = FLT_MAX;
+	for (Gizmo gizmo : gizmos)
+	{
+		UPrimitiveComponent* gizmoCylinder = gizmo.gizmoCylinder;
+		UPrimitiveComponent* gizmoCone = gizmo.gizmoCone;
+		if (gizmoCylinder)
+		{
+			FVector MeshIntersection;
+			if (lineMeshIntersection(gizmoCylinder, MeshIntersection))
+			{
+				float T = (rayOrigin - MeshIntersection).Length();
+				if (T < min_t)
+				{
+					min_t = T;
+					closestGizmo.gizmoCylinder = gizmoCylinder;
+					closestGizmo.gizmoCone = gizmoCone;
+				}
+			}
+
+		}
+		if (gizmoCone)
+		{
+			FVector MeshIntersection;
+			if (lineMeshIntersection(gizmoCone, MeshIntersection))
+			{
+				float T = (rayOrigin - MeshIntersection).Length();
+				if (T < min_t)
+				{
+					min_t = T;
+					closestGizmo.gizmoCylinder = gizmoCylinder;
+					closestGizmo.gizmoCone = gizmoCone;
+				}
+			}
+
+		}
+	}
+
+	if (closestGizmo.gizmoCone &&
+		closestGizmo.gizmoCylinder)
+	{
+		CurrentGizmo = closestGizmo;
+		isGizmoClicked = true;
+	}
+	else
+	{
+		CurrentGizmo.gizmoCone = nullptr;
+		CurrentGizmo.gizmoCylinder = nullptr;
+		isGizmoClicked = false;
+	}
+}
+
 void FPhysScene::SetPrimitive(UPrimitiveComponent* uCubeComp)
 {
 	primitives.push_back(uCubeComp);
+}
+
+void FPhysScene::SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* cone)
+{
+	Gizmo gizmo;
+	gizmo.gizmoCylinder = cylinder;
+	gizmo.gizmoCone = cone;
+
+	gizmos.push_back(gizmo);
 }

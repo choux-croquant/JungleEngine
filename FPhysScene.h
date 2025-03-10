@@ -4,14 +4,23 @@
 #include "Types.h"
 #include "Matrix.h"
 #include "UCamera.h"
+
+struct Gizmo
+{
+	UPrimitiveComponent* gizmoCylinder;
+	UPrimitiveComponent* gizmoCone;
+};
+
 class FPhysScene
 {
 public:
 	FPhysScene(HWND hwnd,const UCamera* camera);
 	void SetPrimitive(UPrimitiveComponent* uPrimitiveComp);
+	void SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* cone);
 	void Update();
 	void LogRender();
 	void PickedObjPropertyRender();
+
 
 	bool rayCollision = false;
 	UPrimitiveComponent* closestHitObject = nullptr;
@@ -20,6 +29,10 @@ private:
 	InputManager& input = InputManager::GetInstance();
 	HWND hwnd;
 	const UCamera* camera;
+
+	TArray<Gizmo> gizmos;
+	Gizmo CurrentGizmo;
+	bool isGizmoClicked = false;
 
 	POINT mousePos;
 	int width, height;
@@ -38,5 +51,9 @@ private:
 	void checkFaceCollision();
 	FVector TransformVertexToWorld(const FVector& localVertex, const USceneComponent* component);
 
+
+	void checkGizmo();
+
+	bool prevMouseButtonState = false;
 };
 
