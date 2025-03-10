@@ -152,7 +152,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	SceneSaveManager sceneSaveManager;
 	char saveFileName[10] = "Default";
-
+	bool hasLogged = false;
 
 	while (bIsExit == false)
 	{
@@ -308,11 +308,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		physScene.LogRender();
 		physScene.PickedObjPropertyRender();
     
-		// UE_LOG
+		// Console Window (UE_LOG)
 		ULog::DrawLogWindow();
-		if (InputManager::GetInstance().IsKeyDown('H'))
+		// temp
+		if (!hasLogged)
+		{
 			UE_LOG(LogTemp, Log, "Hello World %d", 2025);
-
+			hasLogged = true;
+		}
+			
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 		#pragma endregion
