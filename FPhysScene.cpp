@@ -32,17 +32,18 @@ void FPhysScene::Update()
 		//µå·¡±×
 		currentRayWorld = RayCast();
 		deltaRayWorld = currentRayWorld - prevRayWorld;
-		FMatrix rotation =
-			FMatrix::RotateX(closestHitObject->RelativeRotation.X) *
-			FMatrix::RotateY(closestHitObject->RelativeRotation.Y) *
-			FMatrix::RotateZ(closestHitObject->RelativeRotation.Z);
-		FVector axisX(rotation.M[0][0], rotation.M[1][0], rotation.M[2][0]);
-		FVector axisY(rotation.M[0][1], rotation.M[1][1], rotation.M[2][1]);
-		FVector axisZ(rotation.M[0][2], rotation.M[1][2], rotation.M[2][2]);
 
 		float len;
 		if (closestHitObject != nullptr)
 		{
+			FMatrix rotation =
+			FMatrix::RotateX(closestHitObject->RelativeRotation.X) *
+			FMatrix::RotateY(closestHitObject->RelativeRotation.Y) *
+			FMatrix::RotateZ(closestHitObject->RelativeRotation.Z);
+			FVector axisX(rotation.M[0][0], rotation.M[1][0], rotation.M[2][0]);
+			FVector axisY(rotation.M[0][1], rotation.M[1][1], rotation.M[2][1]);
+			FVector axisZ(rotation.M[0][2], rotation.M[1][2], rotation.M[2][2]);
+
 			switch (CurrentGizmo.gizmoAxis)
 			{
 			case GizmoAxis::X:

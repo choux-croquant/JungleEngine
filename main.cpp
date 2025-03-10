@@ -95,6 +95,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplWin32_Init((void*)hWnd);
 	ImGui_ImplDX11_Init(URenderer::GetInstance().Device, URenderer::GetInstance().DeviceContext);
+	
+	// Magic Number - need to fix
+	SendMessage(hWnd, WM_SIZE, SIZE_RESTORED, MAKELPARAM(1000.0f, 980.0f));
 
 	const int targetFPS = 60;
 	const double targetFrameTime = 1000.0 / targetFPS;
