@@ -19,7 +19,8 @@ public:
     UCamera(FVector pos, FVector target, FVector up);
 
     void Rotate(FMatrix rotationMatrix);
-    void RotateByQuaternion(Quaternion roatation);
+    void RotateByQuaternion(Quaternion rotation);
+    void SetRotation(Quaternion rotation);
     void ResetRotation();
     FVector GetRotation();
     FVector GetRotation(Quaternion rotation);
