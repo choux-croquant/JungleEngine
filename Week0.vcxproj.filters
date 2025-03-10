@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -33,6 +29,12 @@
     </Filter>
     <Filter Include="Source Files\Engine\Mesh">
       <UniqueIdentifier>{9a772518-1d25-426d-bfa8-7af597878de1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Statistics">
+      <UniqueIdentifier>{cecf02d2-8532-427c-915b-5b634383ea27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Mesh\Guide">
+      <UniqueIdentifier>{f3ab5445-4ae5-413e-aa25-4ed8e45e87ab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -66,26 +68,26 @@
     <ClCompile Include="Matrix.cpp">
       <Filter>Source Files\Utils\Math</Filter>
     </ClCompile>
-    <ClCompile Include="UPhysScene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UEngineStatics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UGeometryGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ULog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AActor.cpp">
       <Filter>Source Files\Engine\Core</Filter>
     </ClCompile>
+    <ClCompile Include="UEngineStatics.cpp">
+      <Filter>Source Files\Engine\Statistics</Filter>
+    </ClCompile>
     <ClCompile Include="ScenePropertyWindow.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Engine\Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="ULog.cpp">
+      <Filter>Source Files\Engine\Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="UGeometryGenerator.cpp">
+      <Filter>Source Files\Engine\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="UObject.cpp">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="UPhysScene.cpp">
+      <Filter>Source Files\Engine\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -146,32 +148,8 @@
     <ClInclude Include="Types.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="UEngineStatics.h">
-      <Filter>Source Files\Engine\Core</Filter>
-    </ClInclude>
     <ClInclude Include="UCubeMeshData.h">
       <Filter>Source Files\Engine\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="UCamera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UPhysScene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UMemory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UArrowMeshData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UGeometryGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ULog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UWorldAxis.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UActorComponent.h">
       <Filter>Source Files\Engine\Core</Filter>
@@ -184,12 +162,6 @@
     </ClInclude>
     <ClInclude Include="ULevel.h">
       <Filter>Source Files\Engine\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="ScenePropertyWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="USceneSaveManager.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UConeComp.h">
       <Filter>Source Files\Engine\Mesh</Filter>
@@ -210,7 +182,34 @@
       <Filter>Source Files\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Quaternion.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Utils\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ULog.h">
+      <Filter>Source Files\Engine\Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="UMemory.h">
+      <Filter>Source Files\Engine\Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="ScenePropertyWindow.h">
+      <Filter>Source Files\Engine\Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="UEngineStatics.h">
+      <Filter>Source Files\Engine\Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="UWorldAxis.h">
+      <Filter>Source Files\Engine\Mesh\Guide</Filter>
+    </ClInclude>
+    <ClInclude Include="UPhysScene.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="USceneSaveManager.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="UGeometryGenerator.h">
+      <Filter>Source Files\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="UCamera.h">
+      <Filter>Source Files\Engine\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
