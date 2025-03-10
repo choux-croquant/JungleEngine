@@ -233,6 +233,19 @@ struct FMatrix
         return result;
     }
 
+    static FMatrix Orthogonal(float left, float right, float bottom, float top, float nearZ, float farZ) {
+        FMatrix ortho = Identity;
+        ortho.M[0][0] = 2.0f / (right - left);
+        ortho.M[1][1] = 2.0f / (top - bottom);
+        ortho.M[2][2] = 1.0f / (farZ - nearZ);
+        ortho.M[0][3] = -(right + left) / (right - left);
+        ortho.M[1][3] = -(top + bottom) / (top - bottom);
+        ortho.M[2][3] = -nearZ / (farZ - nearZ);
+        ortho.M[3][3] = 1.0f;
+
+        return ortho;
+    }
+
     FMatrix operator*(FMatrix rhs) const {
         return this->Multiply(rhs);
     }

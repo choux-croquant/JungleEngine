@@ -36,6 +36,15 @@ void ScenePropertyWindow::Draw()
 {
 	//카메라 성질
 	ImGui::Checkbox("Orthogonal", &bIsOrthogonal);
+	if (mainCamera->bIsOrthogonal != bIsOrthogonal) {
+		mainCamera->bIsOrthogonal = bIsOrthogonal;
+		if (bIsOrthogonal) {
+			mainCamera->RelativeLocation = FVector(-10.0f, 0.0f, 0.0f);
+			mainCamera->ResetRotation();
+		}
+		mainCamera->Update();
+		UpdateCamera();
+	}
 	ImGui::DragFloat("FOV", &FOV, 0.1f, 30.0f, 120.0f, "%.3f");
 	float fov = DegtoRad(FOV);
 	if (fov != mainCamera->FOV) {

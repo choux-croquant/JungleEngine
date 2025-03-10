@@ -109,7 +109,7 @@ void UCamera::Translate(FVector offset)
 void UCamera::ChangeFOV(float fov)
 {
     FOV = fov;
-    projectionMatrix = FMatrix::Perspective(FOV, 1.0f, 1.0f, 100.0f);
+    Update();
 }
 
 void UCamera::SetWorldLocation(FVector pos)
@@ -188,5 +188,11 @@ void UCamera::MoveCamera(float deltaTime) {
 
 void UCamera::Update()
 {
+    if (bIsOrthogonal) {
+        projectionMatrix = FMatrix::Orthogonal(-10, 10, -10, 10, -10, 10);
+    }
+    else {
+        projectionMatrix = FMatrix::Perspective(FOV, 1.0f, 1.0f, 100.0f);
+    }
     viewMatrix = FMatrix::LookAt(GetWorldLocation(), targetPos, upDirection);
 }

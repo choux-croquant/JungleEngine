@@ -15,6 +15,7 @@ public:
     FVector targetPos;
     FMatrix viewMatrix;
     FMatrix projectionMatrix;
+    bool bIsOrthogonal;
 
     UCamera(FVector pos, FVector target, FVector up);
 
