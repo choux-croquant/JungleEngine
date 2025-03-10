@@ -71,5 +71,6 @@ private:
 	void checkGizmo();
 
 	bool prevMouseButtonState = false;
+
 };
 

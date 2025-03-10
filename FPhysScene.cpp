@@ -32,19 +32,38 @@ void FPhysScene::Update()
 		//µå·¡±×
 		currentRayWorld = RayCast();
 		deltaRayWorld = currentRayWorld - prevRayWorld;
-
+		if (closestHitObject != nullptr)
+		{
+			switch (CurrentGizmo.gizmoAxis)
+			{
+			case GizmoAxis::X:
+				closestHitObject->RelativeLocation.X += deltaRayWorld.X;
+				break;
+			case GizmoAxis::Y:
+				closestHitObject->RelativeLocation.Y += deltaRayWorld.Y;
+				break;
+			case GizmoAxis::Z:
+				closestHitObject->RelativeLocation.Z += deltaRayWorld.Z;
+				break;
+			default:
+				break;
+			}
+		}
+		prevRayWorld = currentRayWorld;
 	}
+
+	
 
 	prevMouseButtonState = currentMouseButtonState;
 
 	if (rayCollision)
 	{
-		//m_gizmoGroup->AttachTo(closestHitObject);
+		m_gizmoGroup->AttachTo(closestHitObject);
 		//closestHitObject->RelativeLocation + deltaRayWorld;
 	}
 	else if (!rayCollision&&!isGizmoClicked)
 	{
-		//m_gizmoGroup->DetachFromParent();
+		m_gizmoGroup->DetachFromParent();
 	}
 }
 
@@ -67,6 +86,7 @@ void FPhysScene::LogRender()
 	{
 		ImGui::Text("Ray Collision Object None");
 	}
+	
 	if (isGizmoClicked)
 	{
 		ImGui::Text("Clicked Gizmo Axis : %d", CurrentGizmo.gizmoAxis);
