@@ -293,11 +293,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		if (!hasLogged)
 		{
 			UE_LOG(LogTemp, Log, "Hello World %d", 2025);
-			UE_LOG(TEST1, Error, "Hello World %d", 1);
-			UE_LOG(LogTemp, Log, "Hello World %d", 3);
-			UE_LOG(LogTemp, Log, "Hello World %d", 6);
-			UE_LOG(LogTemp, Log, "Hello World %d", 28);
-			UE_LOG(LogTemp, Log, "Hello World %d", 2025);
 			hasLogged = true;
 		}
 			
