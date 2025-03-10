@@ -20,7 +20,7 @@ struct Gizmo
 class FPhysScene
 {
 public:
-	FPhysScene(HWND hwnd,const UCamera* camera);
+	FPhysScene(HWND hwnd,UCamera* camera);
 	void SetPrimitive(UPrimitiveComponent* uPrimitiveComp);
 	void SetGizmo(UPrimitiveComponent* cylinder, 
 		UPrimitiveComponent* cone,
@@ -37,7 +37,7 @@ private:
 	TArray<UPrimitiveComponent*> primitives;
 	InputManager& input = InputManager::GetInstance();
 	HWND hwnd;
-	const UCamera* camera;
+	UCamera* camera;
 
 	USceneComponent* m_gizmoGroup;
 	TArray<Gizmo> gizmos;

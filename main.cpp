@@ -175,7 +175,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 		}
 
-		physScene.Update();
 
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();
@@ -224,6 +223,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			primitive->Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		}
 		ImGui::Separator();
+
+		physScene.Update();
 
 		//씬 저장
 		ImGui::InputText("Scene Name", saveFileName, 10);
