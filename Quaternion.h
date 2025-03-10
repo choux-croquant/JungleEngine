@@ -75,7 +75,7 @@ public:
 	}
 
 	static Quaternion RotateX(float angle) {
-		return Rotate(angle, 1.0f, 0.0f, 0.0f);
+		return Rotate(-angle, 1.0f, 0.0f, 0.0f);
 	}
 
 	static Quaternion RotateY(float angle) {
@@ -83,7 +83,7 @@ public:
 	}
 
 	static Quaternion RotateZ(float angle) {
-		return Rotate(-angle, 0.0f, 0.0f, 1.0f);
+		return Rotate(angle, 0.0f, 0.0f, 1.0f);
 	}
 
 	static Quaternion Rotate(FVector axis, float angle) {

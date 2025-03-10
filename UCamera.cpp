@@ -132,11 +132,11 @@ void UCamera::MoveCamera(float deltaTime) {
 
     // 회전 입력 처리 테스트
     if (input.IsKeyDown(VK_LEFT)) { // 좌회전 (Yaw)
-        Quaternion yawRotation = Quaternion::RotateZ(rotateSpeed);
+        Quaternion yawRotation = Quaternion::RotateZ(-rotateSpeed);
         RotateByQuaternion(yawRotation);
     }
     if (input.IsKeyDown(VK_RIGHT)) { // 우회전 (Yaw)
-        Quaternion yawRotation = Quaternion::RotateZ(-rotateSpeed);
+        Quaternion yawRotation = Quaternion::RotateZ(rotateSpeed);
         RotateByQuaternion(yawRotation);
     }
     if (input.IsKeyDown(VK_UP)) { // 상회전 (Pitch)
