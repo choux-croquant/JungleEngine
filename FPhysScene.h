@@ -10,6 +10,13 @@ enum class GizmoAxis
 	X,Y,Z
 };
 
+enum class GizmoMode
+{
+	TRANSLATE,
+	ROTATE,
+	SCALE,
+};
+
 struct Gizmo
 {
 	UPrimitiveComponent* gizmoCylinder;
@@ -29,10 +36,10 @@ public:
 	void Update();
 	void LogRender();
 	void PickedObjPropertyRender();
-
-
+	
 	bool rayCollision = false;
 	UPrimitiveComponent* closestHitObject = nullptr;
+	GizmoMode currentGizmoMode = GizmoMode::TRANSLATE;
 private:
 	TArray<UPrimitiveComponent*> primitives;
 	InputManager& input = InputManager::GetInstance();
@@ -72,8 +79,9 @@ private:
 
 
 	void checkGizmo();
+	void SetGizmoMode();
 
 	bool prevMouseButtonState = false;
-
+	bool prevSpaceKeyState = false;
 };
 

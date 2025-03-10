@@ -1,5 +1,6 @@
 #include "FPhysScene.h"
 #include "ImGui/imgui.h"
+#include "ULog.h"
 
 FPhysScene::FPhysScene(HWND hwnd, UCamera* camera)
 {
@@ -17,6 +18,7 @@ FPhysScene::FPhysScene(HWND hwnd, UCamera* camera)
 
 void FPhysScene::Update()
 {
+	SetGizmoMode();
 	bool currentMouseButtonState = input.IsMouseButtonDown(VK_LBUTTON);
 
 	if (!prevMouseButtonState && input.IsMouseButtonDown(VK_LBUTTON))
@@ -44,29 +46,74 @@ void FPhysScene::Update()
 			FVector axisY(rotation.M[0][1], rotation.M[1][1], rotation.M[2][1]);
 			FVector axisZ(rotation.M[0][2], rotation.M[1][2], rotation.M[2][2]);
 
-			switch (CurrentGizmo.gizmoAxis)
+			switch (currentGizmoMode)
 			{
-			case GizmoAxis::X:
-				len = deltaRayWorld.Dot(axisX);
-				closestHitObject->RelativeLocation += axisX.Normalize() * len * 0.1f;
-				break;
-			case GizmoAxis::Y:
-				len = deltaRayWorld.Dot(axisY);
-				closestHitObject->RelativeLocation += axisY.Normalize() * len * 0.1f;
-				break;
-			case GizmoAxis::Z:
-				len = deltaRayWorld.Dot(axisZ);
-				closestHitObject->RelativeLocation += axisZ.Normalize() * len * 0.1f;
-				break;
+			case GizmoMode::TRANSLATE:
+				// 이동 모드
+				switch (CurrentGizmo.gizmoAxis)
+				{
+				case GizmoAxis::X:
+					len = deltaRayWorld.Dot(axisX);
+					closestHitObject->RelativeLocation += axisX.Normalize() * len * 0.1f;
+					break;
+				case GizmoAxis::Y:
+					len = deltaRayWorld.Dot(axisY);
+					closestHitObject->RelativeLocation += axisY.Normalize() * len * 0.1f;
+					break;
+				case GizmoAxis::Z:
+					len = deltaRayWorld.Dot(axisZ);
+					closestHitObject->RelativeLocation += axisZ.Normalize() * len * 0.1f;
+					break;
+				}
+			break;
+
+			case GizmoMode::ROTATE:
+				// 회전 모드
+				switch (CurrentGizmo.gizmoAxis)
+				{
+				case GizmoAxis::X:
+					len = deltaRayWorld.Dot(axisX);
+					closestHitObject->RelativeRotation.X += len * 5.0f;
+					break;
+				case GizmoAxis::Y:
+					len = deltaRayWorld.Dot(axisY);
+					closestHitObject->RelativeRotation.Y += len * 5.0f;
+					break;
+				case GizmoAxis::Z:
+					len = deltaRayWorld.Dot(axisZ);
+					closestHitObject->RelativeRotation.Z += len * 5.0f;
+					break;
+				}
+			break;
+
+			case GizmoMode::SCALE:
+				// 크기 조절 모드
+				switch (CurrentGizmo.gizmoAxis)
+				{
+				case GizmoAxis::X:
+					len = deltaRayWorld.Dot(axisX);
+					if (closestHitObject->RelativeScale3D.X + len * 0.1f < 0.001f) return;
+					closestHitObject->RelativeScale3D.X += len * 0.1f;
+					break;
+				case GizmoAxis::Y:
+					len = deltaRayWorld.Dot(axisY);
+					if (closestHitObject->RelativeScale3D.Y + len * 0.1f < 0.001f) return;
+					closestHitObject->RelativeScale3D.Y += len * 0.1f;
+					break;
+				case GizmoAxis::Z:
+					len = deltaRayWorld.Dot(axisZ);
+					if (closestHitObject->RelativeScale3D.Z + len * 0.1f < 0.001f) return;
+					closestHitObject->RelativeScale3D.Z += len * 0.1f;
+					break;
+				}
+			break;
+
 			default:
-				break;
-			}
-			//closestHitObject->RelativeLocation + deltaRayWorld;
+			break;
 		}
+	}
 		prevRayWorld = currentRayWorld;
 	}
-
-
 
 	prevMouseButtonState = currentMouseButtonState;
 
@@ -437,6 +484,31 @@ void FPhysScene::checkGizmo()
 		CurrentGizmo.gizmoCylinder = nullptr;
 		isGizmoClicked = false;
 	}
+}
+
+void FPhysScene::SetGizmoMode() {
+	InputManager& input = InputManager::GetInstance();
+
+	bool currentSpaceKeyState = input.IsKeyDown(' ');
+
+	if (!prevSpaceKeyState && currentSpaceKeyState) {
+		switch (currentGizmoMode)
+		{
+		case GizmoMode::TRANSLATE:
+			currentGizmoMode = GizmoMode::ROTATE;
+			break;
+		case GizmoMode::ROTATE:
+			currentGizmoMode = GizmoMode::SCALE;
+			break;
+		case GizmoMode::SCALE:
+			currentGizmoMode = GizmoMode::TRANSLATE;
+			break;
+		default:
+			break;
+		}
+	}
+
+	prevSpaceKeyState = currentSpaceKeyState;
 }
 
 void FPhysScene::SetPrimitive(UPrimitiveComponent* uCubeComp)
