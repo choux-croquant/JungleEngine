@@ -12,7 +12,7 @@ static float ROT = 0;
 class URenderer
 {
 private:
-    // URenderer를 주입받지 않도록 하기 위해 싱글턴으로 변경함.
+    // URenderer를 주입하지 않도록 하기 위해 싱글턴으로 변경함.
     URenderer() {};
     URenderer(const URenderer& ref) {};
     URenderer& operator=(const URenderer& ref) {};
@@ -96,6 +96,8 @@ public:
         DeviceContext->RSSetState(RasterizerState);
 
         // 셰이더 컴파일 및 생성
+        #if defined(DEBUG) || defined(_DEBUG)
+
         ID3DBlob* vsBlob = nullptr;
         D3DCompileFromFile(L"ProjectionVertexShader.hlsl", nullptr, nullptr, "VS", "vs_5_0", 0, 0, &vsBlob, nullptr);
         Device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, &VertexShader);
@@ -107,7 +109,23 @@ public:
         ID3DBlob* ps2Blob = nullptr;
         D3DCompileFromFile(L"SingleColorPixelShader.hlsl", nullptr, nullptr, "PS", "ps_5_0", 0, 0, &ps2Blob, nullptr);
         Device->CreatePixelShader(ps2Blob->GetBufferPointer(), ps2Blob->GetBufferSize(), nullptr, &PixelShader2);
+        
+        #else
 
+        ID3DBlob* vsBlob = nullptr;
+        D3DReadFileToBlob(L"ProjectionVertexShader.cso", &vsBlob);
+        Device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, &VertexShader);
+
+        ID3DBlob* psBlob = nullptr;
+        D3DReadFileToBlob(L"DefaultPixelShader.cso", &psBlob);
+        Device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, &PixelShader);
+
+        ID3DBlob* ps2Blob = nullptr;
+        D3DReadFileToBlob(L"SingleColorPixelShader.cso", &ps2Blob);
+        Device->CreatePixelShader(ps2Blob->GetBufferPointer(), ps2Blob->GetBufferSize(), nullptr, &PixelShader2);
+
+        #endif
+        
         // 입력 레이아웃 생성
         D3D11_INPUT_ELEMENT_DESC layout[] =
         {

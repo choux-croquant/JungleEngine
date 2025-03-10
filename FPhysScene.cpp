@@ -47,15 +47,15 @@ void FPhysScene::Update()
 			{
 			case GizmoAxis::X:
 				len = deltaRayWorld.Dot(axisX);
-				closestHitObject->RelativeLocation += axisX.Normalize()*len;
+				closestHitObject->RelativeLocation += axisX.Normalize() * len * 0.1f;
 				break;
 			case GizmoAxis::Y:
 				len = deltaRayWorld.Dot(axisY);
-				closestHitObject->RelativeLocation += axisY.Normalize()*len;
+				closestHitObject->RelativeLocation += axisY.Normalize() * len * 0.1f;
 				break;
 			case GizmoAxis::Z:
 				len = deltaRayWorld.Dot(axisZ);
-				closestHitObject->RelativeLocation += axisZ.Normalize()*len;
+				closestHitObject->RelativeLocation += axisZ.Normalize() * len * 0.1f;
 				break;
 			default:
 				break;
