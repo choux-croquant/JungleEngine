@@ -38,6 +38,7 @@ public:
         // MVP 행렬 계산
         FMatrix mvp = projection * view * model;
         constantData.MVP = mvp;
+        constantData.bClicked = bIsClicked ? 1 : 0;
 
         // 렌더링 데이터 업데이트 및 그리기
         URenderer::GetInstance().UpdateConstant(constantData);

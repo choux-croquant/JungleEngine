@@ -29,7 +29,7 @@ public:
 	void Update();
 	void LogRender();
 	void PickedObjPropertyRender();
-
+	TArray<UPrimitiveComponent*> GetPrimitives();
 
 	bool rayCollision = false;
 	UPrimitiveComponent* closestHitObject = nullptr;
