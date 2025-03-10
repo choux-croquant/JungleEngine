@@ -275,7 +275,7 @@ struct FMatrix
                 std::cerr << "Matrix is singular and cannot be inverted (Gauss-Jordan)." << std::endl;
                 return FMatrix::Identity; // 역행렬 없음 (단위 행렬 반환)
             }
-            std::swap(augmented.M[col], augmented.M[pivotRow]);
+            std::swap(augmented.M[col], augmented.M[pivotRow]);            
             std::swap(identity.M[col], identity.M[pivotRow]);
 
             // 3. 현재 열(col)의 피벗을 1로 만들기
