@@ -24,8 +24,8 @@ void FPhysScene::Update()
 		//클릭 한번
 		prevRayWorld = RayCast();
 		//checkCollision();
-		checkFaceCollision();
 		checkGizmo();
+		checkFaceCollision();
 	}
 	else if (prevMouseButtonState && input.IsMouseButtonDown(VK_LBUTTON))
 	{
@@ -34,10 +34,12 @@ void FPhysScene::Update()
 		deltaRayWorld = currentRayWorld - prevRayWorld;
 		if (closestHitObject != nullptr)
 		{
+
 			switch (CurrentGizmo.gizmoAxis)
 			{
 			case GizmoAxis::X:
 				closestHitObject->RelativeLocation.X += deltaRayWorld.X;
+				
 				break;
 			case GizmoAxis::Y:
 				closestHitObject->RelativeLocation.Y += deltaRayWorld.Y;
@@ -48,6 +50,7 @@ void FPhysScene::Update()
 			default:
 				break;
 			}
+			//closestHitObject->RelativeLocation + deltaRayWorld;
 		}
 		prevRayWorld = currentRayWorld;
 	}
@@ -59,7 +62,6 @@ void FPhysScene::Update()
 	if (rayCollision)
 	{
 		m_gizmoGroup->AttachTo(closestHitObject);
-		//closestHitObject->RelativeLocation + deltaRayWorld;
 	}
 	else if (!rayCollision&&!isGizmoClicked)
 	{
@@ -346,6 +348,7 @@ bool FPhysScene::lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& 
 
 FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USceneComponent* component)
 {
+	/*
 	FVector WorldPos = component->GetWorldLocation();
 	FVector WorldRotation = component->GetWorldRotation();
 	FVector WorldScale = component->GetWorldScale3D();
@@ -358,6 +361,8 @@ FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USc
 	FMatrix S = FMatrix::Scale(WorldScale);
 
 	FMatrix ModelMatrix = T * R * S;
+	*/
+	FMatrix ModelMatrix = component->GetWorldTransform();
 	FVector transformedVertex = ModelMatrix.TransformVector(localVertex);
 	return transformedVertex;
 }
@@ -409,7 +414,7 @@ void FPhysScene::checkGizmo()
 		}
 	}
 
-	if (closestGizmo.gizmoCone &&
+	if (closestGizmo.gizmoCone ||
 		closestGizmo.gizmoCylinder)
 	{
 		CurrentGizmo = closestGizmo;
