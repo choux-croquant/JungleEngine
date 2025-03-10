@@ -110,23 +110,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	UCamera mainCamera(FVector(-10.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 1.0f));
 	mainCamera.Update();
 
-	// TEST Gizmo 
-	UGizmo gizmo(FVector(4.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-
 	// Guide Axis
 	UWorldAxis worldAxis(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
 	UCubeComp sampleCube(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	USphereComp sampleSphere(FVector(2.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCylinderComp sampleCylinder(FVector(0.0f, 2.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UConeComp sampleCone(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+
+	USceneComponent group(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.2f, 0.2f, 0.2f));
+	
+	UCylinderComp sampleCylinderX(FVector(0.6f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(0.5f, 0.5f, 3.0f));
+	UConeComp sampleConeX(FVector(1.2f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UCylinderComp sampleCylinderY(FVector(0.0f, 0.6f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f));
+	UConeComp sampleConeY(FVector(0.0f, 1.2f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UCylinderComp sampleCylinderZ(FVector(0.0f, 0.0f, 0.6f), FVector(0.0f, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f));
+	UConeComp sampleConeZ(FVector(0.0f, 0.0f, 1.2f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+
+	sampleConeX.AttachTo(&group);
+	sampleCylinderX.AttachTo(&group);
+	sampleConeY.AttachTo(&group);
+	sampleCylinderY.AttachTo(&group);
+	sampleConeZ.AttachTo(&group);
+	sampleCylinderZ.AttachTo(&group);
 
 
 	FPhysScene physScene(hWnd,&mainCamera);
 	physScene.SetPrimitive(&sampleCube);
 	physScene.SetPrimitive(&sampleSphere);
-	physScene.SetPrimitive(&sampleCylinder);
-	physScene.SetPrimitive(&sampleCone);
+	//physScene.SetPrimitive(&sampleCylinder);
+	//physScene.SetPrimitive(&sampleCone);
 	
 	ScenePropertyWindow scenePropertyWindow(mainCamera);
 
@@ -157,18 +168,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		}
 
-		//physScene.Update();
+		physScene.Update();
 
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();
 		worldAxis.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		gizmo.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		//sampleCone.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		//sampleCube.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		//sampleCylinder.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		//sampleSphere.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		
+		sampleCube.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleSphere.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 
+		sampleConeX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleCylinderX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleConeY.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleCylinderY.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleConeZ.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		sampleCylinderZ.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 
 		#pragma region ImGui
 		ImGui_ImplDX11_NewFrame();

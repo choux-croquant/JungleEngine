@@ -176,6 +176,7 @@ struct FMatrix
 
         float cosA = cos(angle);
         float sinA = sin(angle);
+
         float oneMinusCosA = 1.0f - cosA;
 
         // 미리 계산

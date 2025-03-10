@@ -21,16 +21,16 @@ public:
         FConstants constantData = {};
 
         // Scale 행렬
-        FMatrix scaleMatrix = FMatrix::Scale(RelativeScale3D);
+        FMatrix scaleMatrix = FMatrix::Scale(GetWorldScale3D());
 
         // Rotation 행렬 (각 축별 회전 적용)
         FMatrix rotationMatrix =
-            FMatrix::RotateZ(RelativeRotation.Z) *
-            FMatrix::RotateY(RelativeRotation.Y) *
-            FMatrix::RotateX(RelativeRotation.X);
+            FMatrix::RotateZ(GetWorldRotation().Z) *
+            FMatrix::RotateY(GetWorldRotation().Y) *
+            FMatrix::RotateX(GetWorldRotation().X);
 
         // Translation(이동) 행렬
-        FMatrix translationMatrix = FMatrix::Identity.Translate(RelativeLocation);
+        FMatrix translationMatrix = FMatrix::Identity.Translate(GetWorldLocation());
 
         // ModelMatrix = Scale * Rotation * Translation
         FMatrix model = translationMatrix * rotationMatrix * scaleMatrix;

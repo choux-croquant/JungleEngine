@@ -262,8 +262,8 @@ void UGeometryGenerator::CreateCone(float bottomRadius, float height, uint32 sli
     for (uint32 slice = 0; slice < sliceCount; ++slice)
     {
         meshData.Indices.push_back(centerIndex); // 중심 정점
-        meshData.Indices.push_back(centerIndex + (slice + 1) % sliceCount + 1); // 슬라이스의 끝에서 시작점으로 연결
         meshData.Indices.push_back(centerIndex + slice + 1);
+        meshData.Indices.push_back(centerIndex + (slice + 1) % sliceCount + 1); // 슬라이스의 끝에서 시작점으로 연결
     }
 
     // 원뿔의 꼭짓점 추가
