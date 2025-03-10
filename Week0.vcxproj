@@ -167,7 +167,6 @@
     <ClInclude Include="UActorComponent.h" />
     <ClInclude Include="UMemory.h" />
     <ClInclude Include="Types.h" />
-    <ClInclude Include="UArrowMeshData.h" />
     <ClInclude Include="UCamera.h" />
     <ClInclude Include="UConeComp.h" />
     <ClInclude Include="UConeMeshData.h" />
