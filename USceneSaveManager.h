@@ -1,9 +1,11 @@
 #pragma once
-#include "Types.h"
-#include "Vector.h"
 #include <fstream>
 #include <iostream>
+
+#include "Types.h"
+#include "Vector.h"
 #include "include/nlohmann/json.hpp"
+
 using json = nlohmann::ordered_json;
 
 class USceneSaveManager {
@@ -13,7 +15,7 @@ public:
 		FVector Location;
 		FVector Rotation;
 		FVector Scale;
-		std::string Type;
+		FString Type;
 
 		json VectortoJson(const FVector& data) const {
 			return json{ data.X, data.Y, data.Z };
@@ -46,7 +48,7 @@ public:
 	}
 
 	void Save(const char* filename) const {
-		std::string fileName = std::string(filename) + ".scene";
+		FString fileName = FString(filename) + ".scene";
 
 		json j = toJson();
 		std::ofstream file(fileName);
@@ -57,7 +59,7 @@ public:
 	}
 
 	bool Load(const char* filename) {
-		std::string fileName = std::string(filename) + ".scene";
+		FString fileName = FString(filename) + ".scene";
 		std::ifstream file(fileName);
 		if (file.is_open()) {
 			json j;
@@ -74,7 +76,7 @@ public:
 				primitive.Location = FVector(it.value()["Location"][0], it.value()["Location"][1], it.value()["Location"][2]);
 				primitive.Rotation = FVector(it.value()["Rotation"][0], it.value()["Rotation"][1], it.value()["Rotation"][2]);
 				primitive.Scale = FVector(it.value()["Scale"][0], it.value()["Scale"][1], it.value()["Scale"][2]);
-				primitive.Type = FString(it.value()["Type"].get<std::string>());
+				primitive.Type = FString(it.value()["Type"].get<FString>());
 				SceneData.push_back(primitive);
 			}
 			return true;

@@ -1,6 +1,6 @@
 #pragma once
 #include <Windows.h>
-#include <unordered_map>
+#include "Types.h"
 #include "ImGui/imgui.h"
 
 class UInputManager {
@@ -17,7 +17,7 @@ public:
     }
 
     // KeyState getter
-    std::unordered_map<unsigned char, bool> GetKeyStates() const {
+    TMap<unsigned char, bool> GetKeyStates() const {
         return keyStates;
     }
 
@@ -87,8 +87,8 @@ public:
     }
 
 private:
-    std::unordered_map<unsigned char, bool> keyStates;
-    std::unordered_map<int, bool> mouseButtonStates;
+    TMap<unsigned char, bool> keyStates;
+    TMap<int, bool> mouseButtonStates;
     POINT mousePosition = { 0, 0 };
     POINT previousMousePosition = { 0, 0 }; // 이전 마우스 위치
     POINT mouseDelta = { 0, 0 }; // 마우스 이동량

@@ -1,9 +1,11 @@
-#include "ULog.h"
-#include "ImGui/imgui.h"
 #include <chrono>
 #include <ctime>
 
-std::vector<std::string> ULog::LogMessages;  
+#include "ULog.h"
+#include "ImGui/imgui.h"
+#include "Types.h"
+
+TArray<FString> ULog::LogMessages;  
 std::mutex ULog::LogMutex;
 
 void ULog::Log(const char* category, const char* verbosity, const char* fmt, ...)
@@ -24,7 +26,7 @@ void ULog::Log(const char* category, const char* verbosity, const char* fmt, ...
 	std::strftime(timeBuffer, sizeof(timeBuffer), "%H:%M:%S", &localTime);
 
 	// 문자열로 결합
-	std::string logEntry = std::string(timeBuffer) + "[" + category + "][" + verbosity + "]" + buffer;
+	FString logEntry = FString(timeBuffer) + "[" + category + "][" + verbosity + "]" + buffer;
 	{
 		std::lock_guard<std::mutex> lock(LogMutex);
 		LogMessages.push_back(logEntry);
@@ -43,7 +45,7 @@ void ULog::DrawLogWindow()
 	ImGui::SameLine();
 	if (ImGui::Button("Copy"))
 	{
-		std::string allLogs;
+		FString allLogs;
 		{
 			std::lock_guard<std::mutex> lock(LogMutex);
 			for (const auto& msg : LogMessages)
@@ -63,14 +65,14 @@ void ULog::DrawLogWindow()
 	std::lock_guard<std::mutex> lock(LogMutex);  // lock LogMutex -> 여러 스레드 접근 시 발생하는 경쟁상태 예방
 	for (const auto& msg : LogMessages)
 	{
-		if (strlen(filter) != 0 && msg.find(filter) == std::string::npos)
+		if (strlen(filter) != 0 && msg.find(filter) == FString::npos)
 			continue;
 
 		ImVec4 color = ImGui::GetStyle().Colors[ImGuiCol_Text];
 
-		if (msg.find("[Warning]") != std::string::npos)
+		if (msg.find("[Warning]") != FString::npos)
 			color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
-		else if (msg.find("[Error]") != std::string::npos)
+		else if (msg.find("[Error]") != FString::npos)
 			color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
 		
 		ImGui::PushStyleColor(ImGuiCol_Text, color);

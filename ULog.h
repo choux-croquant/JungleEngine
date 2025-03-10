@@ -8,6 +8,8 @@
 #include <mutex>
 #include <cstdarg>
 
+#include "Types.h"
+
 class ULog
 {
 public:
@@ -17,7 +19,7 @@ public:
 	static void DrawLogWindow();
 private:
 	// 로그 메시지를 저장하기 위한 벡터, 뮤텍스
-	static std::vector<std::string> LogMessages;
+	static TArray<FString> LogMessages;
 	static std::mutex LogMutex;
 };
 

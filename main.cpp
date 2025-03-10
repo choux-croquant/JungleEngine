@@ -234,7 +234,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Separator();
 
 
-		//씬 저장
+		// Scene save
 		ImGui::InputText("Scene Name", saveFileName, 10);
 		if(ImGui::Button("New Scene")) {
 			delete currLevel;
@@ -248,7 +248,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			primitives = currLevel->GetPrimitives();
 			if (primitives.size() > 0) {
 				for (int i = 0; i < primitives.size(); i++) {
-					std::string TypeName = primitives[i]->GetTypeName();
+					FString TypeName = primitives[i]->GetTypeName();
 					USceneSaveManager::PrimitiveData data;
 					data.UUID = primitives[i]->GetUUID();
 					data.Location = primitives[i]->GetLocation();
@@ -295,13 +295,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		UInputManager::GetInstance().Update();
 		scenePropertyWindow.UpdateCamera();
 
-		//ImGui::Text("camera position: %f, %f, %f", mainCamera.RelativeLocation.X, mainCamera.RelativeLocation.Y, mainCamera.RelativeLocation.Z);
-		//ImGui::Text("camera up direction: %f, %f, %f", mainCamera.upDirection.X, mainCamera.upDirection.Y, mainCamera.upDirection.Z);
-		//ImGui::Text("camera facing: %f, %f, %f", mainCamera.facing.X, mainCamera.facing.Y, mainCamera.facing.Z);
-		//ImGui::Text("camera rotation: %f, %f, %f", RadtoDeg(mainCamera.RelativeRotation.X), RadtoDeg(mainCamera.RelativeRotation.Y), RadtoDeg(mainCamera.RelativeRotation.Z));
-		//ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
-		//ImGui::Text("projection Matrix:\n%s", mainCamera.projectionMatrix.PrintMatrix().c_str());
-
 		// Heap Memory
 		ImGui::Text("Total Bytes  : %d", UMemory::GetInstance().GetTotalAllocationBytes());
 		ImGui::Text("Total Count  : %d", UMemory::GetInstance().GetTotalAllocationCount());
@@ -312,7 +305,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     
 		// Console Window (UE_LOG)
 		ULog::DrawLogWindow();
-		// temp
+
 		if (!hasLogged)
 		{
 			UE_LOG(LogTemp, Log, "Hello World %d", 2025);

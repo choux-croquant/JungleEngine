@@ -9,6 +9,9 @@ template <typename T>
 using TArray = std::vector<T>;
 using FString = std::string;
 
+template <typename K, typename V>
+using TMap = std::unordered_map<K, V>;
+
 // 자료형 타입 재정의
 typedef int int32;
 typedef unsigned int uint32;
