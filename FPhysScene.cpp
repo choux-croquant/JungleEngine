@@ -39,12 +39,12 @@ void FPhysScene::Update()
 
 	if (rayCollision)
 	{
-		m_gizmoGroup->AttachTo(closestHitObject);
+		//m_gizmoGroup->AttachTo(closestHitObject);
 		//closestHitObject->RelativeLocation + deltaRayWorld;
 	}
-	else
+	else if (!rayCollision&&!isGizmoClicked)
 	{
-		m_gizmoGroup->DetachFromParent();
+		//m_gizmoGroup->DetachFromParent();
 	}
 }
 
@@ -144,10 +144,10 @@ FVector FPhysScene::RayCast()
 
 	if (rayViewW.W != 0)
 	{
-		rayView.X = -rayViewW.X / rayViewW.W;
-		rayView.Y = -rayViewW.Y / rayViewW.W;
-		rayView.Z = -rayViewW.Z / rayViewW.W;
-		rayView.W = -1.0f;
+		rayView.X = rayViewW.X / rayViewW.W;
+		rayView.Y = rayViewW.Y / rayViewW.W;
+		rayView.Z = rayViewW.Z / rayViewW.W;
+		rayView.W = 1.0f;
 	}
 
 	FVector4 rayWorld4 = viewI.TransformVector(rayView);
@@ -289,12 +289,12 @@ bool FPhysScene::lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& 
 	const MeshData meshData = mesh->meshData;
 	const TArray<FVertexSimple>& Vertices = meshData.Vertices;
 	const TArray<uint32>& Indices = meshData.Indices;
-	
-	for (int i = 0; i < Indices.size(); i+=3)
+
+	for (int i = 0; i < Indices.size(); i += 3)
 	{
 		FVector V0 = Vertices[Indices[i]].Position;
-		FVector V1 = Vertices[Indices[i+1]].Position;
-		FVector V2 = Vertices[Indices[i+2]].Position;
+		FVector V1 = Vertices[Indices[i + 1]].Position;
+		FVector V2 = Vertices[Indices[i + 2]].Position;
 
 		V0 = TransformVertexToWorld(V0, mesh);
 		V1 = TransformVertexToWorld(V1, mesh);
@@ -402,7 +402,7 @@ void FPhysScene::SetPrimitive(UPrimitiveComponent* uCubeComp)
 	primitives.push_back(uCubeComp);
 }
 
-void FPhysScene::SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* cone,GizmoAxis gizmoAxis)
+void FPhysScene::SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* cone, GizmoAxis gizmoAxis)
 {
 	Gizmo gizmo;
 	gizmo.gizmoCylinder = cylinder;

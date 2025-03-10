@@ -183,13 +183,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		
 		sampleCube.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleSphere.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		
 		sampleConeX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCylinderX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleConeY.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCylinderY.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleConeZ.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCylinderZ.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-
+		
 		#pragma region ImGui
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();

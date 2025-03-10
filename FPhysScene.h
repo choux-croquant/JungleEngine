@@ -39,10 +39,10 @@ private:
 	HWND hwnd;
 	const UCamera* camera;
 
+	USceneComponent* m_gizmoGroup;
 	TArray<Gizmo> gizmos;
 	Gizmo CurrentGizmo;
 	bool isGizmoClicked = false;
-	USceneComponent* m_gizmoGroup;
 
 	POINT mousePos;
 	int width, height;
