@@ -57,14 +57,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_SIZE:
 		{
-			UINT width = LOWORD(lParam);
-			UINT height = HIWORD(lParam);
-			URenderer::GetInstance().OnResize(width, height);
+			RECT clientRect;
+			GetClientRect(hWnd, &clientRect);
+			UINT clientWidth = clientRect.right - clientRect.left;
+			UINT clientHeight = clientRect.bottom - clientRect.top;
+
+			float aspectRatio = static_cast<float>(clientWidth) / static_cast<float>(clientHeight);
+
+			UCamera* mainCamera = URenderer::GetInstance().MainCamera;
+			if (mainCamera) {
+				mainCamera->AspectRatio = aspectRatio;
+			}
 
 			if (ImGui::GetCurrentContext() != nullptr)
 			{
 				ImGuiIO& io = ImGui::GetIO();
-				io.DisplaySize = ImVec2((float)width, (float)height);
+				io.DisplaySize = ImVec2((float)clientWidth, (float)clientHeight);
 			}
 		}
 		break;
@@ -97,9 +105,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ImGui_ImplWin32_Init((void*)hWnd);
 	ImGui_ImplDX11_Init(URenderer::GetInstance().Device, URenderer::GetInstance().DeviceContext);
 	io.Fonts->AddFontFromFileTTF("Fonts/NotoSansKR-SemiBold.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesKorean());
-
-	// Magic Number - need to fix
-	SendMessage(hWnd, WM_SIZE, SIZE_RESTORED, MAKELPARAM(1000.0f, 980.0f));
 
 	const int targetFPS = 60;
 	const double targetFrameTime = 1000.0 / targetFPS;
@@ -183,8 +188,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();
 
+		// Guide Mesh Render
 		worldAxis.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-	
 		sampleConeX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCylinderX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleConeY.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
@@ -300,6 +305,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// Heap Memory
 		ImGui::Text("Total Bytes  : %d", UMemory::GetInstance().GetTotalAllocationBytes());
 		ImGui::Text("Total Count  : %d", UMemory::GetInstance().GetTotalAllocationCount());
+		//ImGui::Text("IMGUI IO X : %f", ImGui::GetIO().DisplaySize.x);
+		//ImGui::Text("IMGUI IO Y : %f", ImGui::GetIO().DisplaySize.y);
 		ImGui::End();
 
 		//physScene.LogRender();
