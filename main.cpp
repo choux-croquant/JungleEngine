@@ -143,10 +143,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	int selectedPrimitive = 0;
 	int primitiveSpawnNum = 0;
+	std::uniform_real_distribution<float> dis(-5.0f, 5.0f);
 	ULevel* currLevel = new ULevel();
+	currLevel->OnPrimitiveSpawned.push_back([&physScene](UPrimitiveComponent* newPrimitive) {
+		physScene.SetPrimitive(newPrimitive);
+	});
+
 	SceneSaveManager sceneSaveManager;
 	char saveFileName[10] = "Default";
-	std::uniform_real_distribution<float> dis(-5.0f, 5.0f);
 
 
 	while (bIsExit == false)
@@ -165,7 +169,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				bIsExit = true;
 				break;
 			}
-
 		}
 
 		physScene.Update();
@@ -176,7 +179,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		
 		sampleCube.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleSphere.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-
 		sampleConeX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCylinderX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleConeY.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
@@ -211,7 +213,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		ImGui::SameLine();
 		ImGui::InputInt("Number of spawn", &primitiveSpawnNum);
-		for (const auto& primitive : currLevel->GetPrimitives())
+		TArray<UPrimitiveComponent*> primitives = currLevel->GetPrimitives();
+		for (const auto& primitive : primitives)
 		{
 			primitive->Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		}
