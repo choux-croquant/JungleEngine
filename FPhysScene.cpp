@@ -37,7 +37,8 @@ void FPhysScene::LogRender()
 
 	if (rayCollision)
 	{
-		ImGui::Text("Ray Collision Object ID %d", closestHitObject->UUID);
+		ImGui::Text("Ray Collision Object ID : %d", closestHitObject->UUID);
+		ImGui::Text("Ray Collision Object Type : %s", closestHitObject->GetTypeName().c_str());
 	}
 	else
 	{
