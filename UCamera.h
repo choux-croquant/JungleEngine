@@ -20,6 +20,7 @@ public:
 
     void Rotate(FMatrix rotationMatrix);
     void RotateByQuaternion(Quaternion roatation);
+    void ResetRotation();
     FVector GetRotation();
     FVector GetRotation(Quaternion rotation);
     void Translate(FVector offset);

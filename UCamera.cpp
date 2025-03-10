@@ -41,6 +41,14 @@ void UCamera::RotateByQuaternion(Quaternion rotation)
     RelativeRotation = GetRotation(); // µø±‚»≠
 }
 
+void UCamera::ResetRotation()
+{
+    facing = FVector(1, 0, 0);
+    targetPos = facing + GetWorldLocation();
+    upDirection = FVector(0, 0, 1);
+    RelativeRotation = ZeroVector;
+}
+
 FVector UCamera::GetRotation()
 {
     FVector zAxis = upDirection.Normalize();

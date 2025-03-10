@@ -50,11 +50,17 @@ void ScenePropertyWindow::Draw()
 	ImGui::DragFloat3("Camera Rotation", cameraRotation, 0.1f, 0.0f, 0.0f, "%.3f");
 	FVector newRot(DegtoRad(cameraRotation[0]), DegtoRad(cameraRotation[1]), DegtoRad(cameraRotation[2]));
 	if (newRot!=mainCamera->RelativeRotation) {
-		Quaternion rotX = Quaternion::RotateX(newRot.X - mainCamera->RelativeRotation.X);
-		Quaternion rotY = Quaternion::RotateY(newRot.Y - mainCamera->RelativeRotation.Y);
-		Quaternion rotZ = Quaternion::RotateZ(newRot.Z - mainCamera->RelativeRotation.Z);
-		Quaternion rotation = rotZ * rotY * rotX;
-		mainCamera->RotateByQuaternion(rotation);
+		if (newRot.X == 0 && newRot.Y == 0 && newRot.Z == 0) {
+			// 모든 회전값이 0이면, 기본값으로 초기화
+			mainCamera->ResetRotation();
+		}
+		else {
+			Quaternion rotX = Quaternion::RotateX(newRot.X - mainCamera->RelativeRotation.X);
+			Quaternion rotY = Quaternion::RotateY(newRot.Y - mainCamera->RelativeRotation.Y);
+			Quaternion rotZ = Quaternion::RotateZ(newRot.Z - mainCamera->RelativeRotation.Z);
+			Quaternion rotation = rotZ * rotY * rotX;
+			mainCamera->RotateByQuaternion(rotation);
+		}
 		mainCamera->RelativeRotation = newRot;
 		mainCamera->Update();
 	}
