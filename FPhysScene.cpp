@@ -46,7 +46,10 @@ void FPhysScene::Update()
 			FVector axisX(rotation.M[0][0], rotation.M[1][0], rotation.M[2][0]);
 			FVector axisY(rotation.M[0][1], rotation.M[1][1], rotation.M[2][1]);
 			FVector axisZ(rotation.M[0][2], rotation.M[1][2], rotation.M[2][2]);
-
+			if (CurrentGizmo.gizmoCone != nullptr) {
+				CurrentGizmo.gizmoCone->bIsClicked = true;
+				CurrentGizmo.gizmoCylinder->bIsClicked = true;
+			}
 			switch (currentGizmoMode)
 			{
 			case GizmoMode::TRANSLATE:
