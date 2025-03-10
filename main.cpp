@@ -96,7 +96,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplWin32_Init((void*)hWnd);
 	ImGui_ImplDX11_Init(URenderer::GetInstance().Device, URenderer::GetInstance().DeviceContext);
-	
+	io.Fonts->AddFontFromFileTTF("Fonts/NotoSansKR-SemiBold.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesKorean());
+
 	// Magic Number - need to fix
 	SendMessage(hWnd, WM_SIZE, SIZE_RESTORED, MAKELPARAM(1000.0f, 980.0f));
 
@@ -154,6 +155,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SceneSaveManager sceneSaveManager;
 	char saveFileName[10] = "Default";
 	bool hasLogged = false;
+
+	bool isChecked = false;
 
 	while (bIsExit == false)
 	{
