@@ -1,7 +1,7 @@
 #include "FPhysScene.h"
 #include "ImGui/imgui.h"
 
-FPhysScene::FPhysScene(HWND hwnd, const UCamera* camera)
+FPhysScene::FPhysScene(HWND hwnd, UCamera* camera)
 {
 	this->hwnd = hwnd;
 	this->camera = camera;
@@ -17,11 +17,64 @@ FPhysScene::FPhysScene(HWND hwnd, const UCamera* camera)
 
 void FPhysScene::Update()
 {
-	if (input.IsMouseButtonDown(VK_LBUTTON))
+	bool currentMouseButtonState = input.IsMouseButtonDown(VK_LBUTTON);
+
+	if (!prevMouseButtonState && input.IsMouseButtonDown(VK_LBUTTON))
 	{
-		RayCast();
+		//클릭 한번
+		prevRayWorld = RayCast();
 		//checkCollision();
+		checkGizmo();
 		checkFaceCollision();
+	}
+	else if (prevMouseButtonState && input.IsMouseButtonDown(VK_LBUTTON))
+	{
+		//드래그
+		currentRayWorld = RayCast();
+		deltaRayWorld = currentRayWorld - prevRayWorld;
+		FMatrix rotation =
+			FMatrix::RotateX(closestHitObject->RelativeRotation.X) *
+			FMatrix::RotateY(closestHitObject->RelativeRotation.Y) *
+			FMatrix::RotateZ(closestHitObject->RelativeRotation.Z);
+		FVector axisX(rotation.M[0][0], rotation.M[1][0], rotation.M[2][0]);
+		FVector axisY(rotation.M[0][1], rotation.M[1][1], rotation.M[2][1]);
+		FVector axisZ(rotation.M[0][2], rotation.M[1][2], rotation.M[2][2]);
+
+		float len = deltaRayWorld.Length();
+		if (closestHitObject != nullptr)
+		{
+
+			switch (CurrentGizmo.gizmoAxis)
+			{
+			case GizmoAxis::X:
+				closestHitObject->RelativeLocation += axisX.Normalize()*len;
+
+				break;
+			case GizmoAxis::Y:
+				closestHitObject->RelativeLocation += axisY.Normalize()*len;
+				break;
+			case GizmoAxis::Z:
+				closestHitObject->RelativeLocation += axisZ.Normalize()*len;
+				break;
+			default:
+				break;
+			}
+			//closestHitObject->RelativeLocation + deltaRayWorld;
+		}
+		prevRayWorld = currentRayWorld;
+	}
+
+
+
+	prevMouseButtonState = currentMouseButtonState;
+
+	if (rayCollision)
+	{
+		m_gizmoGroup->AttachTo(closestHitObject);
+	}
+	else if (!rayCollision && !isGizmoClicked)
+	{
+		m_gizmoGroup->DetachFromParent();
 	}
 }
 
@@ -44,6 +97,21 @@ void FPhysScene::LogRender()
 	{
 		ImGui::Text("Ray Collision Object None");
 	}
+
+	if (isGizmoClicked)
+	{
+		ImGui::Text("Clicked Gizmo Axis : %d", CurrentGizmo.gizmoAxis);
+		ImGui::Text("Delta Ray World: (%f, %f, %f)",
+			deltaRayWorld.X, deltaRayWorld.Y, deltaRayWorld.Z);
+	}
+	else
+	{
+		ImGui::Text("Clicked Gizmo None");
+	}
+
+	ImGui::Text("inverse projection\n%s", inverseProj.PrintMatrix().c_str());
+	ImGui::Text("view Matrix:\n%s", camera->viewMatrix.PrintMatrix().c_str());
+	ImGui::Text("inverse view\n%s", inverseView.PrintMatrix().c_str());
 	ImGui::End();
 }
 
@@ -86,7 +154,7 @@ void FPhysScene::PickedObjPropertyRender()
 	}
 }
 
-void FPhysScene::RayCast()
+FVector FPhysScene::RayCast()
 {
 	mousePos = input.GetMousePosition();
 
@@ -104,17 +172,19 @@ void FPhysScene::RayCast()
 	ndc.Z = ndcZ;
 	ndc.W = 1.0f;
 
-	FMatrix projI = camera->projectionMatrix.Inverse();
-	FMatrix viewI = camera->viewMatrix.Inverse();
+	FMatrix projI = camera->projectionMatrix.InverseGaussJordan();
+	inverseProj = projI;
+	FMatrix viewI = camera->viewMatrix.InverseGaussJordan();
+	inverseView = viewI;
 
 	FVector4 rayViewW = projI.TransformVector(ndc);
 
 	if (rayViewW.W != 0)
 	{
-		rayView.X = -rayViewW.X / rayViewW.W;
-		rayView.Y = -rayViewW.Y / rayViewW.W;
-		rayView.Z = -rayViewW.Z / rayViewW.W;
-		rayView.W = -1.0f;
+		rayView.X = rayViewW.X / rayViewW.W;
+		rayView.Y = rayViewW.Y / rayViewW.W;
+		rayView.Z = rayViewW.Z / rayViewW.W;
+		rayView.W = 1.0f;
 	}
 
 	FVector4 rayWorld4 = viewI.TransformVector(rayView);
@@ -126,6 +196,7 @@ void FPhysScene::RayCast()
 	rayDir = rayWorld - camera->RelativeLocation;
 	rayDir.Normalize();
 
+	return rayWorld;
 }
 
 void FPhysScene::checkCollision()
@@ -255,12 +326,12 @@ bool FPhysScene::lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& 
 	const MeshData meshData = mesh->meshData;
 	const TArray<FVertexSimple>& Vertices = meshData.Vertices;
 	const TArray<uint32>& Indices = meshData.Indices;
-	
-	for (int i = 0; i < Indices.size(); i+=3)
+
+	for (int i = 0; i < Indices.size(); i += 3)
 	{
 		FVector V0 = Vertices[Indices[i]].Position;
-		FVector V1 = Vertices[Indices[i+1]].Position;
-		FVector V2 = Vertices[Indices[i+2]].Position;
+		FVector V1 = Vertices[Indices[i + 1]].Position;
+		FVector V2 = Vertices[Indices[i + 2]].Position;
 
 		V0 = TransformVertexToWorld(V0, mesh);
 		V1 = TransformVertexToWorld(V1, mesh);
@@ -286,6 +357,7 @@ bool FPhysScene::lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& 
 
 FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USceneComponent* component)
 {
+	/*
 	FVector WorldPos = component->GetWorldLocation();
 	FVector WorldRotation = component->GetWorldRotation();
 	FVector WorldScale = component->GetWorldScale3D();
@@ -298,11 +370,89 @@ FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USc
 	FMatrix S = FMatrix::Scale(WorldScale);
 
 	FMatrix ModelMatrix = T * R * S;
+	*/
+	FMatrix ModelMatrix = component->GetWorldTransform();
 	FVector transformedVertex = ModelMatrix.TransformVector(localVertex);
 	return transformedVertex;
+}
+
+void FPhysScene::checkGizmo()
+{
+	FVector rayOrigin = camera->RelativeLocation;
+	Gizmo closestGizmo;
+	closestGizmo.gizmoCone = nullptr;
+	closestGizmo.gizmoCylinder = nullptr;
+
+	float min_t = FLT_MAX;
+	for (Gizmo gizmo : gizmos)
+	{
+		UPrimitiveComponent* gizmoCylinder = gizmo.gizmoCylinder;
+		UPrimitiveComponent* gizmoCone = gizmo.gizmoCone;
+		GizmoAxis axis = gizmo.gizmoAxis;
+		if (gizmoCylinder)
+		{
+			FVector MeshIntersection;
+			if (lineMeshIntersection(gizmoCylinder, MeshIntersection))
+			{
+				float T = (rayOrigin - MeshIntersection).Length();
+				if (T < min_t)
+				{
+					min_t = T;
+					closestGizmo.gizmoCylinder = gizmoCylinder;
+					closestGizmo.gizmoCone = gizmoCone;
+					closestGizmo.gizmoAxis = axis;
+				}
+			}
+
+		}
+		if (gizmoCone)
+		{
+			FVector MeshIntersection;
+			if (lineMeshIntersection(gizmoCone, MeshIntersection))
+			{
+				float T = (rayOrigin - MeshIntersection).Length();
+				if (T < min_t)
+				{
+					min_t = T;
+					closestGizmo.gizmoCylinder = gizmoCylinder;
+					closestGizmo.gizmoCone = gizmoCone;
+					closestGizmo.gizmoAxis = axis;
+				}
+			}
+
+		}
+	}
+
+	if (closestGizmo.gizmoCone ||
+		closestGizmo.gizmoCylinder)
+	{
+		CurrentGizmo = closestGizmo;
+		isGizmoClicked = true;
+	}
+	else
+	{
+		CurrentGizmo.gizmoCone = nullptr;
+		CurrentGizmo.gizmoCylinder = nullptr;
+		isGizmoClicked = false;
+	}
 }
 
 void FPhysScene::SetPrimitive(UPrimitiveComponent* uCubeComp)
 {
 	primitives.push_back(uCubeComp);
+}
+
+void FPhysScene::SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* cone, GizmoAxis gizmoAxis)
+{
+	Gizmo gizmo;
+	gizmo.gizmoCylinder = cylinder;
+	gizmo.gizmoCone = cone;
+	gizmo.gizmoAxis = gizmoAxis;
+
+	gizmos.push_back(gizmo);
+}
+
+void FPhysScene::SetGizmoGroup(USceneComponent* gizmoGroup)
+{
+	m_gizmoGroup = gizmoGroup;
 }

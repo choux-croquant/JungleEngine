@@ -112,33 +112,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Guide Axis
 	UWorldAxis worldAxis(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
-	UCubeComp sampleCube(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UCubeComp sampleCube(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	USphereComp sampleSphere(FVector(2.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	UConeComp sampleCone(FVector(0.0f, 2.0f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
-	//USceneComponent group(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, -PI / 4, -PI / 4), FVector(0.2f, 0.2f, 0.2f));
-	USceneComponent group(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.2f, 0.2f, 0.2f));
-	
+	USceneComponent group(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.2f, 0.2f, 0.2f));
+
 	UCylinderComp sampleCylinderX(FVector(2.5f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(0.5f, 0.5f, 3.0f), FVector4(1.0f, 0.0f, 0.0f, 1.0f), true);
 	UConeComp sampleConeX(FVector(6.0f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(1.0f, 1.0f, 1.0f), FVector4(1.0f, 0.0f, 0.0f, 1.0f), true);
 	UCylinderComp sampleCylinderY(FVector(0.0f, 2.5f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f), FVector4(0.0f, 1.0f, 0.0f, 1.0f), true);
 	UConeComp sampleConeY(FVector(0.0f, 6.0f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f), FVector4(0.0f, 1.0f, 0.0f, 1.0f), true);
 	UCylinderComp sampleCylinderZ(FVector(0.0f, 0.0f, 2.5f), FVector(0.0f, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f), FVector4(0.0f, 0.0f, 1.0f, 1.0f), true);
 	UConeComp sampleConeZ(FVector(0.0f, 0.0f, 6.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f), FVector4(0.0f, 0.0f, 1.0f, 1.0f), true);
-
+	
 	sampleConeX.AttachTo(&group);
 	sampleCylinderX.AttachTo(&group);
 	sampleConeY.AttachTo(&group);
 	sampleCylinderY.AttachTo(&group);
 	sampleConeZ.AttachTo(&group);
 	sampleCylinderZ.AttachTo(&group);
-
+	
 
 	FPhysScene physScene(hWnd,&mainCamera);
 	physScene.SetPrimitive(&sampleCube);
 	physScene.SetPrimitive(&sampleSphere);
+	physScene.SetPrimitive(&sampleCone);
 	//physScene.SetPrimitive(&sampleCylinder);
 	//physScene.SetPrimitive(&sampleCone);
+	physScene.SetGizmo(&sampleCylinderX, &sampleConeX,GizmoAxis::X);
+	physScene.SetGizmo(&sampleCylinderY, &sampleConeY, GizmoAxis::Y);
+	physScene.SetGizmo(&sampleCylinderZ, &sampleConeZ, GizmoAxis::Z);
+	physScene.SetGizmoGroup(&group);
 	
 	ScenePropertyWindow scenePropertyWindow(mainCamera);
 
@@ -176,10 +180,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();
+
 		worldAxis.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		
 		sampleCube.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleSphere.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+
 		sampleCone.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 
 		sampleConeX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
@@ -188,7 +194,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		sampleCylinderY.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleConeZ.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCylinderZ.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-
+		
 		#pragma region ImGui
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
@@ -222,6 +228,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			primitive->Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		}
 		ImGui::Separator();
+
 
 		//씬 저장
 		ImGui::InputText("Scene Name", saveFileName, 10);
@@ -295,6 +302,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("camera facing: %f, %f, %f", mainCamera.facing.X, mainCamera.facing.Y, mainCamera.facing.Z);
 		ImGui::Text("camera rotation: %f, %f, %f", RadtoDeg(mainCamera.RelativeRotation.X), RadtoDeg(mainCamera.RelativeRotation.Y), RadtoDeg(mainCamera.RelativeRotation.Z));
 		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
+		ImGui::Text("projection Matrix:\n%s", mainCamera.projectionMatrix.PrintMatrix().c_str());
 
 		if (currLevel->GetPrimitives().size() != 0) {
 			ImGui::Text("obejct UUID  : %d", currLevel->GetPrimitives()[0]->GetUUID());
