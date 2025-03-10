@@ -40,20 +40,21 @@ void FPhysScene::Update()
 		FVector axisY(rotation.M[0][1], rotation.M[1][1], rotation.M[2][1]);
 		FVector axisZ(rotation.M[0][2], rotation.M[1][2], rotation.M[2][2]);
 
-		float len = deltaRayWorld.Length();
+		float len;
 		if (closestHitObject != nullptr)
 		{
-
 			switch (CurrentGizmo.gizmoAxis)
 			{
 			case GizmoAxis::X:
+				len = deltaRayWorld.Dot(axisX);
 				closestHitObject->RelativeLocation += axisX.Normalize()*len;
-
 				break;
 			case GizmoAxis::Y:
+				len = deltaRayWorld.Dot(axisY);
 				closestHitObject->RelativeLocation += axisY.Normalize()*len;
 				break;
 			case GizmoAxis::Z:
+				len = deltaRayWorld.Dot(axisZ);
 				closestHitObject->RelativeLocation += axisZ.Normalize()*len;
 				break;
 			default:
@@ -269,7 +270,7 @@ void FPhysScene::checkFaceCollision()
 		rayCollision = true;
 		closestHitObject = closestObject;
 	}
-	else
+	else if(!rayCollision && !isGizmoClicked)
 	{
 		rayCollision = false;
 		closestHitObject = nullptr;
