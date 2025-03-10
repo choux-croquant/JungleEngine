@@ -2,6 +2,7 @@
 #include "USceneComponent.h"
 #include "Matrix.h"
 #include "InputManager.h"
+#include "Quaternion.h"
 
 class UCamera : public USceneComponent
 {
@@ -18,7 +19,9 @@ public:
     UCamera(FVector pos, FVector target, FVector up);
 
     void Rotate(FMatrix rotationMatrix);
+    void RotateByQuaternion(Quaternion roatation);
     FVector GetRotation();
+    FVector GetRotation(Quaternion rotation);
     void Translate(FVector offset);
     void ChangeFOV(float fov);
     void SetWorldLocation(FVector pos);

@@ -159,6 +159,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Quaternion.h" />
     <ClInclude Include="ScenePropertyWindow.h" />
     <ClInclude Include="SceneSaveManager.h" />
     <ClInclude Include="ULevel.h" />

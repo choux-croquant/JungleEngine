@@ -1,6 +1,7 @@
 #include "ScenePropertyWindow.h"
 #include "ImGui/imgui.h"
 #include "Matrix.h"
+#include "Quaternion.h"
 
 
 ScenePropertyWindow::ScenePropertyWindow(UCamera& camera)
@@ -48,13 +49,13 @@ void ScenePropertyWindow::Draw()
 	}
 	ImGui::DragFloat3("Camera Rotation", cameraRotation, 0.1f, 0.0f, 0.0f, "%.3f");
 	FVector newRot(DegtoRad(cameraRotation[0]), DegtoRad(cameraRotation[1]), DegtoRad(cameraRotation[2]));
-	if (newRot != mainCamera->RelativeRotation) {
-		FMatrix rotationX = FMatrix::RotateX(newRot.X - mainCamera->RelativeRotation.X);
-		FMatrix rotationY = FMatrix::RotateY(newRot.Y - mainCamera->RelativeRotation.Y);
-		FMatrix rotationZ = FMatrix::RotateZ(newRot.Z - mainCamera->RelativeRotation.Z);
-		FMatrix finalRotation = rotationZ * rotationY * rotationX;
-		mainCamera->Rotate(finalRotation);
-		mainCamera->RelativeRotation = mainCamera->GetRotation();
+	if (newRot!=mainCamera->RelativeRotation) {
+		Quaternion rotX = Quaternion::RotateX(newRot.X - mainCamera->RelativeRotation.X);
+		Quaternion rotY = Quaternion::RotateY(newRot.Y - mainCamera->RelativeRotation.Y);
+		Quaternion rotZ = Quaternion::RotateZ(newRot.Z - mainCamera->RelativeRotation.Z);
+		Quaternion rotation = rotZ * rotY * rotX;
+		mainCamera->RotateByQuaternion(rotation);
+		mainCamera->RelativeRotation = newRot;
 		mainCamera->Update();
 	}
 	ImGui::Separator();
