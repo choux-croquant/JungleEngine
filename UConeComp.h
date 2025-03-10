@@ -20,20 +20,7 @@ public:
         //void Render() {
         FConstants constantData = {};
 
-        // Scale 행렬
-        FMatrix scaleMatrix = FMatrix::Scale(GetWorldScale3D());
-
-        // Rotation 행렬 (각 축별 회전 적용)
-        FMatrix rotationMatrix =
-            FMatrix::RotateZ(GetWorldRotation().Z) *
-            FMatrix::RotateY(GetWorldRotation().Y) *
-            FMatrix::RotateX(GetWorldRotation().X);
-
-        // Translation(이동) 행렬
-        FMatrix translationMatrix = FMatrix::Identity.Translate(GetWorldLocation());
-
-        // ModelMatrix = Scale * Rotation * Translation
-        FMatrix model = translationMatrix * rotationMatrix * scaleMatrix;
+        FMatrix model = GetWorldTransform();
 
         // MVP 행렬 계산
         FMatrix mvp = projection * view * model;
