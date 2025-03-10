@@ -1,6 +1,7 @@
 #pragma once
 #include <cstddef>
 #include <mutex>
+#include <functional>
 #include "ULog.h"
 
 
@@ -12,28 +13,40 @@ public:
     }
 
     void AddAllocation(std::size_t size) {
-        std::lock_guard<std::mutex> lock(mutex_);
         totalAllocationBytes += size;
         totalAllocationCount++;
     }
     void SubtractAllocation(std::size_t size) {
-        std::lock_guard<std::mutex> lock(mutex_);
         totalAllocationBytes -= size;
         totalAllocationCount--;
     }
 
-    uint32 GetTotalAllocationBytes() const { return totalAllocationBytes; }
-    uint32 GetTotalAllocationCount() const { return totalAllocationCount; }
+    size_t GetTotalAllocationBytes() const { return totalAllocationBytes; }
+    size_t GetTotalAllocationCount() const { return totalAllocationCount; }
+
+    void RecordAllocationCheckpoint() {
+        checkPoint = totalAllocationBytes;
+    }
+
+    size_t GetAllocationDeltaSinceCheckpoint() const {
+        return totalAllocationBytes - checkPoint;
+    }
+
+    size_t TrackAllocationDelta(const std::function<void()>& spawnFunc) {
+        RecordAllocationCheckpoint();
+        spawnFunc();
+        return GetAllocationDeltaSinceCheckpoint();
+    }
 
 private:
-    UMemory() : totalAllocationBytes(0), totalAllocationCount(0) {}
+    UMemory() : totalAllocationBytes(0), totalAllocationCount(0), checkPoint(0){}
     ~UMemory() {}
     UMemory(const UMemory&) = delete;
     UMemory& operator=(const UMemory&) = delete;
 
-    uint32 totalAllocationBytes;
-    uint32 totalAllocationCount;
-    mutable std::mutex mutex_;
+    size_t totalAllocationBytes;
+    int totalAllocationCount;
+    size_t checkPoint;
 };
 
 // Overloading
