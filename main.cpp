@@ -265,7 +265,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				spawnedObjectBytes += static_cast<int>(
 					UMemory::GetInstance().TrackAllocationDelta(
 						std::function<void()>([&]() {
-							for (int i = 0; i < primitiveSpawnNum; i++)
+							for (int i = 0; i < sceneSaveManager.SceneData.size(); i++)
 							{
 								FVector randomPos(dis(gen), dis(gen), dis(gen));
 								EPrimitiveType type = static_cast<EPrimitiveType>(selectedPrimitive);
