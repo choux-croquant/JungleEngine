@@ -64,6 +64,10 @@ public:
         }
     }
 
+    int GetPrimitiveCount() const {
+        return static_cast<int>(PrimitiveComponents.size());
+    }
+
 private:
     TArray<UPrimitiveComponent*> PrimitiveComponents;
 };

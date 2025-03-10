@@ -30,6 +30,7 @@
 #include "UWorld.h"
 #include "ULevel.h"
 #include <random>
+#include <functional>
 
 #include "SceneSaveManager.h"
 
@@ -143,6 +144,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	int selectedPrimitive = 0;
 	int primitiveSpawnNum = 0;
+	size_t spawnedObjectBytes = 0;
 	std::uniform_real_distribution<float> dis(-5.0f, 5.0f);
 	ULevel* currLevel = new ULevel();
 	currLevel->OnPrimitiveSpawned.push_back([&physScene](UPrimitiveComponent* newPrimitive) {
@@ -203,15 +205,24 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		if (ImGui::Button("Spawn"))
 		{
-			for (int i = 0; i < primitiveSpawnNum; i++)
-			{
-				FVector randomPos(dis(gen), dis(gen), dis(gen));
-				EPrimitiveType type = static_cast<EPrimitiveType>(selectedPrimitive);
-				currLevel->SpawnPrimitiveByType(type, randomPos, FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-			}
+			spawnedObjectBytes += static_cast<int>(
+				UMemory::GetInstance().TrackAllocationDelta(
+					std::function<void()>([&]() {
+						for (int i = 0; i < primitiveSpawnNum; i++)
+						{
+							FVector randomPos(dis(gen), dis(gen), dis(gen));
+							EPrimitiveType type = static_cast<EPrimitiveType>(selectedPrimitive);
+							currLevel->SpawnPrimitiveByType(type, randomPos, FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+						}
+					})
+				)
+			);
 		}
 		ImGui::SameLine();
 		ImGui::InputInt("Number of spawn", &primitiveSpawnNum);
+
+		ImGui::Text("Total Spawned Object Count : %d", currLevel->GetPrimitiveCount());
+		ImGui::Text("Total Spawned Object Memory Usage : %d", spawnedObjectBytes);
 		TArray<UPrimitiveComponent*> primitives = currLevel->GetPrimitives();
 		for (const auto& primitive : primitives)
 		{
@@ -226,6 +237,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			delete currLevel;
 			currLevel = new ULevel();
 			sceneSaveManager.SceneData.clear();
+			spawnedObjectBytes = 0;
 		}
 		if (ImGui::Button("Save Scene")) {
 			sceneSaveManager.NextUUID = UEngineStatics::NextUUID;
@@ -250,10 +262,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			if (sceneSaveManager.Load(saveFileName)) {
 				delete currLevel;
 				currLevel = new ULevel();
-				for (int i = 0; i < sceneSaveManager.SceneData.size(); i++) {
-					EPrimitiveType type = UPrimitiveComponent::GetType(sceneSaveManager.SceneData[i].Type);
-					currLevel->SpawnPrimitiveByType(type, sceneSaveManager.SceneData[i].Location, sceneSaveManager.SceneData[i].Rotation, sceneSaveManager.SceneData[i].Scale);
-				}
+				spawnedObjectBytes += static_cast<int>(
+					UMemory::GetInstance().TrackAllocationDelta(
+						std::function<void()>([&]() {
+							for (int i = 0; i < primitiveSpawnNum; i++)
+							{
+								FVector randomPos(dis(gen), dis(gen), dis(gen));
+								EPrimitiveType type = static_cast<EPrimitiveType>(selectedPrimitive);
+								currLevel->SpawnPrimitiveByType(type, randomPos, FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+							}
+							})
+					)
+				);
 				for (const auto& primitive : currLevel->GetPrimitives())
 				{
 					primitive->Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
