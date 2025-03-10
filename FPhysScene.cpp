@@ -51,8 +51,7 @@ void FPhysScene::LogRender()
 	}
 	if (isGizmoClicked)
 	{
-
-		ImGui::Text("Clicked Gizmo");
+		ImGui::Text("Clicked Gizmo Axis : %d", CurrentGizmo.gizmoAxis);
 	}
 	else
 	{
@@ -328,6 +327,7 @@ void FPhysScene::checkGizmo()
 	{
 		UPrimitiveComponent* gizmoCylinder = gizmo.gizmoCylinder;
 		UPrimitiveComponent* gizmoCone = gizmo.gizmoCone;
+		GizmoAxis axis = gizmo.gizmoAxis;
 		if (gizmoCylinder)
 		{
 			FVector MeshIntersection;
@@ -339,6 +339,7 @@ void FPhysScene::checkGizmo()
 					min_t = T;
 					closestGizmo.gizmoCylinder = gizmoCylinder;
 					closestGizmo.gizmoCone = gizmoCone;
+					closestGizmo.gizmoAxis = axis;
 				}
 			}
 
@@ -354,6 +355,7 @@ void FPhysScene::checkGizmo()
 					min_t = T;
 					closestGizmo.gizmoCylinder = gizmoCylinder;
 					closestGizmo.gizmoCone = gizmoCone;
+					closestGizmo.gizmoAxis = axis;
 				}
 			}
 
@@ -379,11 +381,12 @@ void FPhysScene::SetPrimitive(UPrimitiveComponent* uCubeComp)
 	primitives.push_back(uCubeComp);
 }
 
-void FPhysScene::SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* cone)
+void FPhysScene::SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* cone,GizmoAxis gizmoAxis)
 {
 	Gizmo gizmo;
 	gizmo.gizmoCylinder = cylinder;
 	gizmo.gizmoCone = cone;
+	gizmo.gizmoAxis = gizmoAxis;
 
 	gizmos.push_back(gizmo);
 }

@@ -5,10 +5,16 @@
 #include "Matrix.h"
 #include "UCamera.h"
 
+enum class GizmoAxis
+{
+	X,Y,Z
+};
+
 struct Gizmo
 {
 	UPrimitiveComponent* gizmoCylinder;
 	UPrimitiveComponent* gizmoCone;
+	GizmoAxis gizmoAxis;
 };
 
 class FPhysScene
@@ -16,7 +22,9 @@ class FPhysScene
 public:
 	FPhysScene(HWND hwnd,const UCamera* camera);
 	void SetPrimitive(UPrimitiveComponent* uPrimitiveComp);
-	void SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* cone);
+	void SetGizmo(UPrimitiveComponent* cylinder, 
+		UPrimitiveComponent* cone,
+		GizmoAxis gizmoAxis);
 	void Update();
 	void LogRender();
 	void PickedObjPropertyRender();
