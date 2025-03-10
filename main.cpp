@@ -302,6 +302,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ImGui::Text("camera facing: %f, %f, %f", mainCamera.facing.X, mainCamera.facing.Y, mainCamera.facing.Z);
 		ImGui::Text("camera rotation: %f, %f, %f", RadtoDeg(mainCamera.RelativeRotation.X), RadtoDeg(mainCamera.RelativeRotation.Y), RadtoDeg(mainCamera.RelativeRotation.Z));
 		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
+		ImGui::Text("projection Matrix:\n%s", mainCamera.projectionMatrix.PrintMatrix().c_str());
 
 		if (currLevel->GetPrimitives().size() != 0) {
 			ImGui::Text("obejct UUID  : %d", currLevel->GetPrimitives()[0]->GetUUID());

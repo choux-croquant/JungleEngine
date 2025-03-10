@@ -97,6 +97,10 @@ void FPhysScene::LogRender()
 	{
 		ImGui::Text("Clicked Gizmo None");
 	}
+
+	ImGui::Text("inverse projection\n%s", inverseProj.PrintMatrix().c_str());
+	ImGui::Text("view Matrix:\n%s", camera->viewMatrix.PrintMatrix().c_str());
+	ImGui::Text("inverse view\n%s", inverseView.PrintMatrix().c_str());
 	ImGui::End();
 }
 
@@ -157,17 +161,19 @@ FVector FPhysScene::RayCast()
 	ndc.Z = ndcZ;
 	ndc.W = 1.0f;
 
-	FMatrix projI = camera->projectionMatrix.Inverse();
-	FMatrix viewI = camera->viewMatrix.Inverse();
+	FMatrix projI = camera->projectionMatrix.InverseGaussJordan();
+	inverseProj = projI;
+	FMatrix viewI = camera->viewMatrix.InverseGaussJordan();
+	inverseView = viewI;
 
 	FVector4 rayViewW = projI.TransformVector(ndc);
 
 	if (rayViewW.W != 0)
 	{
-		rayView.X = -rayViewW.X / rayViewW.W;
-		rayView.Y = -rayViewW.Y / rayViewW.W;
-		rayView.Z = -rayViewW.Z / rayViewW.W;
-		rayView.W = -1.0f;
+		rayView.X = rayViewW.X / rayViewW.W;
+		rayView.Y = rayViewW.Y / rayViewW.W;
+		rayView.Z = rayViewW.Z / rayViewW.W;
+		rayView.W = 1.0f;
 	}
 
 	FVector4 rayWorld4 = viewI.TransformVector(rayView);

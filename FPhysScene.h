@@ -59,6 +59,9 @@ private:
 	FVector currentRayWorld;
 	FVector deltaRayWorld;
 
+	//¿ªÇà·Ä
+	FMatrix inverseProj;
+	FMatrix inverseView;
 
 	FVector RayCast();
 	void checkCollision();

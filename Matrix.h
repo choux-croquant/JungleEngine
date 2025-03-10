@@ -257,6 +257,49 @@ struct FMatrix
         return result;
     }
 
+    FMatrix InverseGaussJordan() const {
+        FMatrix augmented = *this; // 원본 행렬 복사
+        FMatrix identity = FMatrix::Identity; // 단위 행렬 생성
+
+        for (int col = 0; col < 4; col++) {
+            // 1. 현재 열(col)에서 절댓값이 가장 큰 피벗(pivot) 찾기 (안정성 향상)
+            int pivotRow = col;
+            for (int row = col + 1; row < 4; row++) {
+                if (fabs(augmented.M[row][col]) > fabs(augmented.M[pivotRow][col])) {
+                    pivotRow = row;
+                }
+            }
+
+            // 2. 행 교환 (Pivoting)
+            if (fabs(augmented.M[pivotRow][col]) < 1e-6f) {
+                std::cerr << "Matrix is singular and cannot be inverted (Gauss-Jordan)." << std::endl;
+                return FMatrix::Identity; // 역행렬 없음 (단위 행렬 반환)
+            }
+            std::swap(augmented.M[col], augmented.M[pivotRow]);
+            std::swap(identity.M[col], identity.M[pivotRow]);
+
+            // 3. 현재 열(col)의 피벗을 1로 만들기
+            float pivot = augmented.M[col][col];
+            for (int j = 0; j < 4; j++) {
+                augmented.M[col][j] /= pivot;
+                identity.M[col][j] /= pivot;
+            }
+
+            // 4. 현재 열(col)을 제외한 나머지 행(row)의 해당 열(col) 값을 0으로 만들기
+            for (int row = 0; row < 4; row++) {
+                if (row == col) continue; // 현재 행은 스킵
+                float factor = augmented.M[row][col];
+                for (int j = 0; j < 4; j++) {
+                    augmented.M[row][j] -= factor * augmented.M[col][j];
+                    identity.M[row][j] -= factor * identity.M[col][j];
+                }
+            }
+        }
+
+        return identity; // 변환된 단위 행렬이 역행렬이 됨
+    }
+
+
     FMatrix Inverse() const {
         FMatrix result;
         float det = Determinant();
@@ -309,7 +352,7 @@ struct FMatrix
         FMatrix adj;
         for (int i = 0; i < 4; ++i) {
             for (int j = 0; j < 4; ++j) {
-                adj.M[j][i] = Cofactor(i, j); // 전치하여 저장
+                adj.M[i][j] = Cofactor(j, i); // 전치하여 저장
             }
         }
         return adj;
