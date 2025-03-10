@@ -157,16 +157,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		}
 
-		physScene.Update();
+		//physScene.Update();
 
 		// DirectX 렌더러 루프
 		URenderer::GetInstance().Prepare();
 		worldAxis.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		gizmo.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCone.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCube.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleCylinder.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleSphere.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		//sampleCone.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		//sampleCube.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		//sampleCylinder.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		//sampleSphere.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		
 
 
@@ -217,15 +217,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			if (primitives.size() > 0) {
 				for (int i = 0; i < primitives.size(); i++) {
 					std::string TypeName = primitives[i]->GetTypeName();
-					if (TypeName == "Cube" || TypeName == "Sphere") {
-						SceneSaveManager::PrimitiveData data;
-						data.UUID = primitives[i]->GetUUID();
-						data.Location = primitives[i]->GetLocation();
-						data.Rotation = primitives[i]->GetRotation();
-						data.Scale = primitives[i]->GetScale();
-						data.Type = primitives[i]->GetTypeName();
-						sceneSaveManager.SceneData.push_back(data);
-					}
+					SceneSaveManager::PrimitiveData data;
+					data.UUID = primitives[i]->GetUUID();
+					data.Location = primitives[i]->GetLocation();
+					data.Rotation = primitives[i]->GetRotation();
+					data.Scale = primitives[i]->GetScale();
+					data.Type = primitives[i]->GetTypeName();
+					sceneSaveManager.SceneData.push_back(data);
 				}
 				json SavedJson = sceneSaveManager.toJson();
 				sceneSaveManager.Save(saveFileName);

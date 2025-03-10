@@ -6,7 +6,6 @@
 enum class EPrimitiveType {
     Cube,
     Sphere,
-    Triangle,
     Cylinder,
     Cone,
     Gizmo,
@@ -17,7 +16,7 @@ class UPrimitiveComponent : public USceneComponent
 {
 public:
     UPrimitiveComponent(EPrimitiveType type, FVector Position, FVector Rotation, FVector Scale)
-        : USceneComponent(Position, Rotation, Scale)
+        : USceneComponent(Position, Rotation, Scale), PrimitiveType(type)
     {
     }
     MeshData meshData;
@@ -28,7 +27,6 @@ public:
         switch (PrimitiveType) {
         case EPrimitiveType::Cube: return "Cube";
         case EPrimitiveType::Sphere: return "Sphere";
-        case EPrimitiveType::Triangle: return "Triangle";
         case EPrimitiveType::Cylinder: return "Cylinder";
         case EPrimitiveType::Cone: return "Cone";
         default: return "Unknown";
@@ -42,8 +40,11 @@ public:
         if (type == "Sphere") {
             return EPrimitiveType::Sphere;
         }
-        if (type == "Triangle") {
-            return EPrimitiveType::Triangle;
+        if (type == "Cylinder") {
+            return EPrimitiveType::Cylinder;
+        }
+        if (type == "Cone") {
+            return EPrimitiveType::Cone;
         }
     }
 
