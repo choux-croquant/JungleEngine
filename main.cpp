@@ -141,6 +141,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	physScene.SetGizmo(&sampleCylinderX, &sampleConeX,GizmoAxis::X);
 	physScene.SetGizmo(&sampleCylinderY, &sampleConeY, GizmoAxis::Y);
 	physScene.SetGizmo(&sampleCylinderZ, &sampleConeZ, GizmoAxis::Z);
+	physScene.SetGizmoGroup(&group);
 	
 	ScenePropertyWindow scenePropertyWindow(mainCamera);
 

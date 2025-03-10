@@ -21,13 +21,27 @@ void FPhysScene::Update()
 
 	if (!prevMouseButtonState && input.IsMouseButtonDown(VK_LBUTTON))
 	{
-		RayCast();
+		//클릭 한번
+		prevRayWorld = RayCast();
 		//checkCollision();
 		checkFaceCollision();
 		checkGizmo();
 	}
+	else if (prevMouseButtonState && input.IsMouseButtonDown(VK_LBUTTON))
+	{
+		//드래그
+		currentRayWorld = RayCast();
+		deltaRayWorld = currentRayWorld - prevRayWorld;
+
+	}
 
 	prevMouseButtonState = currentMouseButtonState;
+
+	if (rayCollision)
+	{
+		m_gizmoGroup->AttachTo(closestHitObject);
+		//closestHitObject->RelativeLocation + deltaRayWorld;
+	}
 }
 
 void FPhysScene::LogRender()
@@ -52,6 +66,8 @@ void FPhysScene::LogRender()
 	if (isGizmoClicked)
 	{
 		ImGui::Text("Clicked Gizmo Axis : %d", CurrentGizmo.gizmoAxis);
+		ImGui::Text("Delta Ray World: (%f, %f, %f)",
+			deltaRayWorld.X, deltaRayWorld.Y, deltaRayWorld.Z);
 	}
 	else
 	{
@@ -99,7 +115,7 @@ void FPhysScene::PickedObjPropertyRender()
 	}
 }
 
-void FPhysScene::RayCast()
+FVector FPhysScene::RayCast()
 {
 	mousePos = input.GetMousePosition();
 
@@ -139,6 +155,7 @@ void FPhysScene::RayCast()
 	rayDir = rayWorld - camera->RelativeLocation;
 	rayDir.Normalize();
 
+	return rayWorld;
 }
 
 void FPhysScene::checkCollision()
@@ -389,4 +406,9 @@ void FPhysScene::SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* co
 	gizmo.gizmoAxis = gizmoAxis;
 
 	gizmos.push_back(gizmo);
+}
+
+void FPhysScene::SetGizmoGroup(USceneComponent* gizmoGroup)
+{
+	m_gizmoGroup = gizmoGroup;
 }

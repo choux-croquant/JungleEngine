@@ -41,18 +41,25 @@ private:
 	TArray<Gizmo> gizmos;
 	Gizmo CurrentGizmo;
 	bool isGizmoClicked = false;
+	USceneComponent* gizmoGroup;
 
 	POINT mousePos;
 	int width, height;
 
 	FVector4 ndc;
 	FVector4 rayView;
+	
+	//한번 클릭할때 Ray
 	FVector rayWorld;
-
 	FVector rayDir;
 
+	//드래그 중 Ray
+	FVector prevRayWorld;
+	FVector currentRayWorld;
+	FVector deltaRayWorld;
 
-	void RayCast();
+
+	FVector RayCast();
 	void checkCollision();
 	bool lineTriangleInter(FVector v0, FVector v1, FVector v2, FVector& outIntersection);
 	bool lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& outIntersection);
