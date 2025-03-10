@@ -36,12 +36,9 @@ public:
 	void Update();
 	void LogRender();
 	void PickedObjPropertyRender();
-<<<<<<< HEAD
 	
-=======
 	TArray<UPrimitiveComponent*> GetPrimitives();
 
->>>>>>> 8e2b85235b36899ee6020e65444bce523bbcbbdf
 	bool rayCollision = false;
 	UPrimitiveComponent* closestHitObject = nullptr;
 	GizmoMode currentGizmoMode = GizmoMode::TRANSLATE;
