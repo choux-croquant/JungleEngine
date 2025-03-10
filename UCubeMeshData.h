@@ -47,7 +47,7 @@ private:
         };
 
         // 버퍼 생성
-        numIndex = sizeof(meshData.Indices) / sizeof(meshData.Indices[0]);
+        numIndex = meshData.Indices.size();
         vertexBuffer = URenderer::GetInstance().CreateVertexBuffer(meshData.Vertices, 8);
         indexBuffer = URenderer::GetInstance().CreateIndexBuffer(meshData.Indices, numIndex);
     }

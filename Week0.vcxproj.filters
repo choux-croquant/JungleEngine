@@ -84,6 +84,9 @@
     <ClCompile Include="AActor.cpp">
       <Filter>Source Files\Engine\Core</Filter>
     </ClCompile>
+    <ClCompile Include="ScenePropertyWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGui\imconfig.h">
@@ -161,18 +164,6 @@
     <ClInclude Include="UArrowMeshData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UConeComp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UConeMeshData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UCylinderMeshData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UCylinderComp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UGeometryGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -180,12 +171,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ULog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="USphereComp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="USphereMeshData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UWorldAxis.h">
@@ -202,6 +187,30 @@
     </ClInclude>
     <ClInclude Include="ULevel.h">
       <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ScenePropertyWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneSaveManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UConeComp.h">
+      <Filter>Source Files\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="UConeMeshData.h">
+      <Filter>Source Files\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="UCylinderComp.h">
+      <Filter>Source Files\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="UCylinderMeshData.h">
+      <Filter>Source Files\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="USphereComp.h">
+      <Filter>Source Files\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="USphereMeshData.h">
+      <Filter>Source Files\Engine\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
