@@ -44,6 +44,9 @@ struct FVector
     FVector operator*(float scalar) const {
         return FVector(X * scalar, Y * scalar, Z * scalar);
     }
+    FVector operator*(const FVector& rhs) const {
+        return FVector(X * rhs.X, Y * rhs.Y, Z * rhs.Z);
+    }
     FVector operator/(float scalar) const {
         return (scalar != 0) ? FVector(X / scalar, Y / scalar, Z / scalar) : FVector(0, 0, 0);
     }
