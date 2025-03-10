@@ -168,7 +168,7 @@ void UCamera::MoveCamera(float deltaTime) {
     if (input.IsMouseButtonDown(VK_RBUTTON)) { // 1은 마우스 우클릭 버튼
         POINT mouseDelta = input.GetMouseDelta();
         float yaw = -mouseDelta.x * rotateSpeed; // Yaw 회전 (좌우)
-        float pitch = mouseDelta.y * rotateSpeed; // Pitch 회전 (상하)
+        float pitch = -mouseDelta.y * rotateSpeed; // Pitch 회전 (상하)
 
         // Yaw 회전 (좌우)
         FMatrix yawRotation = FMatrix::RotateZ(yaw);

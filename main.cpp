@@ -112,10 +112,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Guide Axis
 	UWorldAxis worldAxis(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 
-	UCubeComp sampleCube(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	USphereComp sampleSphere(FVector(2.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UConeComp sampleCone(FVector(0.0f, 2.0f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-
 	USceneComponent group(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.2f, 0.2f, 0.2f));
 
 	UCylinderComp sampleCylinderX(FVector(2.5f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(0.5f, 0.5f, 3.0f), FVector4(1.0f, 0.0f, 0.0f, 1.0f), true);
@@ -134,11 +130,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 
 	FPhysScene physScene(hWnd,&mainCamera);
-	physScene.SetPrimitive(&sampleCube);
-	physScene.SetPrimitive(&sampleSphere);
-	physScene.SetPrimitive(&sampleCone);
-	//physScene.SetPrimitive(&sampleCylinder);
-	//physScene.SetPrimitive(&sampleCone);
+	
 	physScene.SetGizmo(&sampleCylinderX, &sampleConeX,GizmoAxis::X);
 	physScene.SetGizmo(&sampleCylinderY, &sampleConeY, GizmoAxis::Y);
 	physScene.SetGizmo(&sampleCylinderZ, &sampleConeZ, GizmoAxis::Z);
@@ -182,12 +174,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		URenderer::GetInstance().Prepare();
 
 		worldAxis.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		
-		sampleCube.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-		sampleSphere.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-
-		sampleCone.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
-
+	
 		sampleConeX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleCylinderX.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
 		sampleConeY.Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
@@ -282,38 +269,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		InputManager::GetInstance().Update();
 		scenePropertyWindow.UpdateCamera();
 
-		ImGui::Separator();
-		ImGui::Text("Keyboard State:");
-		for (const auto& [key, isPressed] : InputManager::GetInstance().GetKeyStates()) {
-			if (isPressed) {
-				ImGui::Text("Key %c: Pressed", key);
-			}
-		}
-
-		// 마우스 버튼 상태 표시
-		ImGui::Separator();
-		ImGui::Checkbox("hasRotated", &scenePropertyWindow.hasRotated);
-		ImGui::Text("Mouse State:");
-		ImGui::Text("Position: (%d, %d)", InputManager::GetInstance().GetMousePosition().x, InputManager::GetInstance().GetMousePosition().y);
-		ImGui::Text("Left Button: %s", InputManager::GetInstance().IsMouseButtonDown(VK_LBUTTON) ? "Pressed" : "Released");
-		ImGui::Text("Right Button: %s", InputManager::GetInstance().IsMouseButtonDown(VK_RBUTTON) ? "Pressed" : "Released");
-		ImGui::Text("camera position: %f, %f, %f", mainCamera.RelativeLocation.X, mainCamera.RelativeLocation.Y, mainCamera.RelativeLocation.Z);
-		ImGui::Text("camera up direction: %f, %f, %f", mainCamera.upDirection.X, mainCamera.upDirection.Y, mainCamera.upDirection.Z);
-		ImGui::Text("camera facing: %f, %f, %f", mainCamera.facing.X, mainCamera.facing.Y, mainCamera.facing.Z);
-		ImGui::Text("camera rotation: %f, %f, %f", RadtoDeg(mainCamera.RelativeRotation.X), RadtoDeg(mainCamera.RelativeRotation.Y), RadtoDeg(mainCamera.RelativeRotation.Z));
-		ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
-		ImGui::Text("projection Matrix:\n%s", mainCamera.projectionMatrix.PrintMatrix().c_str());
-
-		if (currLevel->GetPrimitives().size() != 0) {
-			ImGui::Text("obejct UUID  : %d", currLevel->GetPrimitives()[0]->GetUUID());
-		}
+		//ImGui::Text("camera position: %f, %f, %f", mainCamera.RelativeLocation.X, mainCamera.RelativeLocation.Y, mainCamera.RelativeLocation.Z);
+		//ImGui::Text("camera up direction: %f, %f, %f", mainCamera.upDirection.X, mainCamera.upDirection.Y, mainCamera.upDirection.Z);
+		//ImGui::Text("camera facing: %f, %f, %f", mainCamera.facing.X, mainCamera.facing.Y, mainCamera.facing.Z);
+		//ImGui::Text("camera rotation: %f, %f, %f", RadtoDeg(mainCamera.RelativeRotation.X), RadtoDeg(mainCamera.RelativeRotation.Y), RadtoDeg(mainCamera.RelativeRotation.Z));
+		//ImGui::Text("view Matrix:\n%s", mainCamera.viewMatrix.PrintMatrix().c_str());
+		//ImGui::Text("projection Matrix:\n%s", mainCamera.projectionMatrix.PrintMatrix().c_str());
 
 		// Heap Memory
 		ImGui::Text("Total Bytes  : %d", UMemory::GetInstance().GetTotalAllocationBytes());
 		ImGui::Text("Total Count  : %d", UMemory::GetInstance().GetTotalAllocationCount());
 		ImGui::End();
 
-		physScene.LogRender();
+		//physScene.LogRender();
 		physScene.PickedObjPropertyRender();
     
 		// Console Window (UE_LOG)
@@ -321,6 +289,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// temp
 		if (!hasLogged)
 		{
+			UE_LOG(LogTemp, Log, "Hello World %d", 2025);
+			UE_LOG(TEST1, Error, "Hello World %d", 1);
+			UE_LOG(LogTemp, Log, "Hello World %d", 3);
+			UE_LOG(LogTemp, Log, "Hello World %d", 6);
+			UE_LOG(LogTemp, Log, "Hello World %d", 28);
 			UE_LOG(LogTemp, Log, "Hello World %d", 2025);
 			hasLogged = true;
 		}
