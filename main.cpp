@@ -23,7 +23,6 @@
 #include "UCylinderComp.h"
 #include "UConeComp.h"
 #include "UWorldAxis.h"
-#include "UGizmo.h"
 
 #include "ULog.h"
 #include "UMemory.h"
@@ -120,12 +119,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//USceneComponent group(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, -PI / 4, -PI / 4), FVector(0.2f, 0.2f, 0.2f));
 	USceneComponent group(FVector(0.0f, 0.0f, 2.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.2f, 0.2f, 0.2f));
 	
-	UCylinderComp sampleCylinderX(FVector(2.5f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(0.5f, 0.5f, 3.0f));
-	UConeComp sampleConeX(FVector(6.0f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCylinderComp sampleCylinderY(FVector(0.0f, 2.5f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f));
-	UConeComp sampleConeY(FVector(0.0f, 6.0f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
-	UCylinderComp sampleCylinderZ(FVector(0.0f, 0.0f, 2.5f), FVector(0.0f, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f));
-	UConeComp sampleConeZ(FVector(0.0f, 0.0f, 6.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+	UCylinderComp sampleCylinderX(FVector(2.5f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(0.5f, 0.5f, 3.0f), FVector4(1.0f, 0.0f, 0.0f, 1.0f), true);
+	UConeComp sampleConeX(FVector(6.0f, 0.0f, 0.0f), FVector(0.0f, PI / 2, 0.0f), FVector(1.0f, 1.0f, 1.0f), FVector4(1.0f, 0.0f, 0.0f, 1.0f), true);
+	UCylinderComp sampleCylinderY(FVector(0.0f, 2.5f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f), FVector4(0.0f, 1.0f, 0.0f, 1.0f), true);
+	UConeComp sampleConeY(FVector(0.0f, 6.0f, 0.0f), FVector(PI / 2, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f), FVector4(0.0f, 1.0f, 0.0f, 1.0f), true);
+	UCylinderComp sampleCylinderZ(FVector(0.0f, 0.0f, 2.5f), FVector(0.0f, 0.0f, 0.0f), FVector(0.5f, 0.5f, 3.0f), FVector4(0.0f, 0.0f, 1.0f, 1.0f), true);
+	UConeComp sampleConeZ(FVector(0.0f, 0.0f, 6.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f), FVector4(0.0f, 0.0f, 1.0f, 1.0f), true);
 
 	sampleConeX.AttachTo(&group);
 	sampleCylinderX.AttachTo(&group);
