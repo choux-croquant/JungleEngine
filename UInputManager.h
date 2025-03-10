@@ -3,10 +3,10 @@
 #include <unordered_map>
 #include "ImGui/imgui.h"
 
-class InputManager {
+class UInputManager {
 public:
-    static InputManager& GetInstance() {
-        static InputManager instance;
+    static UInputManager& GetInstance() {
+        static UInputManager instance;
         return instance;
     }
 
@@ -93,8 +93,8 @@ private:
     POINT previousMousePosition = { 0, 0 }; // 이전 마우스 위치
     POINT mouseDelta = { 0, 0 }; // 마우스 이동량
 
-    InputManager() {}
-    ~InputManager() {}
-    InputManager(const InputManager&) = delete;
-    InputManager& operator=(const InputManager&) = delete;
+    UInputManager() {}
+    ~UInputManager() {}
+    UInputManager(const UInputManager&) = delete;
+    UInputManager& operator=(const UInputManager&) = delete;
 };

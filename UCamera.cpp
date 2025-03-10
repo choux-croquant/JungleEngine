@@ -119,7 +119,7 @@ void UCamera::SetWorldLocation(FVector pos)
 }
 
 void UCamera::MoveCamera(float deltaTime) {
-    InputManager& input = InputManager::GetInstance();
+    UInputManager& input = UInputManager::GetInstance();
     float moveSpeed = 5.0f * deltaTime;
     float rotateSpeed = 0.5f * deltaTime; // 회전 속도
 

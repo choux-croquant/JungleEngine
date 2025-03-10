@@ -130,7 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AActor.cpp" />
-    <ClCompile Include="FPhysScene.cpp" />
+    <ClCompile Include="UPhysScene.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -149,7 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AActor.h" />
-    <ClInclude Include="FPhysScene.h" />
+    <ClInclude Include="UPhysScene.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
@@ -158,10 +158,10 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
-    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="UInputManager.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="ScenePropertyWindow.h" />
-    <ClInclude Include="SceneSaveManager.h" />
+    <ClInclude Include="USceneSaveManager.h" />
     <ClInclude Include="ULevel.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="UActorComponent.h" />

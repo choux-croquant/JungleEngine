@@ -6,7 +6,7 @@
 #include "include/nlohmann/json.hpp"
 using json = nlohmann::ordered_json;
 
-class SceneSaveManager {
+class USceneSaveManager {
 public:
 	struct PrimitiveData {
 		uint32 UUID;

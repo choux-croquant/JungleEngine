@@ -1,5 +1,5 @@
 #pragma once
-#include "InputManager.h"
+#include "UInputManager.h"
 #include "UCubeComp.h"
 #include "Types.h"
 #include "Matrix.h"
@@ -24,10 +24,10 @@ struct Gizmo
 	GizmoAxis gizmoAxis;
 };
 
-class FPhysScene
+class UPhysScene
 {
 public:
-	FPhysScene(HWND hwnd,UCamera* camera);
+	UPhysScene(HWND hwnd,UCamera* camera);
 	void SetPrimitive(UPrimitiveComponent* uPrimitiveComp);
 	void SetGizmo(UPrimitiveComponent* cylinder, 
 		UPrimitiveComponent* cone,
@@ -44,7 +44,7 @@ public:
 	GizmoMode currentGizmoMode = GizmoMode::TRANSLATE;
 private:
 	TArray<UPrimitiveComponent*> primitives;
-	InputManager& input = InputManager::GetInstance();
+	UInputManager& input = UInputManager::GetInstance();
 	HWND hwnd;
 	UCamera* camera;
 

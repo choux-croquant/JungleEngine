@@ -66,7 +66,7 @@
     <ClCompile Include="Matrix.cpp">
       <Filter>Source Files\Utils\Math</Filter>
     </ClCompile>
-    <ClCompile Include="FPhysScene.cpp">
+    <ClCompile Include="UPhysScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UEngineStatics.cpp">
@@ -128,7 +128,7 @@
     <ClInclude Include="Utils.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="InputManager.h">
+    <ClInclude Include="UInputManager.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="UObject.h">
@@ -155,7 +155,7 @@
     <ClInclude Include="UCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FPhysScene.h">
+    <ClInclude Include="UPhysScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UMemory.h">
@@ -188,7 +188,7 @@
     <ClInclude Include="ScenePropertyWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SceneSaveManager.h">
+    <ClInclude Include="USceneSaveManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UConeComp.h">

@@ -1,7 +1,7 @@
 #pragma once
 #include "USceneComponent.h"
 #include "Matrix.h"
-#include "InputManager.h"
+#include "UInputManager.h"
 #include "Quaternion.h"
 
 class UCamera : public USceneComponent

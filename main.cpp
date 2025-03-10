@@ -13,11 +13,11 @@
 #include "ImGui/imgui_impl_dx11.h"
 #include "imGui/imgui_impl_win32.h"
 
-#include "InputManager.h"
+#include "UInputManager.h"
 
 #include "UCamera.h"
 #include "UCubeComp.h"
-#include "FPhysScene.h"
+#include "UPhysScene.h"
 
 #include "USphereComp.h"
 #include "UCylinderComp.h"
@@ -32,7 +32,7 @@
 #include <random>
 #include <functional>
 
-#include "SceneSaveManager.h"
+#include "USceneSaveManager.h"
 
 constexpr float BaseWindowWidth = 1024.0f;
 constexpr float BaseWindowHeight = 1024.0f;
@@ -48,7 +48,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		return true;
 	}
-	InputManager::GetInstance().ProcessMessage(message, wParam, lParam);
+	UInputManager::GetInstance().ProcessMessage(message, wParam, lParam);
 
 	switch (message)
 	{
@@ -134,7 +134,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	sampleCylinderZ.AttachTo(&group);
 	
 
-	FPhysScene physScene(hWnd,&mainCamera);
+	UPhysScene physScene(hWnd,&mainCamera);
 	
 	physScene.SetGizmo(&sampleCylinderX, &sampleConeX,GizmoAxis::X);
 	physScene.SetGizmo(&sampleCylinderY, &sampleConeY, GizmoAxis::Y);
@@ -152,7 +152,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		physScene.SetPrimitive(newPrimitive);
 	});
 
-	SceneSaveManager sceneSaveManager;
+	USceneSaveManager sceneSaveManager;
 	char saveFileName[10] = "Default";
 	bool hasLogged = false;
 
@@ -249,7 +249,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			if (primitives.size() > 0) {
 				for (int i = 0; i < primitives.size(); i++) {
 					std::string TypeName = primitives[i]->GetTypeName();
-					SceneSaveManager::PrimitiveData data;
+					USceneSaveManager::PrimitiveData data;
 					data.UUID = primitives[i]->GetUUID();
 					data.Location = primitives[i]->GetLocation();
 					data.Rotation = primitives[i]->GetRotation();
@@ -292,7 +292,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		scenePropertyWindow.Draw();
 		mainCamera.MoveCamera(0.016f);
 		mainCamera.Update();
-		InputManager::GetInstance().Update();
+		UInputManager::GetInstance().Update();
 		scenePropertyWindow.UpdateCamera();
 
 		//ImGui::Text("camera position: %f, %f, %f", mainCamera.RelativeLocation.X, mainCamera.RelativeLocation.Y, mainCamera.RelativeLocation.Z);

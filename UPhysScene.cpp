@@ -1,8 +1,8 @@
-#include "FPhysScene.h"
+#include "UPhysScene.h"
 #include "ImGui/imgui.h"
 #include "ULog.h"
 
-FPhysScene::FPhysScene(HWND hwnd, UCamera* camera)
+UPhysScene::UPhysScene(HWND hwnd, UCamera* camera)
 {
 	this->hwnd = hwnd;
 	this->camera = camera;
@@ -16,7 +16,7 @@ FPhysScene::FPhysScene(HWND hwnd, UCamera* camera)
 	height = windowRect.bottom - windowRect.top;
 }
 
-void FPhysScene::Update()
+void UPhysScene::Update()
 {
 	SetGizmoMode();
 	bool currentMouseButtonState = input.IsMouseButtonDown(VK_LBUTTON);
@@ -142,7 +142,7 @@ void FPhysScene::Update()
 	}
 }
 
-void FPhysScene::LogRender()
+void UPhysScene::LogRender()
 {
 	ImGui::Begin("FPhysScene Log Window");
 	ImGui::Text("FPhysScene Log");
@@ -179,7 +179,7 @@ void FPhysScene::LogRender()
 	ImGui::End();
 }
 
-void FPhysScene::PickedObjPropertyRender()
+void UPhysScene::PickedObjPropertyRender()
 {
 	static UPrimitiveComponent* lastSelectedObject = nullptr; // 이전 선택된 오브젝트 저장
 
@@ -218,12 +218,12 @@ void FPhysScene::PickedObjPropertyRender()
 	}
 }
 
-TArray<UPrimitiveComponent*> FPhysScene::GetPrimitives()
+TArray<UPrimitiveComponent*> UPhysScene::GetPrimitives()
 {
 	return primitives;
 }
 
-FVector FPhysScene::RayCast()
+FVector UPhysScene::RayCast()
 {
 	mousePos = input.GetMousePosition();
 
@@ -268,7 +268,7 @@ FVector FPhysScene::RayCast()
 	return rayWorld;
 }
 
-void FPhysScene::checkCollision()
+void UPhysScene::checkCollision()
 {
 	FVector rayOrigin = camera->RelativeLocation;
 	float min_t = FLT_MAX;
@@ -307,7 +307,7 @@ void FPhysScene::checkCollision()
 	}
 }
 
-void FPhysScene::checkFaceCollision()
+void UPhysScene::checkFaceCollision()
 {
 	FVector rayOrigin = camera->RelativeLocation;
 	UPrimitiveComponent* closestObject = nullptr;
@@ -345,7 +345,7 @@ void FPhysScene::checkFaceCollision()
 	}
 }
 
-bool FPhysScene::lineTriangleInter(FVector v0, FVector v1, FVector v2, FVector& outIntersection)
+bool UPhysScene::lineTriangleInter(FVector v0, FVector v1, FVector v2, FVector& outIntersection)
 {
 	//v0, v1, v2 는 clockwise 순서
 	FVector rayOrigin = camera->RelativeLocation;
@@ -386,7 +386,7 @@ bool FPhysScene::lineTriangleInter(FVector v0, FVector v1, FVector v2, FVector& 
 	return true;
 }
 
-bool FPhysScene::lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& outIntersection)
+bool UPhysScene::lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& outIntersection)
 {
 	FVector rayOrigin = camera->RelativeLocation;
 
@@ -424,7 +424,7 @@ bool FPhysScene::lineMeshIntersection(const UPrimitiveComponent* mesh, FVector& 
 }
 
 
-FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USceneComponent* component)
+FVector UPhysScene::TransformVertexToWorld(const FVector& localVertex, const USceneComponent* component)
 {
 	/*
 	FVector WorldPos = component->GetWorldLocation();
@@ -445,7 +445,7 @@ FVector FPhysScene::TransformVertexToWorld(const FVector& localVertex, const USc
 	return transformedVertex;
 }
 
-void FPhysScene::checkGizmo()
+void UPhysScene::checkGizmo()
 {
 	FVector rayOrigin = camera->RelativeLocation;
 	Gizmo closestGizmo;
@@ -506,8 +506,8 @@ void FPhysScene::checkGizmo()
 	}
 }
 
-void FPhysScene::SetGizmoMode() {
-	InputManager& input = InputManager::GetInstance();
+void UPhysScene::SetGizmoMode() {
+	UInputManager& input = UInputManager::GetInstance();
 
 	bool currentSpaceKeyState = input.IsKeyDown(' ');
 
@@ -531,12 +531,12 @@ void FPhysScene::SetGizmoMode() {
 	prevSpaceKeyState = currentSpaceKeyState;
 }
 
-void FPhysScene::SetPrimitive(UPrimitiveComponent* uCubeComp)
+void UPhysScene::SetPrimitive(UPrimitiveComponent* uCubeComp)
 {
 	primitives.push_back(uCubeComp);
 }
 
-void FPhysScene::SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* cone, GizmoAxis gizmoAxis)
+void UPhysScene::SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* cone, GizmoAxis gizmoAxis)
 {
 	Gizmo gizmo;
 	gizmo.gizmoCylinder = cylinder;
@@ -546,7 +546,7 @@ void FPhysScene::SetGizmo(UPrimitiveComponent* cylinder, UPrimitiveComponent* co
 	gizmos.push_back(gizmo);
 }
 
-void FPhysScene::SetGizmoGroup(USceneComponent* gizmoGroup)
+void UPhysScene::SetGizmoGroup(USceneComponent* gizmoGroup)
 {
 	m_gizmoGroup = gizmoGroup;
 }
