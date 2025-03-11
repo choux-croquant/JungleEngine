@@ -272,18 +272,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			if (sceneSaveManager.Load(saveFileName)) {
 				delete currLevel;
 				currLevel = new ULevel();
+				spawnedObjectBytes = 0;
 				spawnedObjectBytes += static_cast<int>(
 					UMemory::GetInstance().TrackAllocationDelta(
 						std::function<void()>([&]() {
-							for (int i = 0; i < sceneSaveManager.SceneData.size(); i++)
-							{
-								FVector randomPos(dis(gen), dis(gen), dis(gen));
-								EPrimitiveType type = static_cast<EPrimitiveType>(selectedPrimitive);
-								currLevel->SpawnPrimitiveByType(type, randomPos, FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
+							for (int i = 0; i < sceneSaveManager.SceneData.size(); i++) {
+								EPrimitiveType type = UPrimitiveComponent::GetType(sceneSaveManager.SceneData[i].Type);
+								currLevel->SpawnPrimitiveByType(type, sceneSaveManager.SceneData[i].Location, sceneSaveManager.SceneData[i].Rotation, sceneSaveManager.SceneData[i].Scale);
 							}
 							})
 					)
-				);
+					);
 				for (const auto& primitive : currLevel->GetPrimitives())
 				{
 					primitive->Render(mainCamera.viewMatrix, mainCamera.projectionMatrix);
